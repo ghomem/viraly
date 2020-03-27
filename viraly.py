@@ -12,7 +12,7 @@ E_ERR = 1
 
 SEP = ';'
 YLABEL_STR = 'Aware / Recovered / Inactive'
-STATS_STR  = 'Total tranmissions, recoveries, inactivations'
+STATS_STR  = 'Total transmissions, Total infections, recoveries, inactivations'
 
 #STATS_STR = 'Total cases, recoveries, deaths'
 #YLABEL    = 'Active / Recovered / Dead'
@@ -112,7 +112,7 @@ def get_next_model4 ( current, h, p, time, history, m ):
 
 # plotting
 
-def plot_models ( data1, data2, data3, label_str, labely, allplots ):
+def plot_data ( data1, data2, data3, data4, label_str, labely, allplots ):
 
     interval = len(data1)
     x = numpy.linspace(0, interval, interval)
@@ -127,6 +127,8 @@ def plot_models ( data1, data2, data3, label_str, labely, allplots ):
             plt.plot(x,data2)
         if len(data3) > 0:
             plt.plot(x,data3)
+        if len(data4) > 0:
+            plt.plot(x,data4)
 
     plt.show()
     plt.clf()
@@ -258,9 +260,10 @@ r4_history = numpy.array(o4_history) * (1-DR)
 
 # choose which model in use from here on
 
-n_history = n3_history
-d_history = d3_history
-r_history = r3_history
+n_history  = n3_history
+nc_history = nc3_history
+d_history  = d3_history
+r_history  = r3_history
 
 # calculate some statistics
 
@@ -268,12 +271,14 @@ print ('Maximum value')
 print (numpy.argmax(n_history), ' ' , numpy.amax(n_history))
 
 print (STATS_STR)
-print ( numpy.array(n_history).sum(), numpy.array(r_history).sum(), numpy.array(d_history).sum() )
+t_transmissions = numpy.array(nc_history).sum()
+t_infections   =  t_transmissions + N0
+print ( t_transmissions, t_infections, numpy.array(r_history).sum(), numpy.array(d_history).sum() )
 
 # produce a plot
 
 # technical string that labels the plot with the simulation parameters
 tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR}'.format(h=h, p=p, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR)
 
-plot_models( n_history, r_history, d_history, tech_str, YLABEL_STR, True )
+plot_data( n_history, nc_history, r_history, d_history, tech_str, YLABEL_STR, True )
 
