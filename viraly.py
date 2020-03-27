@@ -51,11 +51,18 @@ def get_older_model3 ( time, history ):
 
     return history [ delta ]
 
-def get_next_model3 ( current, h, p, time, history ):
+def get_next_model3 ( current, h, p, time, history, m ):
 
     outgoing = get_older_model3 ( time, history )
-    #print('debug out 3', get_older_model3 ( time, history ))
-    return max (0, get_next_model2 ( current, h, p ) - outgoing), outgoing
+    # the correction here is different becase current does not include outgoers...
+    # we need to use the share of the population available for infection
+    correction = max(( 1 - (M-m)/M ),0)
+    # new cases
+    nc = current*h*p*correction
+    # new current - it sometimes goes negative by a very small value
+    current_updated = max(current + nc - outgoing,0)
+
+    return current_updated, nc, outgoing
 
 # model 4 - temporary infection with gaussian duration of parameters T and L, finite population corrections
 
@@ -97,11 +104,11 @@ def get_older_model4 ( time, history ):
     #print('debug out 4', count)
     return count
 
-def get_next_model4 ( current, h, p, time, history ):
+def get_next_model4 ( current, h, p, time, history, m ):
 
     # we get the outgoing cases (recoveries) from the gaussian 
     outgoing = get_older_model4 ( time, history )
-    return max (0, get_next_model2 ( current, h, p ) - outgoing ), outgoing
+    return min (max (0, get_next_model2 ( current, h, p ) - outgoing ), m), outgoing, 0 # FIXME all broken
 
 # plotting
 
@@ -173,8 +180,17 @@ n3_history = [ N0 ]
 n4_history = [ N0 ]
 
 # history of outgoing numbers
-o3_history = [ 0  ]
-o4_history = [ 0  ]
+o3_history = [ 4 ]
+o4_history = [ 4 ]
+
+# history of new cases
+nc3_history = [ 4 ]
+nc4_history = [ 4 ]
+
+# currently available population
+
+m3 = M
+m4 = M
 
 # initial situation
 print (0, SEP, n1, SEP, n2, SEP, n3)
@@ -182,29 +198,56 @@ print (0, SEP, n1, SEP, n2, SEP, n3)
 for t in range (1, tint):
     n1 = get_next_model1 (n1, h, p) 
     n2 = get_next_model2 (n2, h, p) 
-    n3, o3 = get_next_model3 (n3, h, p, t, n3_history)
-    n4, o4 = get_next_model4 (n4, h, p, t, n4_history)
+    n3, nc3, o3 = get_next_model3 (n3, h, p, t, nc3_history, m3)
+    n4, nc4, o4 = get_next_model4 (n4, h, p, t, nc4_history, m4)
+
+    # new cases that appeared at time t
+    nc3_history.append(nc3)
+    nc4_history.append(nc4)
+   
+    # cases that went out at time t 
+    o3_history.append(o3)
+    o4_history.append(o4)
+
+    # number of active cases at time t
     n1_history.append(n1)
     n2_history.append(n2)
     n3_history.append(n3)
     n4_history.append(n4)
-    o3_history.append(o3)
-    o4_history.append(o4)
-    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, n4)
+
+    # neither the outgoing nor the infected are available targets for new infections
+    # but infected are still infecting causing new infections
+    m3 = max(m3 - nc3 - o3,0)
+    m4 = m4 - nc4 - o4
+
+    #print (t, SEP, n1, SEP, n2, SEP, n3, SEP, n4, SEP, o3, SEP, nc3, SEP, m3) #FIXME remove o3
+    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, o3, SEP, nc3, SEP, m3) #FIXME remove o3
 
 # change in parameters
 for t in range (tint, tmax):
     n1 = get_next_model1 (n1, h1, p1) 
     n2 = get_next_model2 (n2, h1, p1) 
-    n3, o3 = get_next_model3 (n3, h1, p1, t, n3_history)
-    n4, o4 = get_next_model4 (n4, h1, p1, t, n4_history)
+    n3, o3 = get_next_model3 (n3, h1, p1, t, nc3_history, m3)
+    n4, o4 = get_next_model4 (n4, h1, p1, t, nc4_history, m4)
+
+    nc3 = max( n3 - n3_history[-1], 0)
+    nc4 = max( n4 - n4_history[-1], 0)  
+    nc3_history.append(nc3)
+    nc4_history.append(nc4)
+    
+    o3_history.append(o3)
+    o4_history.append(o4)
+
     n1_history.append(n1)
     n2_history.append(n2)
     n3_history.append(n3)
     n4_history.append(n4)
-    o3_history.append(o3)
-    o4_history.append(o4)
-    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, n4)
+
+    m3 = m3 - nc3 - o3
+    m4 = m4 - nc4 - o4
+
+    #print (t, SEP, n1, SEP, n2, SEP, n3, SEP, n4, SEP, o3, SEP, nc3, SEP, m3) #FIXME remove o3
+    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, o3, SEP, nc3, SEP, m3) #FIXME remove o3
 
 # deaths vs recoveries
 
@@ -215,9 +258,9 @@ r4_history = numpy.array(o4_history) * (1-DR)
 
 # choose which model in use from here on
 
-n_history = n4_history
-d_history = d4_history
-r_history = r4_history
+n_history = n3_history
+d_history = d3_history
+r_history = r3_history
 
 # calculate some statistics
 
@@ -232,5 +275,5 @@ print ( numpy.array(n_history).sum(), numpy.array(r_history).sum(), numpy.array(
 # technical string that labels the plot with the simulation parameters
 tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR}'.format(h=h, p=p, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR)
 
-plot_models( n4_history, r4_history, d4_history, tech_str, YLABEL_STR, True )
+plot_models( n_history, r_history, d_history, tech_str, YLABEL_STR, True )
 
