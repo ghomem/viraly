@@ -51,19 +51,6 @@ def get_older_model3 ( time, history ):
 
     return history [ delta ]
 
-def get_next_model3 ( current, h, p, time, history, m ):
-
-    outgoing = get_older_model3 ( time, history )
-    # the correction here is different becase current does not include outgoers...
-    # we need to use the share of the population available for infection
-    correction = max(( 1 - (M-m)/M ),0)
-    # new cases
-    nc = current*h*p*correction
-    # new current - it sometimes goes negative by a very small value
-    current_updated = max(current + nc - outgoing,0)
-
-    return current_updated, nc, outgoing
-
 # model 4 - temporary infection with gaussian duration of parameters T and L, finite population corrections
 
 def get_fraction ( center, stdev, t1, t2 ):
@@ -104,11 +91,15 @@ def get_older_model4 ( time, history ):
     #print('debug out 4', count)
     return count
 
-def get_next_model4 ( current, h, p, time, history, m ):
+# common to models 3 and 4
 
-    # we get the outgoing cases (recoveries) from the gaussian 
-    outgoing = get_older_model4 ( time, history )
+def get_next_model34 ( current, h, p, time, history, m, gaussian = False ):
 
+    if gaussian:
+        # we get the outgoing cases (recoveries) from the gaussian
+        outgoing = get_older_model4 ( time, history )
+    else:
+        outgoing = get_older_model3 ( time, history )
     # the correction here is different becase current does not include outgoers...
     # we need to use the share of the population available for infection
     correction = max(( 1 - (M-m)/M ),0)
@@ -118,6 +109,7 @@ def get_next_model4 ( current, h, p, time, history, m ):
     current_updated = max(current + nc - outgoing,0)
 
     return current_updated, nc, outgoing
+
 
 # plotting
 
@@ -209,8 +201,8 @@ print (0, SEP, n1, SEP, n2, SEP, n3)
 for t in range (1, tint):
     n1 = get_next_model1 (n1, h, p) 
     n2 = get_next_model2 (n2, h, p) 
-    n3, nc3, o3 = get_next_model3 (n3, h, p, t, nc3_history, m3)
-    n4, nc4, o4 = get_next_model4 (n4, h, p, t, nc4_history, m4)
+    n3, nc3, o3 = get_next_model34 (n3, h, p, t, nc3_history, m3, False)
+    n4, nc4, o4 = get_next_model34 (n4, h, p, t, nc4_history, m4, True)
 
     # new cases that appeared at time t
     nc3_history.append(nc3)
@@ -240,8 +232,8 @@ for t in range (1, tint):
 for t in range (tint, tmax):
     n1 = get_next_model1 (n1, h1, p1)
     n2 = get_next_model2 (n2, h1, p1)
-    n3, nc3, o3 = get_next_model3 (n3, h1, p1, t, nc3_history, m3)
-    n4, nc4, o4 = get_next_model4 (n4, h1, p1, t, nc4_history, m4)
+    n3, nc3, o3 = get_next_model34 (n3, h1, p1, t, nc3_history, m3, False)
+    n4, nc4, o4 = get_next_model34 (n4, h1, p1, t, nc4_history, m4, True)
 
     # new cases that appeared at time t
     nc3_history.append(nc3)
