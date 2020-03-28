@@ -14,6 +14,9 @@ SEP = ';'
 YLABEL_STR = 'Count'
 STATS_STR  = 'transmissions, infections, recoveries, inactivations'
 
+# do we prefer model4 over model3?
+PREFER_MOD4 = True
+
 ### functions ###
 
 def print_usage ():
@@ -92,13 +95,18 @@ def get_older_model4 ( time, history ):
 
 # common to models 3 and 4
 
-def get_next_model34 ( current, h, p, time, history, m, gaussian = False ):
+def get_next_model34 ( current, h, p, time, nc_history, m, gaussian = False ):
+
+    # we get the outgoing cases (recoveries, deaths) from the gaussian
+    # outgoers are computed from the history of new cases either with
+    # a batch recovery after T unites of time (gaussian = False)
+    # a recovery spread over moments controlled by normal distribution of
+    # parameters T and L
 
     if gaussian:
-        # we get the outgoing cases (recoveries) from the gaussian
-        outgoing = get_older_model4 ( time, history )
+        outgoing = get_older_model4 ( time, nc_history )
     else:
-        outgoing = get_older_model3 ( time, history )
+        outgoing = get_older_model3 ( time, nc_history )
 
     # the correction here is different becase current does not include outgoers...
     # we need to use the share of the population available for infection
@@ -139,6 +147,17 @@ def plot_multiple ( data, labels, title_str, labely, legend_loc = "upper right" 
 
     plt.show()
     plt.clf()
+
+# print stuff to the terminal
+
+def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False ):
+
+    if prefer_x4:
+        x_data = x4_data
+    else:
+        x_data = x3_data
+
+    print (t, SEP, x1, SEP, x2, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3])
 
 ### Main block ###
 
@@ -228,10 +247,12 @@ for t in range (1, tint):
     m3 = max(m3 - nc3 - o3,0)
     m4 = max(m4 - nc4 - o4,0)
 
-    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, nc3, SEP, o3, SEP, m3)
+    n3_data = [ n3, nc3, o3, m3 ]
+    n4_data = [ n4, nc4, o4, m4 ]
+    print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
 
-# FIXME:model 3: check weird behaviour for T<3, seems fine for T>3
 # FIXME:model 4: check weird behaviour for T<7
+#  python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,10276617,4,0.03"
 
 # change in parameters
 for t in range (tint, tmax):
@@ -259,7 +280,9 @@ for t in range (tint, tmax):
     m3 = max(m3 - nc3 - o3,0)
     m4 = max(m4 - nc4 - o4,0)
 
-    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, nc3, SEP, o3, SEP, m3)
+    n3_data = [ n3, nc3, o3, m3 ]
+    n4_data = [ n4, nc4, o4, m4 ]
+    print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
 
 # deaths vs recoveries
 
@@ -270,10 +293,16 @@ r4_history = numpy.array(o4_history) * (1-DR)
 
 # choose which epidemic model in use from here on
 
-n_history  = n4_history
-nc_history = nc4_history
-d_history  = d4_history
-r_history  = r4_history
+if PREFER_MOD4:
+    n_history  = n4_history
+    nc_history = nc4_history
+    d_history  = d4_history
+    r_history  = r4_history
+else:
+    n_history  = n3_history
+    nc_history = nc3_history
+    d_history  = d3_history
+    r_history  = r3_history
 
 # calculate some statistics
 
@@ -288,16 +317,19 @@ print ( t_transmissions, t_infections, numpy.array(r_history).sum(), numpy.array
 
 
 # technical string that labels the plot with the simulation parameters
+
 tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR}'.format(h=h, p=p, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR)
 
 # produce a complete plot for the chosen epidemic model
+
 mydata   = [ n_history,      nc_history,   r_history,    d_history ]
 mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
 
 plot_multiple( mydata, mylabels, tech_str, YLABEL_STR )
 
 # compare epidemic model with simple exponential and logisitic models
-mydata   = [ n1_history,      n2_history,   n4_history, ]
-mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  ]
+
+mydata   = [ n1_history,      n2_history,   n3_history, n4_history  ]
+mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  'Epidemic2' ]
 
 plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
