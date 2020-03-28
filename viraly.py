@@ -11,11 +11,8 @@ E_OK  = 0
 E_ERR = 1
 
 SEP = ';'
-YLABEL_STR = 'Aware / Recovered / Inactive'
+YLABEL_STR = 'Count'
 STATS_STR  = 'transmissions, infections, recoveries, inactivations'
-
-#STATS_STR = 'Total cases, recoveries, deaths'
-#YLABEL    = 'Active / Recovered / Dead'
 
 ### functions ###
 
@@ -25,11 +22,13 @@ def print_usage ():
     print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR\"\n')
 
 # model 1 - permanent infection, infinite population
+
 def get_next_model1 ( current, h, p ):
 
     return min ( current*(1 + h*p), M )
 
 # model 2 - permanent infection, finite population correction
+
 def get_next_model2 ( current, h, p ):
 
     if current < 0:
@@ -100,6 +99,7 @@ def get_next_model34 ( current, h, p, time, history, m, gaussian = False ):
         outgoing = get_older_model4 ( time, history )
     else:
         outgoing = get_older_model3 ( time, history )
+
     # the correction here is different becase current does not include outgoers...
     # we need to use the share of the population available for infection
     correction = max(( 1 - (M-m)/M ),0)
@@ -110,32 +110,31 @@ def get_next_model34 ( current, h, p, time, history, m, gaussian = False ):
 
     return current_updated, nc, outgoing
 
-
 # plotting
 
-def plot_data ( data1, data2, data3, data4, label_str, labely, allplots ):
+# data is a list of lists of data
+# labels is a list of labels
 
-    interval = len(data1)
+def plot_multiple ( data, labels, title_str, labely ):
+
+    interval = len(data[0])
     x = numpy.linspace(0, interval, interval)
     plt.xkcd() # <3 <3 <3
-    plt.title( label_str)
+    plt.title( title_str)
     plt.xlabel('Time (days)')
     plt.ylabel(labely)
-    plt.plot(x,data1)
 
-    if allplots:
-        if len(data2) > 0:
-            plt.plot(x,data2)
-        if len(data3) > 0:
-            plt.plot(x,data3)
-        if len(data4) > 0:
-            plt.plot(x,data4)
+    for t in range (0, len(data)):
+        plt_data  = data[t]
+        plt_label = labels[t]
+        if len(plt_data) > 0: 
+            plt.plot(x, plt_data, label=plt_label )
 
+    plt.legend(loc="upper right")
     plt.show()
     plt.clf()
 
-
-### main ###
+### Main block ###
 
 # parse input
 
@@ -143,7 +142,7 @@ if len(sys.argv) < 2:
     print_usage()
     exit(E_OK)
 
-### simulation parameters ###
+# simulation parameters
 
 # we accept CLI arguments for h,p,T,L,h1,p1,tint,tmax,M,N0,DR in a single string
 #
@@ -171,6 +170,7 @@ DR    = float(myparams_list[10]) # death rate
 
 # simulation
 
+# initial infections
 n1 = N0
 n2 = N0
 n3 = N0
@@ -191,7 +191,6 @@ nc3_history = [ 4 ]
 nc4_history = [ 4 ]
 
 # currently available population
-
 m3 = M
 m4 = M
 
@@ -286,5 +285,7 @@ print ( t_transmissions, t_infections, numpy.array(r_history).sum(), numpy.array
 # technical string that labels the plot with the simulation parameters
 tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR}'.format(h=h, p=p, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR)
 
-plot_data( n_history, nc_history, r_history, d_history, tech_str, YLABEL_STR, True )
+mydata   = [ n_history,      nc_history,   r_history,    d_history ]
+mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
 
+plot_multiple( mydata, mylabels, tech_str, YLABEL_STR )
