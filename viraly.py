@@ -115,7 +115,7 @@ def get_next_model34 ( current, h, p, time, history, m, gaussian = False ):
 # data is a list of lists of data
 # labels is a list of labels
 
-def plot_multiple ( data, labels, title_str, labely ):
+def plot_multiple ( data, labels, title_str, labely, legend_loc = "upper right" ):
 
     interval = len(data[0])
     x = numpy.linspace(0, interval, interval)
@@ -130,7 +130,13 @@ def plot_multiple ( data, labels, title_str, labely ):
         if len(plt_data) > 0: 
             plt.plot(x, plt_data, label=plt_label )
 
-    plt.legend(loc="upper right")
+    # fine tune legend location
+    plt.legend(loc=legend_loc)
+
+    # add a 10% head room for the y axis
+    bottom, top = plt.ylim()
+    plt.ylim((bottom, top*1.1))
+
     plt.show()
     plt.clf()
 
@@ -262,7 +268,7 @@ r3_history = numpy.array(o3_history) * (1-DR)
 d4_history = numpy.array(o4_history) * DR
 r4_history = numpy.array(o4_history) * (1-DR)
 
-# choose which model in use from here on
+# choose which epidemic model in use from here on
 
 n_history  = n4_history
 nc_history = nc4_history
@@ -280,12 +286,18 @@ t_transmissions = numpy.array(nc_history).sum()
 t_infections   =  t_transmissions + N0
 print ( t_transmissions, t_infections, numpy.array(r_history).sum(), numpy.array(d_history).sum() )
 
-# produce a plot
 
 # technical string that labels the plot with the simulation parameters
 tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR}'.format(h=h, p=p, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR)
 
+# produce a complete plot for the chosen epidemic model
 mydata   = [ n_history,      nc_history,   r_history,    d_history ]
 mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
 
 plot_multiple( mydata, mylabels, tech_str, YLABEL_STR )
+
+# compare epidemic model with simple exponential and logisitic models
+mydata   = [ n1_history,      n2_history,   n4_history, ]
+mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  ]
+
+plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
