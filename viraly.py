@@ -12,7 +12,7 @@ E_ERR = 1
 
 SEP = ';'
 YLABEL_STR = 'Aware / Recovered / Inactive'
-STATS_STR  = 'Total transmissions, Total infections, recoveries, inactivations'
+STATS_STR  = 'transmissions, infections, recoveries, inactivations'
 
 #STATS_STR = 'Total cases, recoveries, deaths'
 #YLABEL    = 'Active / Recovered / Dead'
@@ -108,7 +108,16 @@ def get_next_model4 ( current, h, p, time, history, m ):
 
     # we get the outgoing cases (recoveries) from the gaussian 
     outgoing = get_older_model4 ( time, history )
-    return min (max (0, get_next_model2 ( current, h, p ) - outgoing ), m), outgoing, 0 # FIXME all broken
+
+    # the correction here is different becase current does not include outgoers...
+    # we need to use the share of the population available for infection
+    correction = max(( 1 - (M-m)/M ),0)
+    # new cases
+    nc = current*h*p*correction
+    # new current - it sometimes goes negative by a very small value
+    current_updated = max(current + nc - outgoing,0)
+
+    return current_updated, nc, outgoing
 
 # plotting
 
@@ -220,36 +229,40 @@ for t in range (1, tint):
     # neither the outgoing nor the infected are available targets for new infections
     # but infected are still infecting causing new infections
     m3 = max(m3 - nc3 - o3,0)
-    m4 = m4 - nc4 - o4
+    m4 = max(m4 - nc4 - o4,0)
 
-    #print (t, SEP, n1, SEP, n2, SEP, n3, SEP, n4, SEP, o3, SEP, nc3, SEP, m3) #FIXME remove o3
-    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, o3, SEP, nc3, SEP, m3) #FIXME remove o3
+    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, nc3, SEP, o3, SEP, m3)
+
+# FIXME:model 3: check weird behaviour for T<3, seems fine for T>3
+# FIXME:model 4: check weird behaviour for T<7
 
 # change in parameters
 for t in range (tint, tmax):
-    n1 = get_next_model1 (n1, h1, p1) 
-    n2 = get_next_model2 (n2, h1, p1) 
-    n3, o3 = get_next_model3 (n3, h1, p1, t, nc3_history, m3)
-    n4, o4 = get_next_model4 (n4, h1, p1, t, nc4_history, m4)
+    n1 = get_next_model1 (n1, h1, p1)
+    n2 = get_next_model2 (n2, h1, p1)
+    n3, nc3, o3 = get_next_model3 (n3, h1, p1, t, nc3_history, m3)
+    n4, nc4, o4 = get_next_model4 (n4, h1, p1, t, nc4_history, m4)
 
-    nc3 = max( n3 - n3_history[-1], 0)
-    nc4 = max( n4 - n4_history[-1], 0)  
+    # new cases that appeared at time t
     nc3_history.append(nc3)
     nc4_history.append(nc4)
-    
+
+    # cases that went out at time t 
     o3_history.append(o3)
     o4_history.append(o4)
 
+    # number of active cases at time t
     n1_history.append(n1)
     n2_history.append(n2)
     n3_history.append(n3)
     n4_history.append(n4)
 
-    m3 = m3 - nc3 - o3
-    m4 = m4 - nc4 - o4
+    # neither the outgoing nor the infected are available targets for new infections
+    # but infected are still infecting causing new infections
+    m3 = max(m3 - nc3 - o3,0)
+    m4 = max(m4 - nc4 - o4,0)
 
-    #print (t, SEP, n1, SEP, n2, SEP, n3, SEP, n4, SEP, o3, SEP, nc3, SEP, m3) #FIXME remove o3
-    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, o3, SEP, nc3, SEP, m3) #FIXME remove o3
+    print (t, SEP, n1, SEP, n2, SEP, n3, SEP, nc3, SEP, o3, SEP, m3)
 
 # deaths vs recoveries
 
@@ -260,16 +273,17 @@ r4_history = numpy.array(o4_history) * (1-DR)
 
 # choose which model in use from here on
 
-n_history  = n3_history
-nc_history = nc3_history
-d_history  = d3_history
-r_history  = r3_history
+n_history  = n4_history
+nc_history = nc4_history
+d_history  = d4_history
+r_history  = r4_history
 
 # calculate some statistics
 
 print ('Maximum value')
 print (numpy.argmax(n_history), ' ' , numpy.amax(n_history))
 
+print('Totals:')
 print (STATS_STR)
 t_transmissions = numpy.array(nc_history).sum()
 t_infections   =  t_transmissions + N0
