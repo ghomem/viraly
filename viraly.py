@@ -80,6 +80,10 @@ def test_fraction ():
 
 def get_older_model4 ( time, history ):
 
+    delta = time - T
+    if delta < 0:
+        return 0
+
     aux_t    = 0
     aux_n    = 0
     count    = 0
@@ -99,7 +103,7 @@ def get_next_model34 ( current, h, p, time, nc_history, m, gaussian = False ):
 
     # we get the outgoing cases (recoveries, deaths) from the gaussian
     # outgoers are computed from the history of new cases either with
-    # a batch recovery after T unites of time (gaussian = False)
+    # a batch recovery after T units of time (gaussian = False)
     # a recovery spread over moments controlled by normal distribution of
     # parameters T and L
 
@@ -208,19 +212,22 @@ n3_history = [ N0 ]
 n4_history = [ N0 ]
 
 # history of outgoing numbers
-o3_history = [ 4 ]
-o4_history = [ 4 ]
+o3_history = [ 0 ]
+o4_history = [ 0 ]
 
 # history of new cases
-nc3_history = [ 4 ]
-nc4_history = [ 4 ]
+nc3_history = [ N0 ]
+nc4_history = [ N0 ]
 
 # currently available population
 m3 = M
 m4 = M
 
+n3_data = [ n3, N0, 0, M ]
+n4_data = [ n4, N0, 0, M ]
+
 # initial situation
-print (0, SEP, n1, SEP, n2, SEP, n3)
+print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4 )
 
 for t in range (1, tint):
     n1 = get_next_model1 (n1, h, p) 
@@ -251,8 +258,21 @@ for t in range (1, tint):
     n4_data = [ n4, nc4, o4, m4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
 
+# FIXME: The problem is a leak related to the guassian the spreds to t<0
+# the wider it is the worst the leak - only for model 4
+
 # FIXME:model 4: check weird behaviour for T<7
 #  python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,10276617,4,0.03"
+# há alguma leak pq ficam casos activos
+# reprodutivel com 100
+# python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,100,4,0.03"
+# there is a slight difference between models 3 and 4
+# but there is an entire leak of the initial condition in both models
+# viraly.py "4.10,0.1,6,3,2,0.02,120,120,100,40,0.03"
+
+
+# TODO get rid of globals vars and pass them as arguments
+# TODO: calculate R and R0?
 
 # change in parameters
 for t in range (tint, tmax):
@@ -326,6 +346,8 @@ mydata   = [ n_history,      nc_history,   r_history,    d_history ]
 mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
 
 plot_multiple( mydata, mylabels, tech_str, YLABEL_STR )
+
+# TODO: plot acumulated cases and acumulated deaths
 
 # compare epidemic model with simple exponential and logisitic models
 
