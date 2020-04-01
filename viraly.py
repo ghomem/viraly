@@ -80,6 +80,7 @@ def test_fraction ():
 
 def get_older_model4 ( time, history ):
 
+    # cases infected before 0 are 0
     delta = time - T
     if delta < 0:
         return 0
@@ -88,9 +89,29 @@ def get_older_model4 ( time, history ):
     aux_n    = 0
     count    = 0
 
-    for n in history:
-        aux_n = n*get_fraction(T + aux_t, L, time-1, time )
+    print(history)
+    for i in range(0, len(history) - T):
+
+        print(i)
+        n=history[i]
+        # FIXME AT WHICH TIME DO REMOVALS START AND WITH WHICH VALUES
+        # cases infected at time aux_t that recovered between time-1 and time
+        # the special condition for the last element is necessary to include
+        # the left part of the gaussian curve, the would otherwise be ignored
+        # and cause a leak - see documentation
+        # test case: python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,100,40,0.03"
+
+        if aux_t == ( len(history) -1 ):
+            aux_n = n*scipy.stats.norm.cdf( time, T + aux_t, L)
+            print (n, aux_n, '*')
+        else:
+            aux_n = n*( get_fraction(T + aux_t, L, time-1, time )  )
+            print (n, aux_n)
+
+        #aux_n = n*( get_fraction(T + aux_t, L, time-1, time )  )
+
         #print('debug', time, aux_t, n, aux_n)
+
         count = count + aux_n
         aux_t = aux_t + 1
 
@@ -263,7 +284,6 @@ for t in range (1, tint):
 
 # FIXME:model 4: check weird behaviour for T<7
 #  python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,10276617,4,0.03"
-# há alguma leak pq ficam casos activos
 # reprodutivel com 100
 # python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,100,4,0.03"
 # there is a slight difference between models 3 and 4
@@ -347,7 +367,20 @@ mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
 
 plot_multiple( mydata, mylabels, tech_str, YLABEL_STR )
 
-# TODO: plot acumulated cases and acumulated deaths
+# plot acumulated cases and acumulated deaths
+
+j = 0
+na_history = []
+da_history = []
+
+for value in n_history:
+   na_history.append(numpy.array(nc_history[0:j]).sum())
+   da_history.append(numpy.array(d_history[0:j]).sum())
+   j=j+1
+
+mydata   = [ na_history,          da_history ]
+mylabels = [ 'Acumulated cases', 'Acumulated deaths' ]
+plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
 # compare epidemic model with simple exponential and logisitic models
 
