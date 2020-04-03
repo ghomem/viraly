@@ -176,8 +176,13 @@ if len(sys.argv) < 2:
 
 # we accept CLI arguments for h,p,T,L,h1,p1,tint,tmax,M,N0,DR in a single string
 #
-# example: 
-# python3 viraly.py "4.574,0.1,15,3,1,0.02,24,60,10000000,4,0.03"
+# examples:
+#
+# No shock 
+# python3 viraly.pt "4.1,0.1,15,3,2,0.02,120,120,10276617,4,0.03"
+#
+# Shock at t=24
+# python3 viraly.py "4.1,0.1,15,3,2,0.02,24 ,120,10276617,4,0.03"
 
 myparams_str  = sys.argv[1]
 myparams_list = myparams_str.split(',')
