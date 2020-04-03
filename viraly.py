@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# TODO get rid of globals vars and pass them as arguments
+# TODO: calculate R and R0?
+
 import os
 import sys
 import scipy.stats
@@ -56,6 +59,8 @@ def get_older_model3 ( time, history ):
 # model 4 - temporary infection with gaussian duration of parameters T and L, finite population corrections
 
 # note: this model leaves a residue of infections that do not disappear which is noticeable if L is high compared to T
+# it couple be fixed by complicating the code, but the physical situation does not make much sense
+# 99% (so to say) of the normal should be to the right of t=0, or the physical model is not good
 
 def get_fraction ( center, stdev, t1, t2 ):
 
@@ -253,9 +258,6 @@ for t in range (1, tint):
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
-
-# TODO get rid of globals vars and pass them as arguments
-# TODO: calculate R and R0?
 
 # change in parameters
 for t in range (tint, tmax):
