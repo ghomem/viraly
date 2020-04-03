@@ -80,40 +80,17 @@ def test_fraction ():
 
 def get_older_model4 ( time, history ):
 
-    # cases infected before 0 are 0
-    delta = time - T
-    if delta < 0:
-        return 0
-
-    aux_t    = 0
     aux_n    = 0
+    aux_nc   = 0
     count    = 0
 
     print(history)
-    for i in range(0, len(history) - T):
-
-        print(i)
-        n=history[i]
-        # FIXME AT WHICH TIME DO REMOVALS START AND WITH WHICH VALUES
-        # cases infected at time aux_t that recovered between time-1 and time
-        # the special condition for the last element is necessary to include
-        # the left part of the gaussian curve, the would otherwise be ignored
-        # and cause a leak - see documentation
-        # test case: python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,100,40,0.03"
-
-        if aux_t == ( len(history) -1 ):
-            aux_n = n*scipy.stats.norm.cdf( time, T + aux_t, L)
-            print (n, aux_n, '*')
-        else:
-            aux_n = n*( get_fraction(T + aux_t, L, time-1, time )  )
-            print (n, aux_n)
-
-        #aux_n = n*( get_fraction(T + aux_t, L, time-1, time )  )
-
-        #print('debug', time, aux_t, n, aux_n)
+    for j in range (0, time-1):
+        aux_nc = history[j]
+        aux_n =  aux_nc*get_fraction( j + T , L, time-1, time )
 
         count = count + aux_n
-        aux_t = aux_t + 1
+        print(time, j, j-T, aux_nc, aux_n, count)
 
     #print('debug out 4', count)
     return count
@@ -256,6 +233,8 @@ for t in range (1, tint):
     n3, nc3, o3 = get_next_model34 (n3, h, p, t, nc3_history, m3, False)
     n4, nc4, o4 = get_next_model34 (n4, h, p, t, nc4_history, m4, True)
 
+    print (o3,' ',o4)
+
     # new cases that appeared at time t
     nc3_history.append(nc3)
     nc4_history.append(nc4)
@@ -278,18 +257,6 @@ for t in range (1, tint):
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
-
-# FIXME: The problem is a leak related to the guassian the spreds to t<0
-# the wider it is the worst the leak - only for model 4
-
-# FIXME:model 4: check weird behaviour for T<7
-#  python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,10276617,4,0.03"
-# reprodutivel com 100
-# python3 viraly.py "4.10,0.1,6,3,2,0.02,120,120,100,4,0.03"
-# there is a slight difference between models 3 and 4
-# but there is an entire leak of the initial condition in both models
-# viraly.py "4.10,0.1,6,3,2,0.02,120,120,100,40,0.03"
-
 
 # TODO get rid of globals vars and pass them as arguments
 # TODO: calculate R and R0?
