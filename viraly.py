@@ -55,6 +55,8 @@ def get_older_model3 ( time, history ):
 
 # model 4 - temporary infection with gaussian duration of parameters T and L, finite population corrections
 
+# note: this model leaves a residue of infections that do not disappear which is noticeable if L is high compared to T
+
 def get_fraction ( center, stdev, t1, t2 ):
 
     n1 = scipy.stats.norm.cdf( t1, center, stdev )
@@ -87,9 +89,7 @@ def get_older_model4 ( time, history ):
     for j in range (0, time):
         aux_nc = history[j]
         aux_n = aux_nc*get_fraction( j + T , L, time-1, time )
-
         count = count + aux_n
-        #print (j,aux_nc,aux_n,count)
 
     return count
 
