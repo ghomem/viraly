@@ -84,15 +84,13 @@ def get_older_model4 ( time, history ):
     aux_nc   = 0
     count    = 0
 
-    print(history)
-    for j in range (0, time-1):
+    for j in range (0, time):
         aux_nc = history[j]
-        aux_n =  aux_nc*get_fraction( j + T , L, time-1, time )
+        aux_n = aux_nc*get_fraction( j + T , L, time-1, time )
 
         count = count + aux_n
-        print(time, j, j-T, aux_nc, aux_n, count)
+        #print (j,aux_nc,aux_n,count)
 
-    #print('debug out 4', count)
     return count
 
 # common to models 3 and 4
@@ -232,8 +230,6 @@ for t in range (1, tint):
     n2 = get_next_model2 (n2, h, p) 
     n3, nc3, o3 = get_next_model34 (n3, h, p, t, nc3_history, m3, False)
     n4, nc4, o4 = get_next_model34 (n4, h, p, t, nc4_history, m4, True)
-
-    print (o3,' ',o4)
 
     # new cases that appeared at time t
     nc3_history.append(nc3)
