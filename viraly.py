@@ -254,8 +254,8 @@ for t in range (1, tint):
 
     # neither the outgoing nor the infected are available targets for new infections
     # but infected are still infecting causing new infections
-    m3 = max(m3 - nc3 - o3,0)
-    m4 = max(m4 - nc4 - o4,0)
+    m3 = max(m3 - nc3,0)
+    m4 = max(m4 - nc4,0)
 
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
@@ -286,8 +286,8 @@ for t in range (tint, tmax):
 
     # neither the outgoing nor the infected are available targets for new infections
     # but infected are still infecting causing new infections
-    m3 = max(m3 - nc3 - o3,0)
-    m4 = max(m4 - nc4 - o4,0)
+    m3 = max(m3 - nc3,0)
+    m4 = max(m4 - nc4,0)
 
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
