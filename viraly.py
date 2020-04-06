@@ -15,7 +15,7 @@ YLABEL_STR = 'Count'
 STATS_STR  = 'transmissions, infections, recoveries, inactivations'
 
 # do we prefer model4 over model3?
-PREFER_MOD4 = True
+PREFER_MOD4 = False
 
 ### functions ###
 
@@ -223,8 +223,8 @@ nc3_history = [ N0 ]
 nc4_history = [ N0 ]
 
 # currently available population
-m3 = M
-m4 = M
+m3 = M - N0
+m4 = M - N0
 
 n3_data = [ n3, N0, 0, M ]
 n4_data = [ n4, N0, 0, M ]
@@ -260,6 +260,8 @@ for t in range (1, tint):
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
+    # SIR dbug
+    #print( m3, n3, numpy.array(o3_history).sum(), m3 + n3 + numpy.array(o3_history).sum())
 
 # change in parameters
 for t in range (tint, tmax):
@@ -291,6 +293,7 @@ for t in range (tint, tmax):
     n4_data = [ n4, nc4, o4, m4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
 
+
 # deaths vs recoveries
 
 d3_history = numpy.array(o3_history) * DR
@@ -301,15 +304,21 @@ r4_history = numpy.array(o4_history) * (1-DR)
 # choose which epidemic model in use from here on
 
 if PREFER_MOD4:
+    n_final    = n4
+    m_final    = m4
     n_history  = n4_history
     nc_history = nc4_history
     d_history  = d4_history
     r_history  = r4_history
+    o_history  = o4_history
 else:
+    n_final    = n3
+    m_final    = m3
     n_history  = n3_history
     nc_history = nc3_history
     d_history  = d3_history
     r_history  = r3_history
+    o_history  = o3_history
 
 # calculate some statistics
 
@@ -319,9 +328,14 @@ print (numpy.argmax(n_history), ' ' , numpy.amax(n_history))
 print('Totals:')
 print (STATS_STR)
 t_transmissions = numpy.array(nc_history).sum()
-t_infections   =  t_transmissions + N0
-print ( t_transmissions, t_infections, numpy.array(r_history).sum(), numpy.array(d_history).sum() )
+t_infections    = t_transmissions + N0
+t_inactivations = numpy.array(d_history).sum()
+t_recoveries    = numpy.array(r_history).sum()
+t_removals      = numpy.array(o_history).sum()
 
+print ( t_transmissions, t_infections, t_recoveries, t_inactivations )
+
+print ("control numbers", M, n_final, m_final, t_inactivations, t_recoveries, n_final + m_final + t_removals )
 
 # technical string that labels the plot with the simulation parameters
 
