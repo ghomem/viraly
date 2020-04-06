@@ -15,7 +15,7 @@ YLABEL_STR = 'Count'
 STATS_STR  = 'transmissions, infections, recoveries, inactivations'
 
 # do we prefer model4 over model3?
-PREFER_MOD4 = False
+PREFER_MOD4 = True
 
 ### functions ###
 
@@ -335,7 +335,8 @@ t_removals      = numpy.array(o_history).sum()
 
 print ( t_transmissions, t_infections, t_recoveries, t_inactivations )
 
-print ("control numbers", M, n_final, m_final, t_inactivations, t_recoveries, n_final + m_final + t_removals )
+#print ('control numbers')
+#print (M, n_final, m_final, t_removals, n_final + m_final + t_removals )
 
 # technical string that labels the plot with the simulation parameters
 
