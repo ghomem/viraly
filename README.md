@@ -24,6 +24,12 @@ python3 viraly.py "4.1,0.1,15,3,2,0.02,24 ,120,10276617,4,0.03"
 
 The first example simulates a free epidemic for 120 days, whereas the second example simulates an epidemic for 120 days with sudden change of h and p (contenton) at time t=24.
 
+Outputs:
+
+* plot with active cases, new cases, recoveries an deaths
+* plot with acumulated cases and acumulated deaths
+* plot with comparison of models: exponential, logistic and epidemic (with fixed recovery time) and epidemic2 (with gaussian recovery time)
+
 Disclaimer:
 
-This is an experiment related to the math of virality (wheather is markeing, ideas, content or something else)  and should not be used for real world public health situations.
+This is an experiment related to the math of virality (whether it means marketing, ideas, content or something else) and should not be used for decisions related to real world public health situations.
