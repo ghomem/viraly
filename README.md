@@ -1,6 +1,4 @@
-# viraly
-Virality concept demo
-
+# Viraly - Virality concept demo
 
 Parameters and their meaning:
 ```
