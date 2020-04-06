@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 
-# TODO get rid of globals vars and pass them as arguments
-# TODO: calculate R and R0?
-
 import os
 import sys
 import scipy.stats
