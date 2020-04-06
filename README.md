@@ -1,6 +1,6 @@
 # Viraly - Virality concept demo
 
-Parameters and their meaning:
+**Parameters and their meaning**
 ```
 h     # average number of contacts per unit of time
 p     # probability of transmission during a contact
