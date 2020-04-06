@@ -125,11 +125,13 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
 # data is a list of lists of data
 # labels is a list of labels
 
-def plot_multiple ( data, labels, title_str, labely, legend_loc = "upper right" ):
+def plot_multiple ( data, labels, title_str, labely, legend_loc = "upper right" , block_execution = True):
 
     interval = len(data[0])
     x = numpy.linspace(0, interval, interval)
+
     plt.xkcd() # <3 <3 <3
+    plt.figure() # necessary to make the plots separate
     plt.title( title_str)
     plt.xlabel('Time (days)')
     plt.ylabel(labely)
@@ -147,8 +149,7 @@ def plot_multiple ( data, labels, title_str, labely, legend_loc = "upper right" 
     bottom, top = plt.ylim()
     plt.ylim((bottom, top*1.1))
 
-    plt.show()
-    plt.clf()
+    return plt
 
 # print stuff to the terminal
 
@@ -347,7 +348,7 @@ tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tma
 mydata   = [ n_history,      nc_history,   r_history,    d_history ]
 mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
 
-plot_multiple( mydata, mylabels, tech_str, YLABEL_STR )
+plt1 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper right" )
 
 # plot acumulated cases and acumulated deaths
 
@@ -362,11 +363,14 @@ for value in n_history:
 
 mydata   = [ na_history,          da_history ]
 mylabels = [ 'Acumulated cases', 'Acumulated deaths' ]
-plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+
+plt2 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
 # compare epidemic model with simple exponential and logisitic models
 
 mydata   = [ n1_history,      n2_history,   n3_history, n4_history  ]
 mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  'Epidemic2' ]
 
-plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+plt3 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+
+plt1.show(block = True)
