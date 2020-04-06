@@ -12,7 +12,7 @@ E_ERR = 1
 
 SEP = ';'
 YLABEL_STR = 'Count'
-STATS_STR  = 'transmissions, infections, recoveries, inactivations'
+STATS_STR  = 'transmissions, infections, recoveries, deaths'
 
 # do we prefer model4 over model3?
 PREFER_MOD4 = True
