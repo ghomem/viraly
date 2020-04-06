@@ -4,11 +4,11 @@ Parameters and their meaning:
 ```
 h     # average number of contacts per unit of time
 p     # probability of transmission during a contact
-T     # average duration of infection
-L     # standard deviation of the normal distribution
+T     # average duration of infections
+L     # standard deviation of the normal distribution of the infection duration
 h1    # average number of contacts per unit of time under contention
 p1    # probability of transmission during a contact under contention
-tint  # time with initial parameters (i.e., before contention)
+tint  # simulation time with initial parameters (i.e., before contention)
 tmax  # total time
 M     # population size
 N0    # initial number of infections
