@@ -237,6 +237,10 @@ nc4_history = [ N0 ]
 m3 = M - N0
 m4 = M - N0
 
+# history of available population
+m3_history = [ m3 ]
+m4_history = [ m4 ]
+
 n3_data = [ n3, N0, 0, M ]
 n4_data = [ n4, N0, 0, M ]
 
@@ -270,6 +274,9 @@ for t in range (1, tmax):
     m3 = max(m3 - nc3,0)
     m4 = max(m4 - nc4,0)
 
+    m3_history.append(m3)
+    m4_history.append(m4)
+
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
@@ -293,6 +300,7 @@ if PREFER_MOD4:
     d_history  = d4_history
     r_history  = r4_history
     o_history  = o4_history
+    m_history  = m4_history
 else:
     n_final    = n3
     m_final    = m3
@@ -301,6 +309,7 @@ else:
     d_history  = d3_history
     r_history  = r3_history
     o_history  = o3_history
+    m_history  = m3_history
 
 # calculate some statistics
 
@@ -331,27 +340,38 @@ mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
 
 plt1 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper right" )
 
-# plot acumulated cases and acumulated deaths
+# prepare some acumulated data
 
 j = 0
 na_history = []
 da_history = []
+ra_history = []
 
 for value in n_history:
    na_history.append(numpy.array(nc_history[0:j]).sum())
    da_history.append(numpy.array(d_history[0:j]).sum())
+   ra_history.append(numpy.array(r_history[0:j]).sum())
    j=j+1
+
+# plot acumulated cases and acumulated deaths
 
 mydata   = [ na_history,          da_history ]
 mylabels = [ 'Acumulated cases', 'Acumulated deaths' ]
 
 plt2 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
+# typical SIR plot with Susceptible, Infected and Removed (Recovered or Dead)
+
+mydata   = [ m_history,     n_history,  ra_history,  da_history ]
+mylabels = [ 'Susceptible', 'Infected', 'Recovered', 'Dead' ]
+
+plt3 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+
 # compare epidemic model with simple exponential and logisitic models
 
 mydata   = [ n1_history,      n2_history,   n3_history, n4_history  ]
 mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  'Epidemic2' ]
 
-plt3 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+plt4 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
 plt1.show(block = True)
