@@ -56,7 +56,7 @@ def get_older_model3 ( time, history ):
 # model 4 - temporary infection with gaussian duration of parameters T and L, finite population corrections
 
 # note: this model leaves a residue of infections that do not disappear which is noticeable if L is high compared to T
-# it couple be fixed by complicating the code, but the physical situation does not make much sense
+# it could be fixed by complicating the code, but the physical situation does not make much sense
 # 99% (so to say) of the normal should be to the right of t=0, or the physical model is not good
 
 def get_fraction ( center, stdev, t1, t2 ):
@@ -119,6 +119,16 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     current_updated = max(current + nc - outgoing,0)
 
     return current_updated, nc, outgoing
+
+# helper function to model parameters evolution over time
+
+def get_parameters ( h, p, h1, p1, t, tint, progressive = False ):
+
+    # TODO: implement a progressive linear change of parameters
+    if t < tint:
+        return h, p
+    else:
+        return h1,p1
 
 # plotting
 
@@ -233,11 +243,13 @@ n4_data = [ n4, N0, 0, M ]
 # initial situation
 print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4 )
 
-for t in range (1, tint):
+for t in range (1, tmax):
     n1 = get_next_model1 (n1, h, p, M) 
     n2 = get_next_model2 (n2, h, p, M) 
     n3, nc3, o3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
     n4, nc4, o4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
+    # update simulation parameters over time
+    h, p = get_parameters( h,p, h1, p1, t, tint )
 
     # new cases that appeared at time t
     nc3_history.append(nc3)
@@ -261,39 +273,8 @@ for t in range (1, tint):
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
-    # SIR dbug
+    # SIR debug
     #print( m3, n3, numpy.array(o3_history).sum(), m3 + n3 + numpy.array(o3_history).sum())
-
-# change in parameters
-for t in range (tint, tmax):
-    n1 = get_next_model1 (n1, h1, p1, M)
-    n2 = get_next_model2 (n2, h1, p1, M)
-    n3, nc3, o3 = get_next_model34 (n3, h1, p1, t, nc3_history, m3, M, T, L, False)
-    n4, nc4, o4 = get_next_model34 (n4, h1, p1, t, nc4_history, m4, M, T, L, True)
-
-    # new cases that appeared at time t
-    nc3_history.append(nc3)
-    nc4_history.append(nc4)
-
-    # cases that went out at time t 
-    o3_history.append(o3)
-    o4_history.append(o4)
-
-    # number of active cases at time t
-    n1_history.append(n1)
-    n2_history.append(n2)
-    n3_history.append(n3)
-    n4_history.append(n4)
-
-    # neither the outgoing nor the infected are available targets for new infections
-    # but infected are still infecting causing new infections
-    m3 = max(m3 - nc3,0)
-    m4 = max(m4 - nc4,0)
-
-    n3_data = [ n3, nc3, o3, m3 ]
-    n4_data = [ n4, nc4, o4, m4 ]
-    print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
-
 
 # deaths vs recoveries
 
