@@ -40,7 +40,9 @@ The first example simulates a free epidemic for 120 days, whereas the second exa
 * plot with the usual SIR variables: Susceptible, Infected and Removed (Recovered or Dead)
 * plot with comparison of models: exponential, logistic and epidemic (with fixed recovery time) and epidemic2 (with gaussian recovery time)
 
-** Example output:**
+**Example outputs:**
+
+Output for model 4 with a parameter change shock at t=24:
 ![Output for model4 with a parameter change shock at t=24](https://github.com/ghomem/viraly/blob/master/images/example_t24_shock.png)
 
 **Disclaimer:**
