@@ -22,7 +22,7 @@ python3 viraly.py "4,0.1145,15,3,2,0.02,120,120,10276617,4,0.03"
 python3 viraly.py "4,0.1145,15,3,2,0.02,24 ,120,10276617,4,0.03"
 ```
 
-The first example simulates a free epidemic for 120 days, whereas the second example simulates an epidemic for 120 days with sudden change of h and p (contenton) at time t=24.
+The first example simulates a free epidemic for 120 days, whereas the second example simulates an epidemic for 120 days with sudden change of h and p (contention) at time t=24.
 
 **Outputs:**
 
