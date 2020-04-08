@@ -58,4 +58,4 @@ Comparison of models for the case above:
 
 **Disclaimer:**
 
-This is an experiment related to the math of virality (whether it means marketing, ideas, content or something else) and should not be used for decisions related to real world public health situations.
+This is an experiment related to the math of virality and should not be used for decisions related to real world public health situations.
