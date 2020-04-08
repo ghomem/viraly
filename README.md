@@ -49,7 +49,7 @@ Same as above but as a free epidemic (no parameter change):
 ![Same as above but as a free epidemic (no parameter change)](https://github.com/ghomem/viraly/blob/master/images/example_no_shock.png)
 
 SIR plot for the case above:
-![SIR plot](https://github.com/ghomem/viraly/blob/master/images/example_no_SIR.png)
+![SIR plot](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_SIR.png)
 
 Comparison of models for the case above:
 ![Comparison](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_comp.png)
