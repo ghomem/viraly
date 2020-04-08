@@ -42,8 +42,17 @@ The first example simulates a free epidemic for 120 days, whereas the second exa
 
 **Example outputs:**
 
-Output for model 4 with a parameter change shock at t=24:
+Output for model 4 with a sudden parameter change (contention) at t=24:
 ![Output for model4 with a parameter change shock at t=24](https://github.com/ghomem/viraly/blob/master/images/example_t24_shock.png)
+
+Same as above but as a free epidemic (no parameter change):
+![Same as above but as a free epidemic (no parameter change)[https://github.com/ghomem/viraly/blob/master/images/example_no_shock.png)
+
+SIR plot for the case above:
+![SIR plot)[https://github.com/ghomem/viraly/blob/master/images/example_no_SIR.png)
+
+Comparison of models for the case above:
+![Comparison)[https://github.com/ghomem/viraly/blob/master/images/example_no_comp.png)
 
 **Disclaimer:**
 
