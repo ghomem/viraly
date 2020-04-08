@@ -244,6 +244,10 @@ m4_history = [ m4 ]
 n3_data = [ n3, N0, 0, M ]
 n4_data = [ n4, N0, 0, M ]
 
+# stored parameters because h and p change over time
+sh = h
+sp = p
+
 # initial situation
 print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4 )
 
@@ -331,7 +335,7 @@ print ( t_transmissions, t_infections, t_recoveries, t_inactivations )
 
 # technical string that labels the plot with the simulation parameters
 
-tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR}'.format(h=h, p=p, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR)
+tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR}'.format(h=sh, p=sp, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR)
 
 # produce a complete plot for the chosen epidemic model
 
