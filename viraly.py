@@ -242,9 +242,9 @@ else:
     progressive = False
 
 if len(myparams_list) > 12:
-    pdelta = int(myparams_list[12])
+    ttime = int(myparams_list[12])
 else:
-    pdelta = 0
+    ttime = 0
 
 # simulation
 
@@ -292,7 +292,7 @@ for t in range (1, tmax):
     n3, nc3, o3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
     n4, nc4, o4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
     # update simulation parameters over time
-    h, p = get_parameters( h,p, h1, p1, t, tint, progressive, pdelta)
+    h, p = get_parameters( h,p, h1, p1, t, tint, progressive, ttime)
 
     # new cases that appeared at time t
     nc3_history.append(nc3)
@@ -370,7 +370,7 @@ print ( t_transmissions, t_infections, t_recoveries, t_inactivations )
 
 # technical string that labels the plot with the simulation parameters
 
-tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR}'.format(h=sh, p=sp, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR)
+tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR} progressive={progressive} ttime={ttime}'.format(h=sh, p=sp, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR, progressive=progressive, ttime=ttime)
 
 # produce a complete plot for the chosen epidemic model
 
