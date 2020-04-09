@@ -18,6 +18,9 @@ STATS_STR  = 'transmissions, infections, recoveries, deaths'
 # do we prefer model4 over model3?
 PREFER_MOD4 = True
 
+# shall we output the other models to the terminal?
+OUTPUT_ALL = False
+
 ### functions ###
 
 def print_usage ():
@@ -182,14 +185,17 @@ def plot_multiple ( data, labels, title_str, labely, legend_loc = "upper right" 
 
 # print stuff to the terminal
 
-def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False ):
+def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all = False ):
 
     if prefer_x4:
         x_data = x4_data
     else:
         x_data = x3_data
 
-    print (t, SEP, x1, SEP, x2, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3])
+    if output_all:
+        print (t, SEP, x1, SEP, x2, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3])
+    else:
+        print (t, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3])
 
 ### Main block ###
 
@@ -278,7 +284,7 @@ sh = h
 sp = p
 
 # initial situation
-print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4 )
+print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL )
 
 for t in range (1, tmax):
     n1 = get_next_model1 (n1, h, p, M) 
@@ -312,7 +318,7 @@ for t in range (1, tmax):
 
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
-    print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4 )
+    print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL )
     # SIR debug
     #print( m3, n3, numpy.array(o3_history).sum(), m3 + n3 + numpy.array(o3_history).sum())
 
