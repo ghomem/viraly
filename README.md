@@ -20,11 +20,11 @@ L           # standard deviation of the normal distribution of the infection dur
 h1          # average number of contacts per unit of time under contention
 p1          # probability of transmission during a contact under contention
 tint        # simulation time with initial parameters (i.e., before contention)
-tmax        # total time
+tmax        # total simulation time
 M           # population size
 N0          # initial number of infections
 DR          # death rate
-progressive # whether or not the change of parameters at tint should be progressive
+progressive # whether or not the change of parameters at time tint should be progressive
 ttime       # the parameters transition time (if progressive == True)  
 ```
 The parameters must be given via command line in the order listed above as quoted comma-separated list.
