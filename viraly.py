@@ -5,6 +5,7 @@ import sys
 import scipy.stats
 import numpy
 import matplotlib.pyplot as plt 
+from distutils.util import strtobool
 
 # misc parameters
 E_OK  = 0
@@ -23,6 +24,7 @@ def print_usage ():
     basename = os.path.basename(sys.argv[0])
     print()
     print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR\"\n')
+    print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR,progressive,ttime\"\n')
 
 # model 1 - permanent infection, infinite population
 
@@ -122,13 +124,30 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
 
 # helper function to model parameters evolution over time
 
-def get_parameters ( h, p, h1, p1, t, tint, progressive = False ):
+def get_parameters ( h, p, h1, p1, t, tint, progressive = False, delta = 14 ):
 
-    # TODO: implement a progressive linear change of parameters
+    # check transtition time
+    if progressive == False:
+        ttime = 0
+    else:
+        ttime = delta
+
+    # normal cases
     if t < tint:
         return h, p
+
+    if t >= (tint + ttime):
+        return h1, p1
+
+    # if we are in the transition period
+    if progressive == False:
+        return h1, p1
     else:
-        return h1,p1
+        delta_t  = t-(tint+ttime)
+        p_h1     = h1 + ((h1-h)/ttime)*delta_t
+        p_p1     = p1 + ((p1-p)/ttime)*delta_t
+        return p_h1, p_p1
+
 
 # plotting
 
@@ -211,6 +230,16 @@ M     = float(myparams_list[8])  # population size
 N0    = float(myparams_list[9])  # initial number of infections
 DR    = float(myparams_list[10]) # death rate
 
+if len(myparams_list) > 11:
+    progressive = strtobool(myparams_list[11])
+else:
+    progressive = False
+
+if len(myparams_list) > 12:
+    pdelta = int(myparams_list[12])
+else:
+    pdelta = 0
+
 # simulation
 
 # initial infections
@@ -257,7 +286,7 @@ for t in range (1, tmax):
     n3, nc3, o3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
     n4, nc4, o4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
     # update simulation parameters over time
-    h, p = get_parameters( h,p, h1, p1, t, tint )
+    h, p = get_parameters( h,p, h1, p1, t, tint, progressive, pdelta)
 
     # new cases that appeared at time t
     nc3_history.append(nc3)
