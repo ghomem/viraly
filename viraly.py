@@ -23,8 +23,8 @@ PREFER_MOD4 = True
 def print_usage ():
     basename = os.path.basename(sys.argv[0])
     print()
-    print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR\"\n')
-    print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR,progressive,ttime\"\n')
+    print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR\"')
+    print( 'python3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR,progressive,ttime\"\n')
 
 # model 1 - permanent infection, infinite population
 
