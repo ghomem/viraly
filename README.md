@@ -11,6 +11,10 @@ This is a simple command line program that simulates an epidemic in 4 different 
 
 An epidemic is the propagation of something (a disease, a phrase, a brand, an idea, ...) over a population by means of interactions between elements.
 
+**Requirements**
+
+Scipy, Numpy and Matplotlib
+
 **Parameters and their meaning:**
 ```
 h           # average number of contacts per unit of time
