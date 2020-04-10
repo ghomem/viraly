@@ -2,12 +2,12 @@
 
 **Introduction**
 
-This is a simple command line program that simulates an epidemic 4 different models:
+This is a simple command line program that simulates an epidemic in 4 different models:
 
-* permanent infection, infinite population: exponential growth
-* permanent infection, finite population: logistic growth
-* temporary infection with duration T, finite population: epidemic curve
-* temporary infection with guassian duration of avg T and stdev L, finite population: epidemic curve
+1. permanent infection, infinite population: exponential growth
+2. permanent infection, finite population: logistic growth
+3. temporary infection with duration T, finite population: epidemic curve
+4. temporary infection with guassian duration of avg T and stdev L, finite population: epidemic curve
 
 An epidemic is the propagation of something (a disease, a phrase, a brand, an idea, ...) over a population by means of interactions between elements.
 
