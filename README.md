@@ -25,7 +25,7 @@ M           # population size
 N0          # initial number of infections
 DR          # death rate
 progressive # [optional] whether or not the change of parameters at time tint should be progressive
-ttime       # [optional] the parameters transition time (if progressive == True)  
+ttime       # [optional] the parameters transition time (if progressive == True)
 ```
 The parameters must be given via command line in the order listed above as quoted comma-separated list.
 
