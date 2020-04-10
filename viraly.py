@@ -106,7 +106,7 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
 
     # we get the outgoing cases (recoveries, deaths) from the gaussian
     # outgoers are computed from the history of new cases either with
-    # a batch recovery after T units of time (gaussian = False)
+    # a batch recovery after T units of time (gaussian = False) or with
     # a recovery spread over moments controlled by normal distribution of
     # parameters T and L
 
@@ -207,15 +207,7 @@ if len(sys.argv) < 2:
 
 # simulation parameters
 
-# we accept CLI arguments for h,p,T,L,h1,p1,tint,tmax,M,N0,DR in a single string
-#
-# examples:
-#
-# No shock 
-# python3 viraly.pt "4.1,0.1,15,3,2,0.02,120,120,10276617,4,0.03"
-#
-# Shock at t=24
-# python3 viraly.py "4.1,0.1,15,3,2,0.02,24 ,120,10276617,4,0.03"
+# We accept all the CLI arguments in a single comma separated string. Check the documentation for examples.
 
 myparams_str  = sys.argv[1]
 myparams_list = myparams_str.split(',')
