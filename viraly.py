@@ -319,8 +319,6 @@ for t in range (1, tmax):
     n3_data = [ n3, nc3, o3, m3 ]
     n4_data = [ n4, nc4, o4, m4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL )
-    # SIR debug
-    #print( m3, n3, numpy.array(o3_history).sum(), m3 + n3 + numpy.array(o3_history).sum())
 
 # deaths vs recoveries
 
@@ -387,9 +385,12 @@ da_history = []
 ra_history = []
 
 for value in n_history:
-   na_history.append(numpy.array(nc_history[0:j]).sum())
-   da_history.append(numpy.array(d_history[0:j]).sum())
-   ra_history.append(numpy.array(r_history[0:j]).sum())
+   na = numpy.array(nc_history[0:j]).sum()
+   da = numpy.array(d_history[0:j]).sum()
+   ra = numpy.array(r_history[0:j]).sum()
+   na_history.append(na)
+   da_history.append(da)
+   ra_history.append(ra)
    j=j+1
 
 # plot acumulated cases and acumulated deaths
@@ -401,8 +402,11 @@ plt2 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
 # typical SIR plot with Susceptible, Infected and Removed (Recovered or Dead)
 
+# population history: should be constant, can be added to the plot just to check consistency
+po_history = numpy.array(m_history) +  numpy.array(n_history) + numpy.array(ra_history) + numpy.array(da_history)
+
 mydata   = [ m_history,     n_history,  ra_history,  da_history ]
-mylabels = [ 'Susceptible', 'Infected', 'Recovered', 'Dead' ]
+mylabels = [ 'Susceptible', 'Infected', 'Recovered', 'Dead'     ]
 
 plt3 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
