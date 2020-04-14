@@ -38,7 +38,7 @@ Important notes:
 * they  are presented as independent for physical intuition purposes but only the product hp matters in practice
 * same for h1 and p1
 * the simulation includes two phases:  \[0,tint\[ with parameters (h,p), \[tint, tmax\[  with parameters (h1,p1)
-* if tint == tmax the simulation runs over a single phase with propagation parameters h and p
+* if tint == tmax the simulation reduces to a single phase with paramters (h,p)
 * if progressive == True the transition between phases is done using a linear variation (h,p) -> (h1,p1)
 * the Basic Reproduction Number is given by hpT
 
