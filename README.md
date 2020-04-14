@@ -34,8 +34,10 @@ ttime       # [optional] the parameters transition time (if progressive == True)
 The parameters must be given via command line in the order listed above as quoted comma-separated list.
 
 Important notes:
-* the simulation includes two phases:  \[0,tint\[ with propagation parameters (h,p), \[tint, tmax\[  with propagation parameters (h1,p1)
-* h and p are presented as independent for physical intuition purposes but only the product hp matters in practice; the same goes for h1 and p1
+* h and p are the parameters that drive propagation
+* they  are presented as independent for physical intuition purposes but only the product hp matters in practice
+* same for h1 and p1
+* the simulation includes two phases:  \[0,tint\[ with parameters (h,p), \[tint, tmax\[  with parameters (h1,p1)
 * if tint == tmax the simulation runs over a single phase with propagation parameters h and p
 * if progressive == True the transition between phases is done using a linear variation (h,p) -> (h1,p1)
 * the Basic Reproduction Number is given by hpT
