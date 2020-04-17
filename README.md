@@ -58,6 +58,11 @@ The first example simulates a free epidemic for 120 days, whereas the second exa
 * plot with acumulated cases and acumulated deaths
 * plot with the usual SIR variables: Susceptible, Infected and Removed (Recovered or Dead)
 * plot with comparison of models: exponential, logistic and epidemic (with fixed recovery time) and epidemic2 (with gaussian recovery time)
+* console output for the preferred model with Active Cases, New Cases, Removals and Susceptibles plus misc stats (peak, totals, ...)
+
+**Configuration**
+
+The boolean global variable PREFER_MOD4 controls whether or not model4 is the preferred model for console output and plots. If PREFER_MOD4 is False the preferred model is model3.
 
 **Example outputs:**
 
