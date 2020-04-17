@@ -39,7 +39,9 @@ Notes:
 * the simulation includes two phases:  **\[ 0, tint \[** with parameters (h,p) and **\[ tint, tmax \[**  with parameters (h1,p1)
 * if tint == tmax the simulation reduces to a single phase with parameters (h,p)
 * if progressive == True the transition between phases is done using a linear variation (h,p) -> (h1,p1)
-* the Basic Reproduction Number is given by hpT
+* the Basic Reproduction Number (R0) is given by hpT
+* for model 3 the infections remain constant if hp = 1/T and decrease to zero if hp < 1/T
+* for model 4 hp needs to be slightly lower for the situations above to occur
 
 **Examples:**
 ```
@@ -70,6 +72,15 @@ SIR plot for the case above:
 
 Comparison of models for the case above:
 ![Comparison](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_comp.png)
+
+Output for model 3 with critical choice of parameters hp = 1/T so that the epidemic is in the limit of propagation:
+![Critical](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_prop_stall_model3.png)
+
+Same as above for model 4 where due to the gaussian recovery hp needs to be slightly lower:
+![Critical](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_prop_stall_model4.png)
+
+Output of early erratication case due to sub critical hp for model 4:
+![Critical](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_erradication_model4.png)
 
 **Disclaimer:**
 
