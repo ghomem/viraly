@@ -66,28 +66,28 @@ The boolean global variable PREFER_MOD4 controls whether or not model4 is the pr
 
 **Example outputs:**
 
-Output for model 4 with a sudden parameter change (contention) at t=24 such that hpT < 1:
+Example 1: output for model 4 with a sudden parameter change (contention) at t=24 such that hpT < 1:
 ![Output for model4 with a parameter change shock at t=24 hpT < 1](https://github.com/ghomem/viraly/blob/master/images/example_t24_shock.png)
 
-Output for model 4 with a sudden parameter change (contention) at t=24 such that hpT > 1:
+Example 2: output for model 4 with a sudden parameter change (contention) at t=24 such that hpT > 1:
 ![Output for model4 with a parameter change shock at t=24 htT > 1](https://github.com/ghomem/viraly/blob/master/images/example_t24_shock_larger_R.png)
 
-Same as above but as a free epidemic (no parameter change):
+Example 3: same as above but as a free epidemic (no parameter change):
 ![Same as above but as a free epidemic (no parameter change)](https://github.com/ghomem/viraly/blob/master/images/example_no_shock.png)
 
-SIR plot for the case above:
+Example 4: SIR plot for the case above:
 ![SIR plot](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_SIR.png)
 
-Comparison of models for the case above:
+Example 5: comparison of models for the case above:
 ![Comparison](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_comp.png)
 
-Output for model 3 with critical choice of parameters hp = 1/T so that the epidemic is in the limit of propagation:
+Example 6: output for model 3 with critical choice of parameters hp = 1/T so that the epidemic is in the limit of propagation:
 ![Critical](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_prop_stall_model3.png)
 
-Same as above for model 4 where due to the gaussian recovery hp needs to be slightly lower:
+Example 7: same as above for model 4 where due to the gaussian recovery hp needs to be slightly lower:
 ![Critical](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_prop_stall_model4.png)
 
-Output of early erratication case due to sub critical hp for model 4:
+Example 8: output of early erratication case due to sub critical hp for model 4:
 ![Critical](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_erradication_model4.png)
 
 **Disclaimer:**
