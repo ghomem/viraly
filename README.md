@@ -58,7 +58,8 @@ The first example simulates a free epidemic for 120 days, whereas the second exa
 * plot with acumulated cases and acumulated deaths
 * plot with the usual SIR variables: Susceptible, Infected and Removed (Recovered or Dead)
 * plot with comparison of models: exponential, logistic and epidemic (with fixed recovery time) and epidemic2 (with gaussian recovery time)
-* console output for the preferred model with Active Cases, New Cases, Removals and Susceptibles plus misc stats (peak, totals, ...)
+* plot with evolution of the effective reproduction number R(t) over time
+* console output for the preferred model with Active Cases, New Cases, Removals, Susceptibles and R(t), plus misc stats (peak, totals, ...)
 
 **Configuration**
 
