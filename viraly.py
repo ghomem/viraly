@@ -120,10 +120,12 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     correction = max(( 1 - (M-m)/M ),0)
     # new cases
     nc = current*h*p*correction
+    # Rt - attempt at estimating
+    rt = h*p*T*correction
     # new current - it sometimes goes negative by a very small value
     current_updated = max(current + nc - outgoing,0)
 
-    return current_updated, nc, outgoing
+    return current_updated, nc, outgoing, rt
 
 # helper function to model parameters evolution over time
 
@@ -193,9 +195,9 @@ def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all =
         x_data = x3_data
 
     if output_all:
-        print (t, SEP, x1, SEP, x2, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3])
+        print (t, SEP, x1, SEP, x2, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3], SEP, x_data[4])
     else:
-        print (t, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3])
+        print (t, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3], SEP, x_data[4])
 
 ### Main block ###
 
@@ -246,6 +248,8 @@ n2 = N0
 n3 = N0
 n4 = N0
 
+R0 = h*p*T
+
 # history of active numbers
 n1_history = [ N0 ]
 n2_history = [ N0 ]
@@ -268,8 +272,13 @@ m4 = M - N0
 m3_history = [ m3 ]
 m4_history = [ m4 ]
 
-n3_data = [ n3, N0, 0, M ]
-n4_data = [ n4, N0, 0, M ]
+n3_data = [ n3, N0, 0, M, R0 ]
+n4_data = [ n4, N0, 0, M, R0 ]
+
+# Rt history
+
+rt3_history = [ R0 ]
+rt4_history = [ R0 ]
 
 # stored parameters because h and p change over time
 sh = h
@@ -281,8 +290,8 @@ print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL )
 for t in range (1, tmax):
     n1 = get_next_model1 (n1, h, p, M) 
     n2 = get_next_model2 (n2, h, p, M) 
-    n3, nc3, o3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
-    n4, nc4, o4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
+    n3, nc3, o3, rt3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
+    n4, nc4, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
     # update simulation parameters over time
     h, p = get_parameters( h,p, h1, p1, t, tint, progressive, ttime)
 
@@ -308,8 +317,11 @@ for t in range (1, tmax):
     m3_history.append(m3)
     m4_history.append(m4)
 
-    n3_data = [ n3, nc3, o3, m3 ]
-    n4_data = [ n4, nc4, o4, m4 ]
+    rt3_history.append(rt3)
+    rt4_history.append(rt4)
+
+    n3_data = [ n3, nc3, o3, m3, rt3 ]
+    n4_data = [ n4, nc4, o4, m4, rt4 ]
     print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL )
 
 # deaths vs recoveries
@@ -330,6 +342,7 @@ if PREFER_MOD4:
     r_history  = r4_history
     o_history  = o4_history
     m_history  = m4_history
+    rt_history = rt4_history
 else:
     n_final    = n3
     m_final    = m3
@@ -339,6 +352,7 @@ else:
     r_history  = r3_history
     o_history  = o3_history
     m_history  = m3_history
+    rt_history = rt3_history
 
 # calculate some statistics
 
@@ -406,6 +420,13 @@ plt3 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
 mydata   = [ n1_history,      n2_history,   n3_history, n4_history  ]
 mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  'Epidemic2' ]
+
+plt4 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+
+# plot Rt
+
+mydata   = [ rt_history ]
+mylabels = [ 'R(t)'     ]
 
 plt4 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
