@@ -4,6 +4,7 @@ import os
 import sys
 import scipy.stats
 import numpy
+import json
 import matplotlib.pyplot as plt 
 from distutils.util import strtobool
 
@@ -187,7 +188,10 @@ def plot_multiple ( data, labels, title_str, labely, legend_loc = "upper right" 
 
 # print stuff to the terminal
 
-def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all = False ):
+def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all = False, output_silent = False ):
+
+    if output_silent:
+        return
 
     if prefer_x4:
         x_data = x4_data
@@ -201,11 +205,17 @@ def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all =
 
 ### Main block ###
 
+# the silent mode is for integration with external tools, it only exports dataset
+silent = False
+
 # parse input
 
 if len(sys.argv) < 2:
     print_usage()
     exit(E_OK)
+
+if len(sys.argv) > 2:
+    silent=True
 
 # simulation parameters
 
@@ -285,7 +295,7 @@ sh = h
 sp = p
 
 # initial situation
-print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL )
+print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
 
 for t in range (1, tmax):
     n1 = get_next_model1 (n1, h, p, M) 
@@ -322,7 +332,7 @@ for t in range (1, tmax):
 
     n3_data = [ n3, nc3, o3, m3, rt3 ]
     n4_data = [ n4, nc4, o4, m4, rt4 ]
-    print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL )
+    print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
 
 # deaths vs recoveries
 
@@ -354,20 +364,21 @@ else:
     m_history  = m3_history
     rt_history = rt3_history
 
-# calculate some statistics
+# calculate and print some statistics
 
-print ('Maximum value')
-print (numpy.argmax(n_history), ' ' , numpy.amax(n_history))
-
-print('Totals:')
-print (STATS_STR)
 t_transmissions = numpy.array(nc_history).sum()
 t_infections    = t_transmissions + N0
 t_inactivations = numpy.array(d_history).sum()
 t_recoveries    = numpy.array(r_history).sum()
 t_removals      = numpy.array(o_history).sum()
 
-print ( t_transmissions, t_infections, t_recoveries, t_inactivations )
+if not silent:
+    print ('Maximum value')
+    print (numpy.argmax(n_history), ' ' , numpy.amax(n_history))
+
+    print('Totals:')
+    print (STATS_STR)
+    print ( t_transmissions, t_infections, t_recoveries, t_inactivations )
 
 #print ('control numbers')
 #print (M, n_final, m_final, t_removals, n_final + m_final + t_removals )
@@ -416,7 +427,7 @@ mylabels = [ 'Susceptible', 'Infected', 'Recovered', 'Dead'     ]
 
 plt3 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
-# compare epidemic model with simple exponential and logisitic models
+# compare epidemic model with simple exponential and logisic models
 
 mydata   = [ n1_history,      n2_history,   n3_history, n4_history  ]
 mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  'Epidemic2' ]
@@ -430,4 +441,10 @@ mylabels = [ 'R(t)'     ]
 
 plt4 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
 
-plt1.show(block = True)
+# the list cast is only to uniformized because some of the elements were converted to numpy arrays
+dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history ]
+
+if not silent:
+    plt1.show(block = True)
+else:
+    print(json.dumps(dataset))
