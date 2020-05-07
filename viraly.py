@@ -27,8 +27,8 @@ OUTPUT_ALL = False
 def print_usage ():
     basename = os.path.basename(sys.argv[0])
     print()
-    print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR\"')
-    print( 'python3 ' + basename + ' \"h,p,T,L,h1,p1,tint,tmax,M,N0,DR,progressive,ttime\"\n')
+    print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h2,p2,tint,tmax,M,N0,DR\"')
+    print( 'python3 ' + basename + ' \"h,p,T,L,h2,p2,tint,tmax,M,N0,DR,progressive,ttime\"\n')
 
 # model 1 - permanent infection, infinite population
 
@@ -130,7 +130,7 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
 
 # helper function to model parameters evolution over time
 
-def get_parameters ( h, p, h1, p1, t, tint, progressive = False, delta = 14 ):
+def get_parameters ( h, p, h2, p2, t, tint, progressive = False, delta = 14 ):
 
     # check transtition time
     if progressive == False:
@@ -143,16 +143,16 @@ def get_parameters ( h, p, h1, p1, t, tint, progressive = False, delta = 14 ):
         return h, p
 
     if t >= (tint + ttime):
-        return h1, p1
+        return h2, p2
 
     # if we are in the transition period
     if progressive == False:
-        return h1, p1
+        return h2, p2
     else:
         delta_t  = t-(tint+ttime)
-        p_h1     = h1 + ((h1-h)/ttime)*delta_t
-        p_p1     = p1 + ((p1-p)/ttime)*delta_t
-        return p_h1, p_p1
+        p_h2     = h2 + ((h2-h)/ttime)*delta_t
+        p_p2     = p2 + ((p2-p)/ttime)*delta_t
+        return p_h2, p_p2
 
 
 # plotting
@@ -203,6 +203,204 @@ def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all =
     else:
         print (t, SEP, x_data[0], SEP, x_data[1], SEP, x_data[2], SEP, x_data[3], SEP, x_data[4])
 
+# main simulation function
+
+def run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, silent ):
+
+    # initial infections
+    n1 = N0
+    n2 = N0
+    n3 = N0
+    n4 = N0
+
+    R0 = h*p*T
+
+    # history of active numbers
+    n1_history = [ N0 ]
+    n2_history = [ N0 ]
+    n3_history = [ N0 ]
+    n4_history = [ N0 ]
+
+    # history of outgoing numbers
+    o3_history = [ 0 ]
+    o4_history = [ 0 ]
+
+    # history of new cases
+    nc3_history = [ N0 ]
+    nc4_history = [ N0 ]
+
+    # currently available population
+    m3 = M - N0
+    m4 = M - N0
+
+    # history of available population
+    m3_history = [ m3 ]
+    m4_history = [ m4 ]
+
+    n3_data = [ n3, N0, 0, M, R0 ]
+    n4_data = [ n4, N0, 0, M, R0 ]
+
+    # Rt history
+
+    rt3_history = [ R0 ]
+    rt4_history = [ R0 ]
+
+    # stored parameters because h and p change over time
+    sh = h
+    sp = p
+
+    # initial situation
+    print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
+
+    for t in range (1, tmax):
+        n1 = get_next_model1 (n1, h, p, M)
+        n2 = get_next_model2 (n2, h, p, M)
+        n3, nc3, o3, rt3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
+        n4, nc4, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
+        # update simulation parameters over time
+        h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime)
+
+        # new cases that appeared at time t
+        nc3_history.append(nc3)
+        nc4_history.append(nc4)
+
+        # cases that went out at time t
+        o3_history.append(o3)
+        o4_history.append(o4)
+
+        # number of active cases at time t
+        n1_history.append(n1)
+        n2_history.append(n2)
+        n3_history.append(n3)
+        n4_history.append(n4)
+
+        # neither the outgoing nor the infected are available targets for new infections
+        # but infected are still infecting causing new infections
+        m3 = max(m3 - nc3,0)
+        m4 = max(m4 - nc4,0)
+
+        m3_history.append(m3)
+        m4_history.append(m4)
+
+        rt3_history.append(rt3)
+        rt4_history.append(rt4)
+
+        n3_data = [ n3, nc3, o3, m3, rt3 ]
+        n4_data = [ n4, nc4, o4, m4, rt4 ]
+        print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
+
+    # deaths vs recoveries
+
+    d3_history = numpy.array(o3_history) * DR
+    r3_history = numpy.array(o3_history) * (1-DR)
+    d4_history = numpy.array(o4_history) * DR
+    r4_history = numpy.array(o4_history) * (1-DR)
+
+    # choose which epidemic model in use from here on
+
+    if PREFER_MOD4:
+        n_final    = n4
+        m_final    = m4
+        n_history  = n4_history
+        nc_history = nc4_history
+        d_history  = d4_history
+        r_history  = r4_history
+        o_history  = o4_history
+        m_history  = m4_history
+        rt_history = rt4_history
+    else:
+        n_final    = n3
+        m_final    = m3
+        n_history  = n3_history
+        nc_history = nc3_history
+        d_history  = d3_history
+        r_history  = r3_history
+        o_history  = o3_history
+        m_history  = m3_history
+        rt_history = rt3_history
+
+    # calculate and print some statistics
+
+    t_transmissions = numpy.array(nc_history).sum()
+    t_infections    = t_transmissions + N0
+    t_inactivations = numpy.array(d_history).sum()
+    t_recoveries    = numpy.array(r_history).sum()
+    t_removals      = numpy.array(o_history).sum()
+
+    # prepare some acumulated data
+
+    j = 0
+    na_history = []
+    da_history = []
+    ra_history = []
+
+    for value in n_history:
+        na = numpy.array(nc_history[0:j]).sum()
+        da = numpy.array(d_history[0:j]).sum()
+        ra = numpy.array(r_history[0:j]).sum()
+        na_history.append(na)
+        da_history.append(da)
+        ra_history.append(ra)
+        j=j+1
+
+    # plot time
+
+    if not silent:
+        print ('Maximum value')
+        print (numpy.argmax(n_history), ' ' , numpy.amax(n_history))
+
+        print('Totals:')
+        print (STATS_STR)
+        print ( t_transmissions, t_infections, t_recoveries, t_inactivations )
+
+        # technical string that labels the plot with the simulation parameters
+
+        tech_str = 'h={h}, p={p}, T={T}, L={L}, h2={h2}, p2={p2}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR} progressive={progressive} ttime={ttime}'.format(h=sh, p=sp, T=T, L=L, h2=h2,p2=p2, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR, progressive=progressive, ttime=ttime)
+
+        # produce a complete plot for the chosen epidemic model
+
+        mydata   = [ n_history,      nc_history,   r_history,    d_history ]
+        mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
+
+        plt1 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper right" )
+        # plot acumulated cases and acumulated deaths
+
+        mydata   = [ na_history,          da_history ]
+        mylabels = [ 'Acumulated cases', 'Acumulated deaths' ]
+
+        plt2 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+
+        # typical SIR plot with Susceptible, Infected and Removed (Recovered or Dead)
+
+        # population history: should be constant, can be added to the plot just to check consistency
+        po_history = numpy.array(m_history) +  numpy.array(n_history) + numpy.array(ra_history) + numpy.array(da_history)
+
+        mydata   = [ m_history,     n_history,  ra_history,  da_history ]
+        mylabels = [ 'Susceptible', 'Infected', 'Recovered', 'Dead'     ]
+
+        plt3 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+
+        # compare epidemic model with simple exponential and logisic models
+
+        mydata   = [ n1_history,      n2_history,   n3_history, n4_history  ]
+        mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  'Epidemic2' ]
+
+        plt4 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+
+        # plot Rt
+
+        mydata   = [ rt_history ]
+        mylabels = [ 'R(t)'     ]
+
+        plt4 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
+
+        plt1.show(block = True)
+    else:
+        # the list cast is only to uniformized because some of the elements were converted to numpy arrays
+        dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history ]
+
+        print(json.dumps(dataset))
+
 ### Main block ###
 
 # the silent mode is for integration with external tools, it only exports dataset
@@ -232,8 +430,8 @@ h     = float(myparams_list[0])  # average number of contacts per unit of time
 p     = float(myparams_list[1])  # probability of transmission during a contact
 T     = int  (myparams_list[2])  # average duration of infection
 L     = int  (myparams_list[3])  # standard deviation of the normal distribution
-h1    = float(myparams_list[4])  # average number of contacts per unit of time under contention
-p1    = float(myparams_list[5])  # probability of transmission during a contact under contention
+h2    = float(myparams_list[4])  # average number of contacts per unit of time under contention
+p2    = float(myparams_list[5])  # probability of transmission during a contact under contention
 tint  = int  (myparams_list[6])  # time with initial parameters (i.e., before contention)
 tmax  = int  (myparams_list[7])  # total time
 M     = float(myparams_list[8])  # population size
@@ -252,199 +450,5 @@ else:
 
 # simulation
 
-# initial infections
-n1 = N0
-n2 = N0
-n3 = N0
-n4 = N0
+run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, silent )
 
-R0 = h*p*T
-
-# history of active numbers
-n1_history = [ N0 ]
-n2_history = [ N0 ]
-n3_history = [ N0 ]
-n4_history = [ N0 ]
-
-# history of outgoing numbers
-o3_history = [ 0 ]
-o4_history = [ 0 ]
-
-# history of new cases
-nc3_history = [ N0 ]
-nc4_history = [ N0 ]
-
-# currently available population
-m3 = M - N0
-m4 = M - N0
-
-# history of available population
-m3_history = [ m3 ]
-m4_history = [ m4 ]
-
-n3_data = [ n3, N0, 0, M, R0 ]
-n4_data = [ n4, N0, 0, M, R0 ]
-
-# Rt history
-
-rt3_history = [ R0 ]
-rt4_history = [ R0 ]
-
-# stored parameters because h and p change over time
-sh = h
-sp = p
-
-# initial situation
-print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
-
-for t in range (1, tmax):
-    n1 = get_next_model1 (n1, h, p, M) 
-    n2 = get_next_model2 (n2, h, p, M) 
-    n3, nc3, o3, rt3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
-    n4, nc4, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
-    # update simulation parameters over time
-    h, p = get_parameters( h,p, h1, p1, t, tint, progressive, ttime)
-
-    # new cases that appeared at time t
-    nc3_history.append(nc3)
-    nc4_history.append(nc4)
-   
-    # cases that went out at time t 
-    o3_history.append(o3)
-    o4_history.append(o4)
-
-    # number of active cases at time t
-    n1_history.append(n1)
-    n2_history.append(n2)
-    n3_history.append(n3)
-    n4_history.append(n4)
-
-    # neither the outgoing nor the infected are available targets for new infections
-    # but infected are still infecting causing new infections
-    m3 = max(m3 - nc3,0)
-    m4 = max(m4 - nc4,0)
-
-    m3_history.append(m3)
-    m4_history.append(m4)
-
-    rt3_history.append(rt3)
-    rt4_history.append(rt4)
-
-    n3_data = [ n3, nc3, o3, m3, rt3 ]
-    n4_data = [ n4, nc4, o4, m4, rt4 ]
-    print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
-
-# deaths vs recoveries
-
-d3_history = numpy.array(o3_history) * DR
-r3_history = numpy.array(o3_history) * (1-DR)
-d4_history = numpy.array(o4_history) * DR
-r4_history = numpy.array(o4_history) * (1-DR)
-
-# choose which epidemic model in use from here on
-
-if PREFER_MOD4:
-    n_final    = n4
-    m_final    = m4
-    n_history  = n4_history
-    nc_history = nc4_history
-    d_history  = d4_history
-    r_history  = r4_history
-    o_history  = o4_history
-    m_history  = m4_history
-    rt_history = rt4_history
-else:
-    n_final    = n3
-    m_final    = m3
-    n_history  = n3_history
-    nc_history = nc3_history
-    d_history  = d3_history
-    r_history  = r3_history
-    o_history  = o3_history
-    m_history  = m3_history
-    rt_history = rt3_history
-
-# calculate and print some statistics
-
-t_transmissions = numpy.array(nc_history).sum()
-t_infections    = t_transmissions + N0
-t_inactivations = numpy.array(d_history).sum()
-t_recoveries    = numpy.array(r_history).sum()
-t_removals      = numpy.array(o_history).sum()
-
-if not silent:
-    print ('Maximum value')
-    print (numpy.argmax(n_history), ' ' , numpy.amax(n_history))
-
-    print('Totals:')
-    print (STATS_STR)
-    print ( t_transmissions, t_infections, t_recoveries, t_inactivations )
-
-#print ('control numbers')
-#print (M, n_final, m_final, t_removals, n_final + m_final + t_removals )
-
-# technical string that labels the plot with the simulation parameters
-
-tech_str = 'h={h}, p={p}, T={T}, L={L}, h1={h1}, p1={p1}, tint={tint}, tmax={tmax}, M={M}, N0={N0}, DR={DR} progressive={progressive} ttime={ttime}'.format(h=sh, p=sp, T=T, L=L, h1=h1,p1=p1, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR, progressive=progressive, ttime=ttime)
-
-# produce a complete plot for the chosen epidemic model
-
-mydata   = [ n_history,      nc_history,   r_history,    d_history ]
-mylabels = [ 'Active cases', 'New Cases',  'Recoveries', 'Deaths'  ]
-
-plt1 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper right" )
-
-# prepare some acumulated data
-
-j = 0
-na_history = []
-da_history = []
-ra_history = []
-
-for value in n_history:
-   na = numpy.array(nc_history[0:j]).sum()
-   da = numpy.array(d_history[0:j]).sum()
-   ra = numpy.array(r_history[0:j]).sum()
-   na_history.append(na)
-   da_history.append(da)
-   ra_history.append(ra)
-   j=j+1
-
-# plot acumulated cases and acumulated deaths
-
-mydata   = [ na_history,          da_history ]
-mylabels = [ 'Acumulated cases', 'Acumulated deaths' ]
-
-plt2 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
-
-# typical SIR plot with Susceptible, Infected and Removed (Recovered or Dead)
-
-# population history: should be constant, can be added to the plot just to check consistency
-po_history = numpy.array(m_history) +  numpy.array(n_history) + numpy.array(ra_history) + numpy.array(da_history)
-
-mydata   = [ m_history,     n_history,  ra_history,  da_history ]
-mylabels = [ 'Susceptible', 'Infected', 'Recovered', 'Dead'     ]
-
-plt3 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
-
-# compare epidemic model with simple exponential and logisic models
-
-mydata   = [ n1_history,      n2_history,   n3_history, n4_history  ]
-mylabels = [ 'Exponential',   'Logistic',  'Epidemic',  'Epidemic2' ]
-
-plt4 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
-
-# plot Rt
-
-mydata   = [ rt_history ]
-mylabels = [ 'R(t)'     ]
-
-plt4 = plot_multiple( mydata, mylabels, tech_str, YLABEL_STR, "upper left" )
-
-# the list cast is only to uniformized because some of the elements were converted to numpy arrays
-dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history ]
-
-if not silent:
-    plt1.show(block = True)
-else:
-    print(json.dumps(dataset))
