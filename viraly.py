@@ -51,7 +51,7 @@ def get_next_model2 ( current, h, p, M ):
 
 # model 3 - temporary infection of fixed duration, finite population correction
 
-def get_older_model3 ( time, history ):
+def get_older_model3 ( time, history, T ):
 
     delta = time - T
     if delta < 0:
@@ -114,7 +114,7 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     if gaussian:
         outgoing = get_older_model4 ( time, nc_history, M, T, L )
     else:
-        outgoing = get_older_model3 ( time, nc_history )
+        outgoing = get_older_model3 ( time, nc_history, T )
 
     # the correction here is different becase current does not include outgoers...
     # we need to use the share of the population available for infection
@@ -399,56 +399,62 @@ def run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, tti
         # the list cast is only to uniformized because some of the elements were converted to numpy arrays
         dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history ]
 
-        print(json.dumps(dataset))
+        return dataset
 
+def main():
+
+    # the silent mode is for integration with external tools, it only exports dataset
+    silent = False
+
+    # parse input
+
+    if len(sys.argv) < 2:
+        print_usage()
+        exit(E_OK)
+
+    if len(sys.argv) > 2:
+        silent=True
+
+    # simulation parameters
+
+    # We accept all the CLI arguments in a single comma separated string. Check the documentation for examples.
+
+    myparams_str  = sys.argv[1]
+    myparams_list = myparams_str.split(',')
+
+    if len(myparams_list) < 11:
+        print_usage()
+        exit(E_OK)
+
+    h     = float(myparams_list[0])  # average number of contacts per unit of time
+    p     = float(myparams_list[1])  # probability of transmission during a contact
+    T     = int  (myparams_list[2])  # average duration of infection
+    L     = int  (myparams_list[3])  # standard deviation of the normal distribution
+    h2    = float(myparams_list[4])  # average number of contacts per unit of time under contention
+    p2    = float(myparams_list[5])  # probability of transmission during a contact under contention
+    tint  = int  (myparams_list[6])  # time with initial parameters (i.e., before contention)
+    tmax  = int  (myparams_list[7])  # total time
+    M     = float(myparams_list[8])  # population size
+    N0    = float(myparams_list[9])  # initial number of infections
+    DR    = float(myparams_list[10]) # death rate
+
+    if len(myparams_list) > 11:
+        progressive = strtobool(myparams_list[11])
+    else:
+        progressive = False
+
+    if len(myparams_list) > 12:
+        ttime = int(myparams_list[12])
+    else:
+        ttime = 0
+
+    # simulation
+
+    dataset = run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, silent )
+    #print(dataset)
+ 
 ### Main block ###
 
-# the silent mode is for integration with external tools, it only exports dataset
-silent = False
-
-# parse input
-
-if len(sys.argv) < 2:
-    print_usage()
-    exit(E_OK)
-
-if len(sys.argv) > 2:
-    silent=True
-
-# simulation parameters
-
-# We accept all the CLI arguments in a single comma separated string. Check the documentation for examples.
-
-myparams_str  = sys.argv[1]
-myparams_list = myparams_str.split(',')
-
-if len(myparams_list) < 11:
-    print_usage()
-    exit(E_OK)
-
-h     = float(myparams_list[0])  # average number of contacts per unit of time
-p     = float(myparams_list[1])  # probability of transmission during a contact
-T     = int  (myparams_list[2])  # average duration of infection
-L     = int  (myparams_list[3])  # standard deviation of the normal distribution
-h2    = float(myparams_list[4])  # average number of contacts per unit of time under contention
-p2    = float(myparams_list[5])  # probability of transmission during a contact under contention
-tint  = int  (myparams_list[6])  # time with initial parameters (i.e., before contention)
-tmax  = int  (myparams_list[7])  # total time
-M     = float(myparams_list[8])  # population size
-N0    = float(myparams_list[9])  # initial number of infections
-DR    = float(myparams_list[10]) # death rate
-
-if len(myparams_list) > 11:
-    progressive = strtobool(myparams_list[11])
-else:
-    progressive = False
-
-if len(myparams_list) > 12:
-    ttime = int(myparams_list[12])
-else:
-    ttime = 0
-
-# simulation
-
-run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, silent )
+if __name__ == "__main__":
+    main()
 
