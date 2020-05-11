@@ -128,9 +128,9 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
 
     return current_updated, nc, outgoing, rt
 
-# helper function to model parameters evolution over time
+# old helper function to model parameters evolution over time (supports only two stages)
 
-def get_parameters ( h, p, h2, p2, t, tint, progressive = False, delta = 14 ):
+def get_parameters_old ( h, p, h2, p2, t, tint, progressive = False, delta = 14 ):
 
     # check transtition time
     if progressive == False:
@@ -154,6 +154,57 @@ def get_parameters ( h, p, h2, p2, t, tint, progressive = False, delta = 14 ):
         p_p2     = p2 + ((p2-p)/ttime)*delta_t
         return p_h2, p_p2
 
+# helper function to model parameters evolution over time
+
+def get_parameters ( h, p, h2, p2, t, tint, progressive = False, delta = 14, h3 = 0, p3 = 0, tint2 = 0, delta2 = 0 ):
+
+    if progressive == False:
+        ttime  = 0
+        ttime2 = 0
+    else:
+        ttime  = delta
+        ttime2 = delta2
+
+    # free phase
+    if t < tint:
+        #print (t, 'free phase')
+        return h, p
+
+    # first transition
+    if t in range(tint, tint + ttime):
+        if progressive == False:
+            return h2, p2
+        else:
+            delta_t  = t-(tint+ttime)
+            p_h2     = h2 + ((h2-h)/ttime)*delta_t
+            p_p2     = p2 + ((p2-p)/ttime)*delta_t
+            #print (t, 'first transition')
+            return p_h2, p_p2
+
+    # contention phase
+    if tint2 > 0 and  t in range(tint + ttime, tint2 ):
+        #print (t, 'contention')
+        return h2, p2
+
+    # second transition
+    if tint2 > 0 and t in range(tint2, tint2 + ttime2):
+        if progressive == False:
+            return h3, p3
+        else:
+            delta_t  = t-(tint2+ttime2)
+            p_h3     = h3 + ((h3-h2)/ttime2)*delta_t
+            p_p3     = p3 + ((p3-p2)/ttime2)*delta_t
+            #print (t, 'second transition')
+            return p_h3, p_p3
+
+    # either second free phase or contention still
+    if t >= tint2 + ttime2 :
+        if tint2 > 0:
+            #print (t, 'second free')
+            return h3, p3
+        else:
+            #print (t, 'contention')
+            return h2,p2
 
 # plotting
 
@@ -205,7 +256,7 @@ def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all =
 
 # main simulation function
 
-def run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, silent ):
+def run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent ):
 
     # initial infections
     n1 = N0
@@ -258,7 +309,7 @@ def run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, tti
         n3, nc3, o3, rt3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
         n4, nc4, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
         # update simulation parameters over time
-        h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime)
+        h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
 
         # new cases that appeared at time t
         nc3_history.append(nc3)
@@ -448,9 +499,33 @@ def main():
     else:
         ttime = 0
 
+    # bonus: stage 3
+    if len(myparams_list) > 16:
+        h3     = float(myparams_list[13])  # average number of contacts per unit of time after contention
+        p3     = float(myparams_list[14])  # probability of transmission during a contact after contention
+        tint2  = int(myparams_list[15])    # time at which we start the second transition
+        ttime2 = int(myparams_list[16])    # x2 -> x3 parameters transition duration
+    else:
+        h3     = 0
+        p3     = 0
+        tint2  = 0
+        ttime2 = 0
+
+    if tint > tmax:
+        print('tint2 must be smaller than', tmax)
+        exit(E_ERR)
+
+    if tint2 > 0 and tint2 > tmax:
+        print('tint2 must be smaller than', tmax)
+        exit(E_ERR)
+
+    if tint2 > 0 and tint2 < tint + ttime:
+        print('tint2 must be greater than', tint, '+', ttime)
+        exit(E_ERR)
+
     # simulation
 
-    dataset = run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, silent )
+    dataset = run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent )
     #print(dataset)
  
 ### Main block ###
