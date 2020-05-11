@@ -86,8 +86,8 @@ BETA2_START = 0.034 * 10
 BETA2_STEP  = 0.01
 
 BETA3_MAX   = 0.6   * 10
-BETA3_START = 0.1   * 10
-BETA3_STEP  = 0.01  * 10
+BETA3_START = 0.043 * 10
+BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
 DRATE_MAX   = 100
@@ -122,21 +122,27 @@ def get_data(x, pop, n0, period, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_cha
     p  = float (b1 / 10) # input is multiplied by 10 for precision on the sliders
     h2 = 1
     p2 = float (b2 / 10) # input is multiplied by 10 for precision on the sliders
+    h3 = 1
+    p3 = float (b3 / 10) # input is multiplied by 10 for precision on the sliders
     T  = period
     N0 = n0
     DR = float(dr/100) # input is in percentage
     M =  pop*1000000   # input is in millions
 
     L = 2 # TODO either bring to top or make it a parameter
-    tint = d1 # TODO improve for when we have 3 stages
+    tint  = d1
+    tint2 = tmax - (d1 + d2)
     progressive = prog_change # bool
-    ttime = tr1 #TODO tr2
+    ttime  = tr1
+    ttime2 = tr2
 
-    str_params = '{h},{p},{T},{L},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime}'.format(h=h, p=p, T=T, L=L, h2=h2,p2=p2, tint=tint, tmax=tmax, M=M, N0=N0, DR=DR, progressive=progressive, ttime=ttime)
+    str_params = '{h},{p},{T},{L},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2}'.format(h=h, p=p, T=T, L=L, h2=h2,p2=p2, \
+                                                                                                                          tint=tint, tmax=tmax, M=M, N0=N0, DR=DR, \
+                                                                                                                          progressive=progressive, ttime=ttime, h3=h3, p3=p3, tint2=tint2, ttime2=ttime2)
     print(str_params)
 
     # this function is included from viraly.py
-    top_level = run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, True )
+    top_level = run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True )
 
     # Active, New, Recovered, Dead
     return top_level[0], top_level[1], top_level[2], top_level[3]
