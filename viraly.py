@@ -124,10 +124,8 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     nc = current*h*p*correction
     # Rt - attempt at estimating
     rt = h*p*T*correction
-    # new current - it sometimes goes negative by a very small value
-    current_updated = max(current + nc - outgoing,0)
 
-    return current_updated, nc, outgoing, rt
+    return nc, outgoing, rt
 
 # old helper function to model parameters evolution over time (supports only two stages)
 
@@ -275,7 +273,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 
     # fifos for cases in incubation
     incubator3 = deque([0]*(I-1))
-    incubator4 = deque([0]*(I-1))
+    incubator4 = deque([0]*(I-1)) 
 
     # history of outgoing numbers
     o3_history = [ 0 ]
@@ -313,8 +311,8 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
         n1 = get_next_model1 (n1, h, p, M)
         n2 = get_next_model2 (n2, h, p, M)
         # get new cases, outgoing and rt3 for the two models that matter
-        n3, nc3i, o3, rt3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
-        n4, nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
+        nc3i, o3, rt3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
+        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
         # update simulation parameters over time
         h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
 
@@ -325,6 +323,10 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
         incubator4.appendleft(nc4i)
         nc3 = incubator3.pop()
         nc4 = incubator4.pop()
+
+        # new current - it sometimes goes negative by a very small value
+        n3 = max(n3 + nc3 - o3,0)
+        n4 = max(n4 + nc4 - o4,0)
 
         # new cases that appeared at time t
         nc3_history.append(nc3)
