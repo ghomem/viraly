@@ -48,9 +48,15 @@ IIF_MAX   = 50
 IIF_START = 4
 
 # Infectious period
-T_MIN   = 1
+T_MIN   = 7
 T_MAX   = 50
 T_START = 25
+T_STDEV = 2  # this is currently hardcoded, not sure a slider for this adds that much value
+
+# Incubation period
+I_MIN   = 1
+I_MAX   = 20
+I_START = 1
 
 # Stage durations 
 DUR_MIN  = 1
@@ -73,8 +79,10 @@ DAYS = 150 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS
 
 # Propagation rate parameters
 #
-# BETA = hp
-# R0   = hpT
+# Note:
+#   BETA = hp
+#   R0   = hpT
+#
 BETA_MIN  =  0
 
 BETA1_MAX   = 0.6  * 10
@@ -100,6 +108,7 @@ PLOT_TITLE  ='Active'
 PLOT2_TITLE ='New, Recovered, Dead'
 
 T_LABEL     = 'Infectious Period'
+I_LABEL     = 'Incubation Period'
 POP_LABEL   = 'Population (Millions)'
 IIF_LABEL   = 'Initial number of infections'
 DUR1_LABEL  = 'Free expansion duration'
@@ -116,7 +125,7 @@ DRATE_LABEL = 'Death rate (%)'
 ### Functions
 
 # the function that we are plotting
-def get_data(x, pop, n0, period, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change ):
+def get_data(x, pop, n0, period, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change ):
 
     h  = 1
     p  = float (b1 / 10) # input is multiplied by 10 for precision on the sliders
@@ -125,24 +134,25 @@ def get_data(x, pop, n0, period, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_cha
     h3 = 1
     p3 = float (b3 / 10) # input is multiplied by 10 for precision on the sliders
     T  = period
+    I  = incubation
     N0 = n0
     DR = float(dr/100) # input is in percentage
     M =  pop*1000000   # input is in millions
 
-    L = 2 # TODO either bring to top or make it a parameter
+    L = T_STDEV # global var for now
     tint  = d1
     tint2 = tmax - (d1 + d2)
     progressive = prog_change # bool
     ttime  = tr1
     ttime2 = tr2
 
-    str_params = '{h},{p},{T},{L},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2}'.format(h=h, p=p, T=T, L=L, h2=h2,p2=p2, \
+    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2, \
                                                                                                                           tint=tint, tmax=tmax, M=M, N0=N0, DR=DR, \
                                                                                                                           progressive=progressive, ttime=ttime, h3=h3, p3=p3, tint2=tint2, ttime2=ttime2)
     print(str_params)
 
     # this function is included from viraly.py
-    top_level = run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True )
+    top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True )
 
     # Active, New, Recovered, Dead
     return top_level[0], top_level[1], top_level[2], top_level[3]
@@ -152,7 +162,7 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4 = get_data(x, population.value, iinfections.value, period.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source1.data = dict(x=x, y=y1)
@@ -174,6 +184,23 @@ def update_data(attrname, old, new):
     transition2_box.left  = transition2_begin
     transition2_box.right = transition2_end
 
+def reset_data():
+    population.value  = POP_START
+    iinfections.value = IIF_START
+    period.value      = T_START
+    incubation.value  = I_START
+    duration1.value   = DUR1_START
+    duration2.value   = DUR2_START
+    transition1.value = TRA1_START
+    transition2.value = TRA2_START
+    beta1.value       = BETA1_START
+    beta2.value       = BETA2_START
+    beta3.value       = BETA3_START
+    drate.value       = DRATE_START
+
+    # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
+    update_data('xxxx',0,0)
+
 ### Main
 
 # Set up widgets
@@ -181,6 +208,8 @@ population  = Slider(title=POP_LABEL, value=POP_START, start=POP_MIN, end=POP_MA
 iinfections = Slider(title=IIF_LABEL, value=IIF_START, start=IIF_MIN, end=IIF_MAX, step=1)
 
 period = Slider(title=T_LABEL, value=T_START, start=T_MIN, end=T_MAX, step=1)
+
+incubation = Slider(title=I_LABEL, value=I_START, start=I_MIN, end=I_MAX, step=1)
 
 duration1 = Slider(title=DUR1_LABEL, value=DUR1_START, start=DUR_MIN, end=DUR1_MAX, step=1)
 duration2 = Slider(title=DUR2_LABEL, value=DUR2_START, start=DUR_MIN, end=DUR2_MAX, step=1)
@@ -199,12 +228,15 @@ button = Button(label="Reset", button_type="default")
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
+for w in [population, iinfections, period, incubation, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
     w.on_change('value_throttled', update_data)
+
+# reset button call back
+button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(0, DAYS, DAYS)
-y1, y2, y3, y4 = get_data(x, population.value, iinfections.value, period.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead
 source1 = ColumnDataSource(data=dict(x=x, y=y1))
@@ -264,7 +296,7 @@ plot2.add_layout(confinement_box)
 plot2.add_layout(transition2_box)
 
 # Set up layouts and add to document
-inputs = column(population, iinfections, period, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button)
+inputs = column(population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button)
 
 curdoc().title = PAGE_TITLE
 curdoc().add_root(row(inputs, column(plot, plot2)))
