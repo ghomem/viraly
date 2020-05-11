@@ -21,6 +21,7 @@ h           # average number of contacts per unit of time
 p           # probability of transmission during a contact
 T           # average duration of infections
 L           # standard deviation of the normal distribution of the infection duration
+I           # incubation time
 h2          # average number of contacts per unit of time under contention
 p2          # probability of transmission during a contact under contention
 tint        # simulation time with initial parameters (i.e., before contention)
@@ -45,9 +46,9 @@ Notes:
 
 **Examples:**
 ```
-python3 viraly.py "4,0.1145,15,3,2,0.02,120,120,10276617,4,0.03"
-python3 viraly.py "4,0.1145,15,3,2,0.02,24 ,120,10276617,4,0.03"
-python3 viraly.py "4,0.1145,15,3,2,0.02,24 ,120,10276617,4,0.03,True,7"
+python3 viraly.py "4,0.1145,15,3,1,2,0.02,120,120,10276617,4,0.03"
+python3 viraly.py "4,0.1145,15,3,1,2,0.02,24 ,120,10276617,4,0.03"
+python3 viraly.py "4,0.1145,15,3,1,2,0.02,24 ,120,10276617,4,0.03,True,7"
 ```
 
 The first example simulates a free epidemic for 120 days, whereas the second example simulates an epidemic for 120 days with sudden change of h and p (contention) at time t=24. The third example is equal to the second but with a linear change of parameters over the course of 7 days.

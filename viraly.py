@@ -7,6 +7,7 @@ import numpy
 import json
 import matplotlib.pyplot as plt 
 from distutils.util import strtobool
+from collections import deque
 
 # misc parameters
 E_OK  = 0
@@ -27,8 +28,8 @@ OUTPUT_ALL = False
 def print_usage ():
     basename = os.path.basename(sys.argv[0])
     print()
-    print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,h2,p2,tint,tmax,M,N0,DR\"')
-    print( 'python3 ' + basename + ' \"h,p,T,L,h2,p2,tint,tmax,M,N0,DR,progressive,ttime\"\n')
+    print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,I,h2,p2,tint,tmax,M,N0,DR\"')
+    print( 'python3 ' + basename + ' \"h,p,T,L,I,h2,p2,tint,tmax,M,N0,DR,progressive,ttime\"\n')
 
 # model 1 - permanent infection, infinite population
 
@@ -256,7 +257,7 @@ def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all =
 
 # main simulation function
 
-def run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent ):
+def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent ):
 
     # initial infections
     n1 = N0
@@ -271,6 +272,10 @@ def run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, tti
     n2_history = [ N0 ]
     n3_history = [ N0 ]
     n4_history = [ N0 ]
+
+    # fifos for cases in incubation
+    incubator3 = deque([0]*(I-1))
+    incubator4 = deque([0]*(I-1))
 
     # history of outgoing numbers
     o3_history = [ 0 ]
@@ -304,12 +309,22 @@ def run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, tti
     print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
 
     for t in range (1, tmax):
+        # get new cases for the dummy models (new cases = active cases as there are no outgoers here)
         n1 = get_next_model1 (n1, h, p, M)
         n2 = get_next_model2 (n2, h, p, M)
-        n3, nc3, o3, rt3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
-        n4, nc4, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
+        # get new cases, outgoing and rt3 for the two models that matter
+        n3, nc3i, o3, rt3 = get_next_model34 (n3, h, p, t, nc3_history, m3, M, T, L, False)
+        n4, nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
         # update simulation parameters over time
         h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
+
+        # but nc3i and nc4i go for incubation still and we need to fetch the ones that are ready to infect
+        # note: we need to append before popping to support the case where the incubation time is 1 
+        # which recovers the tried and tested behaviour we had before introducing this parameter
+        incubator3.appendleft(nc3i)
+        incubator4.appendleft(nc4i)
+        nc3 = incubator3.pop()
+        nc4 = incubator4.pop()
 
         # new cases that appeared at time t
         nc3_history.append(nc3)
@@ -473,7 +488,7 @@ def main():
     myparams_str  = sys.argv[1]
     myparams_list = myparams_str.split(',')
 
-    if len(myparams_list) < 11:
+    if len(myparams_list) < 12:
         print_usage()
         exit(E_OK)
 
@@ -481,30 +496,31 @@ def main():
     p     = float(myparams_list[1])  # probability of transmission during a contact
     T     = int  (myparams_list[2])  # average duration of infection
     L     = int  (myparams_list[3])  # standard deviation of the normal distribution
-    h2    = float(myparams_list[4])  # average number of contacts per unit of time under contention
-    p2    = float(myparams_list[5])  # probability of transmission during a contact under contention
-    tint  = int  (myparams_list[6])  # time with initial parameters (i.e., before contention)
-    tmax  = int  (myparams_list[7])  # total time
-    M     = float(myparams_list[8])  # population size
-    N0    = float(myparams_list[9])  # initial number of infections
-    DR    = float(myparams_list[10]) # death rate
+    I     = int  (myparams_list[4])  # incubation time
+    h2    = float(myparams_list[5])  # average number of contacts per unit of time under contention
+    p2    = float(myparams_list[6])  # probability of transmission during a contact under contention
+    tint  = int  (myparams_list[7])  # time with initial parameters (i.e., before contention)
+    tmax  = int  (myparams_list[8])  # total time
+    M     = float(myparams_list[9])  # population size
+    N0    = float(myparams_list[10])  # initial number of infections
+    DR    = float(myparams_list[11]) # death rate
 
-    if len(myparams_list) > 11:
-        progressive = strtobool(myparams_list[11])
+    if len(myparams_list) > 12:
+        progressive = strtobool(myparams_list[12])
     else:
         progressive = False
 
-    if len(myparams_list) > 12:
-        ttime = int(myparams_list[12])
+    if len(myparams_list) > 13:
+        ttime = int(myparams_list[13])
     else:
         ttime = 0
 
     # bonus: stage 3
-    if len(myparams_list) > 16:
-        h3     = float(myparams_list[13])  # average number of contacts per unit of time after contention
-        p3     = float(myparams_list[14])  # probability of transmission during a contact after contention
-        tint2  = int(myparams_list[15])    # time at which we start the second transition
-        ttime2 = int(myparams_list[16])    # x2 -> x3 parameters transition duration
+    if len(myparams_list) > 17:
+        h3     = float(myparams_list[14])  # average number of contacts per unit of time after contention
+        p3     = float(myparams_list[15])  # probability of transmission during a contact after contention
+        tint2  = int(myparams_list[16])    # time at which we start the second transition
+        ttime2 = int(myparams_list[17])    # x2 -> x3 parameters transition duration
     else:
         h3     = 0
         p3     = 0
@@ -525,7 +541,7 @@ def main():
 
     # simulation
 
-    dataset = run_simulation ( h, p, T, L, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent )
+    dataset = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent )
     #print(dataset)
  
 ### Main block ###
