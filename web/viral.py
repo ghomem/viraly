@@ -8,7 +8,7 @@ import numpy as np
 
 from bokeh.io import curdoc
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, Slider, TextInput, BoxAnnotation, HoverTool, Button, Spacer, PreText, Div
+from bokeh.models import ColumnDataSource, Slider, TextInput, BoxAnnotation, HoverTool, Button, Spacer, Div
 from bokeh.plotting import figure
 
 # imports from separate  file
@@ -125,9 +125,9 @@ BETA2_LABEL = 'Beta during confinement (x10)'
 BETA3_LABEL = 'Beta after confinement (x10)'
 DRATE_LABEL = 'Death rate (%)'
 
-TEXT_INTRO   = '<b>Use the mouse for initial selection and cursors for fine tuning:</b>'
-TEXT_SUMMARY = 'Summary stats:'
-TEXT_NOTES   ='<b>Notes:</b><br/>&bull; Confinement phase is highlighted in red.<br/>&bull; Adjacent highlights represent transitions.<br/>&bull; Source available at github.com/ghomem/viraly'
+TEXT_INTRO   = 'Use the mouse for initial selection and cursors for fine tuning:'
+TEXT_SUMMARY = 'Stats:'
+TEXT_NOTES   ='<b>Notes:</b><br/>&bull; Confinement phase is highlighted in red.<br/>&bull; Adjacent highlights represent transitions.<br/>&bull; Source is available at github.com/ghomem/viraly'
 ### End of configuration
 
 ### Functions
@@ -211,7 +211,7 @@ def update_data(attrname, old, new):
     transition2_box.left  = transition2_begin
     transition2_box.right = transition2_end
 
-    stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '\nRecoveries: ' + str(ar_stats[1]) + '\nDeaths: ' + str(ar_stats[2])
+    stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2])
     stats.text = stats_str
 
 def reset_data():
@@ -257,8 +257,8 @@ button = Button(label="Reset", button_type="default")
 
 # text widgets
 intro   = Div(text='', width=STATS_WIDTH)
-summary = PreText(text='', width=STATS_WIDTH)
-stats   = PreText(text='', width=STATS_WIDTH)
+summary = Div(text='', width=STATS_WIDTH)
+stats   = Div(text='', width=STATS_WIDTH)
 notes   = Div(text='', width=STATS_WIDTH)
 
 # Assign widgets to the call back function
@@ -374,12 +374,12 @@ plot4.add_layout(transition2_box)
 intro.text    = TEXT_INTRO
 summary.text  = TEXT_SUMMARY
 summary.style = { 'font-weight' : 'bold' }
-stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '\nRecoveries: ' + str(ar_stats[1]) + '\nDeaths: ' + str(ar_stats[2])
+stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2])
 stats.text    = stats_str
 notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
-notespacer = Spacer(width=STATS_WIDTH, height=40, width_policy='auto', height_policy='fixed')
+notespacer = Spacer(width=STATS_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 inputs = column(intro, population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
