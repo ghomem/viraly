@@ -154,8 +154,12 @@ def get_data(x, pop, n0, period, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, 
     # this function is included from viraly.py
     top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True )
 
-    # Active, New, Recovered, Dead
-    return top_level[0], top_level[1], top_level[2], top_level[3]
+    # calculate % of initial population which is immunized
+    r_history  = top_level[2]
+    im_history = list ( numpy.array( r_history ) * (100/M) )
+
+    # Active, New, Recovered, Dead, Rt, Immunized
+    return top_level[0], top_level[1], r_history, top_level[3], top_level[8], im_history
 
 # callback function dor updating the data
 def update_data(attrname, old, new):
@@ -238,11 +242,15 @@ button.on_click(reset_data)
 x = np.linspace(0, DAYS, DAYS)
 y1, y2, y3, y4 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
-# Active, New, Recovered, Dead
+# Active, New, Recovered, Dead, Rt, pct Immunized
 source1 = ColumnDataSource(data=dict(x=x, y=y1))
 source2 = ColumnDataSource(data=dict(x=x, y=y2))
 source3 = ColumnDataSource(data=dict(x=x, y=y3))
 source4 = ColumnDataSource(data=dict(x=x, y=y4))
+source5 = ColumnDataSource(data=dict(x=x, y=y5))
+source6 = ColumnDataSource(data=dict(x=x, y=y6))
+
+# TODO centralize plots labels
 
 # plot 1
 
@@ -275,6 +283,34 @@ plot2.line('x', 'y', source=source4, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT
 plot2.add_tools(hover2)
 plot.toolbar.active_inspect = None
 
+# plot 3
+
+hover3 = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="vline" )
+hover3.point_policy='snap_to_data'
+hover3.line_policy='nearest'
+
+plot3 = figure(PLOT_height=PLOT_HEIGHT, PLOT_width=PLOT_WIDTH, title=PLOT_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
+plot3.xaxis.axis_label = PLOT_X_LABEL
+plot3.yaxis.axis_label = PLOT_Y_LABEL
+plot3.add_tools(hover3)
+plot3.toolbar.active_inspect = None
+
+plot3.line('x', 'y', source=source1, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Rt' )
+
+# plot 4
+
+hover4 = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="vline" )
+hover4.point_policy='snap_to_data'
+hover4.line_policy='nearest'
+
+plot4 = figure(PLOT4_HEIGHT=PLOT_HEIGHT, PLOT_width=PLOT_WIDTH, title=PLOT_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
+plot4.xaxis.axis_label = PLOT_X_LABEL
+plot4.yaxis.axis_label = PLOT_Y_LABEL
+plot4.add_tools(hover4)
+plot4.toolbar.active_inspect = None
+
+plot4.line('x', 'y', source=source1, line_width=PLOT4_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
+
 # highlight phases with boxes
 transition1_begin = duration1.value
 transition1_end   = transition1_begin + transition1.value
@@ -299,4 +335,4 @@ plot2.add_layout(transition2_box)
 inputs = column(population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button)
 
 curdoc().title = PAGE_TITLE
-curdoc().add_root(row(inputs, column(plot, plot2)))
+curdoc().add_root(row(inputs, column(plot, plot2), column(plot3, plot4)))
