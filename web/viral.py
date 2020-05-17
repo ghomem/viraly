@@ -244,7 +244,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(0, DAYS, DAYS)
-y1, y2, y3, y4, y5,y6 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source1 = ColumnDataSource(data=dict(x=x, y=y1))
@@ -332,6 +332,15 @@ plot.add_layout(transition2_box)
 plot2.add_layout(transition1_box)
 plot2.add_layout(confinement_box)
 plot2.add_layout(transition2_box)
+
+
+plot3.add_layout(transition1_box)
+plot3.add_layout(confinement_box)
+plot3.add_layout(transition2_box)
+
+plot4.add_layout(transition1_box)
+plot4.add_layout(confinement_box)
+plot4.add_layout(transition2_box)
 
 # Set up layouts and add to document
 inputs = column(population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button)
