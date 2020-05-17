@@ -106,6 +106,8 @@ DRATE_STEP  = 0.5
 PAGE_TITLE  ='3 stage epidemic simulator'
 PLOT_TITLE  ='Active'
 PLOT2_TITLE ='New, Recovered, Dead'
+PLOT3_TITLE ='R_t estimation'
+PLOT4_TITLE ='Immunity'
 
 T_LABEL     = 'Infectious Period'
 I_LABEL     = 'Incubation Period'
@@ -289,7 +291,7 @@ hover3 = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="vlin
 hover3.point_policy='snap_to_data'
 hover3.line_policy='nearest'
 
-plot3 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
+plot3 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT3_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
 plot3.xaxis.axis_label = PLOT_X_LABEL
 plot3.yaxis.axis_label = PLOT_Y_LABEL
 plot3.add_tools(hover3)
@@ -303,7 +305,7 @@ hover4 = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="vlin
 hover4.point_policy='snap_to_data'
 hover4.line_policy='nearest'
 
-plot4 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
+plot4 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT4_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
 plot4.xaxis.axis_label = PLOT_X_LABEL
 plot4.yaxis.axis_label = PLOT_Y_LABEL
 plot4.add_tools(hover4)
