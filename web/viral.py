@@ -155,11 +155,11 @@ def get_data(x, pop, n0, period, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, 
     top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True )
 
     # calculate % of initial population which is immunized
-    r_history  = top_level[2]
-    im_history = list ( numpy.array( r_history ) * (100/M) )
+    ra_history  = top_level[6]
+    im_history = list ( numpy.array( ra_history ) * (100/M) )
 
     # Active, New, Recovered, Dead, Rt, Immunized
-    return top_level[0], top_level[1], r_history, top_level[3], top_level[8], im_history
+    return top_level[0], top_level[1], top_level[2], top_level[3], top_level[8], im_history
 
 # callback function dor updating the data
 def update_data(attrname, old, new):
