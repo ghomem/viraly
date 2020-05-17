@@ -20,7 +20,7 @@ from viraly import *
 PLOT_TOOLS  ='save,reset,pan,wheel_zoom,box_zoom'
 PLOT_HEIGHT = 400
 PLOT_WIDTH  = 600
-STATS_WIDTH = 300
+TEXT_WIDTH = 300
 
 PLOT_LINE_WIDTH = 3
 PLOT_LINE_ALPHA = 0.6
@@ -256,10 +256,10 @@ drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_
 button = Button(label="Reset", button_type="default")
 
 # text widgets
-intro   = Div(text='', width=STATS_WIDTH)
-summary = Div(text='', width=STATS_WIDTH)
-stats   = Div(text='', width=STATS_WIDTH)
-notes   = Div(text='', width=STATS_WIDTH)
+intro   = Div(text='', width=TEXT_WIDTH)
+summary = Div(text='', width=TEXT_WIDTH)
+stats   = Div(text='', width=TEXT_WIDTH)
+notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
@@ -379,7 +379,7 @@ stats.text    = stats_str
 notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
-notespacer = Spacer(width=STATS_WIDTH, height=10, width_policy='auto', height_policy='fixed')
+notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 inputs = column(intro, population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
