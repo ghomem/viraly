@@ -244,15 +244,13 @@ button.on_click(reset_data)
 x = np.linspace(0, DAYS, DAYS)
 y1, y2, y3, y4, y5,y6 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
-# Active, New, Recovered, Dead, Rt, pct Immunized
+# Active, New, Recovered, Dead, Rt, % Immunine
 source1 = ColumnDataSource(data=dict(x=x, y=y1))
 source2 = ColumnDataSource(data=dict(x=x, y=y2))
 source3 = ColumnDataSource(data=dict(x=x, y=y3))
 source4 = ColumnDataSource(data=dict(x=x, y=y4))
 source5 = ColumnDataSource(data=dict(x=x, y=y5))
 source6 = ColumnDataSource(data=dict(x=x, y=y6))
-
-# TODO centralize plots labels
 
 # plot 1
 
@@ -297,7 +295,7 @@ plot3.yaxis.axis_label = PLOT_Y_LABEL
 plot3.add_tools(hover3)
 plot3.toolbar.active_inspect = None
 
-plot3.line('x', 'y', source=source1, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Rt' )
+plot3.line('x', 'y', source=source5, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Rt' )
 
 # plot 4
 
@@ -311,7 +309,7 @@ plot4.yaxis.axis_label = PLOT_Y_LABEL
 plot4.add_tools(hover4)
 plot4.toolbar.active_inspect = None
 
-plot4.line('x', 'y', source=source1, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
+plot4.line('x', 'y', source=source6, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
 
 # highlight phases with boxes
 transition1_begin = duration1.value
