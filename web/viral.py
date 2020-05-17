@@ -291,7 +291,7 @@ hover3 = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="vlin
 hover3.point_policy='snap_to_data'
 hover3.line_policy='nearest'
 
-plot3 = figure(PLOT_height=PLOT_HEIGHT, PLOT_width=PLOT_WIDTH, title=PLOT_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
+plot3 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
 plot3.xaxis.axis_label = PLOT_X_LABEL
 plot3.yaxis.axis_label = PLOT_Y_LABEL
 plot3.add_tools(hover3)
