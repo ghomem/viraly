@@ -24,8 +24,9 @@ PLOT_WIDTH  = 600
 PLOT_LINE_WIDTH = 3
 PLOT_LINE_ALPHA = 0.6
 
-PLOT_X_LABEL = 'Days'
-PLOT_Y_LABEL = 'Count'
+PLOT_X_LABEL  = 'Days'
+PLOT_Y_LABEL  = 'Count'
+PLOT_Y_LABEL2 = 'Value'
 
 PLOT_LINE_ACTIVE_COLOR    = 'blue'
 PLOT_LINE_NEW_COLOR       = 'red'
@@ -256,7 +257,7 @@ source6 = ColumnDataSource(data=dict(x=x, y=y6))
 
 # plot 1
 
-hover = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="vline" )
+hover = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover.point_policy='snap_to_data'
 hover.line_policy='nearest'
 
@@ -271,7 +272,7 @@ plot.line('x', 'y', source=source1, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_
 # plot 2
 
 # using mode="mouse" because the vline mode produces overlapping tooltips when multiple lines are used
-hover2 = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="mouse" )
+hover2 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
 hover2.point_policy='snap_to_data'
 hover2.line_policy='nearest'
 
@@ -287,13 +288,13 @@ plot.toolbar.active_inspect = None
 
 # plot 3
 
-hover3 = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="vline" )
+hover3 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0}")], mode="vline" )
 hover3.point_policy='snap_to_data'
 hover3.line_policy='nearest'
 
 plot3 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT3_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
 plot3.xaxis.axis_label = PLOT_X_LABEL
-plot3.yaxis.axis_label = PLOT_Y_LABEL
+plot3.yaxis.axis_label = PLOT_Y_LABEL2
 plot3.add_tools(hover3)
 plot3.toolbar.active_inspect = None
 
@@ -301,13 +302,13 @@ plot3.line('x', 'y', source=source5, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT
 
 # plot 4
 
-hover4 = HoverTool(tooltips=[ ("day", "$index"), ("count", "@y{0}")], mode="vline" )
+hover4 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0}")], mode="vline" )
 hover4.point_policy='snap_to_data'
 hover4.line_policy='nearest'
 
 plot4 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT4_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
 plot4.xaxis.axis_label = PLOT_X_LABEL
-plot4.yaxis.axis_label = PLOT_Y_LABEL
+plot4.yaxis.axis_label = PLOT_Y_LABEL2
 plot4.add_tools(hover4)
 plot4.toolbar.active_inspect = None
 
