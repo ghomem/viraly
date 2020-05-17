@@ -8,7 +8,7 @@ import numpy as np
 
 from bokeh.io import curdoc
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, Slider, TextInput, BoxAnnotation, HoverTool, Button, Spacer
+from bokeh.models import ColumnDataSource, Slider, TextInput, BoxAnnotation, HoverTool, Button, Spacer, PreText, Div
 from bokeh.plotting import figure
 
 # imports from separate  file
@@ -20,6 +20,7 @@ from viraly import *
 PLOT_TOOLS  ='save,reset,pan,wheel_zoom,box_zoom'
 PLOT_HEIGHT = 400
 PLOT_WIDTH  = 600
+STATS_WIDTH = 300
 
 PLOT_LINE_WIDTH = 3
 PLOT_LINE_ALPHA = 0.6
@@ -40,8 +41,9 @@ CMD_PYTHON = '/usr/bin/python3'
 
 # Population
 POP_MIN   = 1
-POP_MAX   = 1300
+POP_MAX   = 330
 POP_START = 10.2
+POP_STEP  = 0.5
 
 # Initial infections
 IIF_MIN   = 0
@@ -100,14 +102,14 @@ BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
 DRATE_MAX   = 100
-DRATE_START = 3
-DRATE_STEP  = 0.5
+DRATE_START = 0.5
+DRATE_STEP  = 0.25
 
 # labels and strings
 PAGE_TITLE  ='3 stage epidemic simulator'
 PLOT_TITLE  ='Active'
 PLOT2_TITLE ='New, Recovered, Dead'
-PLOT3_TITLE ='R_t estimation'
+PLOT3_TITLE ='Rt estimation'
 PLOT4_TITLE ='Immunity'
 
 T_LABEL     = 'Infectious Period'
@@ -123,6 +125,9 @@ BETA2_LABEL = 'Beta during confinement (x10)'
 BETA3_LABEL = 'Beta after confinement (x10)'
 DRATE_LABEL = 'Death rate (%)'
 
+TEXT_INTRO   = '<b>Use the mouse for initial selection and cursors for fine tuning:</b>'
+TEXT_SUMMARY = 'Summary stats:'
+TEXT_NOTES   ='<b>Notes:</b><br/>&bull; Confinement phase is highlighted in red.<br/>&bull; Adjacent highlights represent transitions.<br/>&bull; Source available at github.com/ghomem/viraly'
 ### End of configuration
 
 ### Functions
@@ -157,19 +162,32 @@ def get_data(x, pop, n0, period, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, 
     # this function is included from viraly.py
     top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True )
 
+    # dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history ]
+    n_history  = top_level[0]
+    nc_history = top_level[1]
+    r_history  = top_level[2]
+    d_history  = top_level[3]
+    ra_history = top_level[6]
+    rt_history = top_level[8]
+
     # calculate % of initial population which is immunized
-    ra_history  = top_level[6]
     im_history = list ( numpy.array( ra_history ) * (100/M) )
 
+    t_transmissions = int(numpy.array(nc_history).sum())
+    t_recoveries    = int(numpy.array(r_history).sum())
+    t_deaths        = int(numpy.array(d_history).sum())
+
+    ar_stats = [ t_transmissions, t_recoveries, t_deaths ]
+
     # Active, New, Recovered, Dead, Rt, Immunized
-    return top_level[0], top_level[1], top_level[2], top_level[3], top_level[8], im_history
+    return n_history, nc_history, r_history, d_history, rt_history, im_history, ar_stats
 
 # callback function dor updating the data
 def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6, ar_stats = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source1.data = dict(x=x, y=y1)
@@ -193,6 +211,9 @@ def update_data(attrname, old, new):
     transition2_box.left  = transition2_begin
     transition2_box.right = transition2_end
 
+    stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '\nRecoveries: ' + str(ar_stats[1]) + '\nDeaths: ' + str(ar_stats[2])
+    stats.text = stats_str
+
 def reset_data():
     population.value  = POP_START
     iinfections.value = IIF_START
@@ -213,7 +234,7 @@ def reset_data():
 ### Main
 
 # Set up widgets
-population  = Slider(title=POP_LABEL, value=POP_START, start=POP_MIN, end=POP_MAX, step=1)
+population  = Slider(title=POP_LABEL, value=POP_START, start=POP_MIN, end=POP_MAX, step=POP_STEP)
 iinfections = Slider(title=IIF_LABEL, value=IIF_START, start=IIF_MIN, end=IIF_MAX, step=1)
 
 period = Slider(title=T_LABEL, value=T_START, start=T_MIN, end=T_MAX, step=1)
@@ -234,6 +255,11 @@ drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_
 
 button = Button(label="Reset", button_type="default")
 
+# text widgets
+intro   = Div(text='', width=STATS_WIDTH)
+summary = PreText(text='', width=STATS_WIDTH)
+stats   = PreText(text='', width=STATS_WIDTH)
+notes   = Div(text='', width=STATS_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
@@ -245,7 +271,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(0, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6, ar_stats = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source1 = ColumnDataSource(data=dict(x=x, y=y1))
@@ -336,7 +362,6 @@ plot2.add_layout(transition1_box)
 plot2.add_layout(confinement_box)
 plot2.add_layout(transition2_box)
 
-
 plot3.add_layout(transition1_box)
 plot3.add_layout(confinement_box)
 plot3.add_layout(transition2_box)
@@ -345,11 +370,20 @@ plot4.add_layout(transition1_box)
 plot4.add_layout(confinement_box)
 plot4.add_layout(transition2_box)
 
+# misc text
+intro.text    = TEXT_INTRO
+summary.text  = TEXT_SUMMARY
+summary.style = { 'font-weight' : 'bold' }
+stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '\nRecoveries: ' + str(ar_stats[1]) + '\nDeaths: ' + str(ar_stats[2])
+stats.text    = stats_str
+notes.text    = TEXT_NOTES
+
 # Set up layouts and add to document
-inputs = column(population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button)
+notespacer = Spacer(width=STATS_WIDTH, height=40, width_policy='auto', height_policy='fixed')
+inputs = column(intro, population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
 # useful for mobile scrolling on the left side
-vspace = Spacer(width=80, height=400, width_policy='fixed', height_policy='auto')
-curdoc().add_root( row(vspace,inputs, column(plot, plot2), column(plot3, plot4)) )
+leftmargin = Spacer(width=80, height=400, width_policy='fixed', height_policy='auto')
+curdoc().add_root( row(leftmargin,inputs, column(plot, plot2), column(plot3, plot4)) )
