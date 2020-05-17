@@ -166,13 +166,15 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source1.data = dict(x=x, y=y1)
     source2.data = dict(x=x, y=y2)
     source3.data = dict(x=x, y=y3)
     source4.data = dict(x=x, y=y4)
+    source5.data = dict(x=x, y=y5)
+    source6.data = dict(x=x, y=y6)
 
     transition1_begin = duration1.value
     transition1_end   = transition1_begin + transition1.value
@@ -240,7 +242,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(0, DAYS, DAYS)
-y1, y2, y3, y4 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5,y6 = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, pct Immunized
 source1 = ColumnDataSource(data=dict(x=x, y=y1))
