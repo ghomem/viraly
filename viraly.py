@@ -18,7 +18,7 @@ YLABEL_STR = 'Count'
 STATS_STR  = 'transmissions, infections, recoveries, deaths'
 
 # do we prefer model4 over model3?
-PREFER_MOD4 = True
+PREFER_MOD4 = False
 
 # shall we output the other models to the terminal?
 OUTPUT_ALL = False
