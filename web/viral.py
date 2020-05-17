@@ -311,7 +311,7 @@ plot4.yaxis.axis_label = PLOT_Y_LABEL
 plot4.add_tools(hover4)
 plot4.toolbar.active_inspect = None
 
-plot4.line('x', 'y', source=source1, line_width=PLOT4_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
+plot4.line('x', 'y', source=source1, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
 
 # highlight phases with boxes
 transition1_begin = duration1.value
