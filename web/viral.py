@@ -288,7 +288,8 @@ plot.toolbar.active_inspect = None
 
 # plot 3
 
-hover3 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0}")], mode="vline" )
+# custom precision
+hover3 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover3.point_policy='snap_to_data'
 hover3.line_policy='nearest'
 
@@ -302,7 +303,8 @@ plot3.line('x', 'y', source=source5, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT
 
 # plot 4
 
-hover4 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0}")], mode="vline" )
+# custom precision
+hover4 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover4.point_policy='snap_to_data'
 hover4.line_policy='nearest'
 
