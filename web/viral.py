@@ -8,7 +8,7 @@ import numpy as np
 
 from bokeh.io import curdoc
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, Slider, TextInput, BoxAnnotation, HoverTool, Button
+from bokeh.models import ColumnDataSource, Slider, TextInput, BoxAnnotation, HoverTool, Button, Spacer
 from bokeh.plotting import figure
 
 # imports from separate  file
@@ -349,4 +349,7 @@ plot4.add_layout(transition2_box)
 inputs = column(population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button)
 
 curdoc().title = PAGE_TITLE
-curdoc().add_root(row(inputs, column(plot, plot2), column(plot3, plot4)))
+
+# useful for mobile scrolling on the left side
+vspace = Spacer(width=80, height=400, width_policy='fixed', height_policy='auto')
+curdoc().add_root( row(vspace,inputs, column(plot, plot2), column(plot3, plot4)) )
