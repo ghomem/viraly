@@ -74,7 +74,7 @@ TRA_MIN  = 0
 TRA1_MAX = 45
 TRA2_MAX = 60
 
-TRA1_START = 30
+TRA1_START = 20
 TRA2_START = 40
 
 # Simulation time
@@ -102,7 +102,7 @@ BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
 DRATE_MAX   = 100
-DRATE_START = 0.5
+DRATE_START = 1
 DRATE_STEP  = 0.25
 
 # labels and strings
