@@ -130,7 +130,7 @@ TEXT_SUMMARY = 'Stats:'
 TEXT_NOTES   ='<b>Notes:</b><br/>\
               &bull; Confinement phase is highlighted in red.<br/>\
               &bull; Adjacent highlights represent transition periods.<br/>\
-              &bull; Pre/post confinement phases appear in white .<br/>\
+              &bull; Pre/post confinement phases appear in white.<br/>\
               &bull; For each phase &beta; = hp.<br/>\
               &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>'
 ### End of configuration
