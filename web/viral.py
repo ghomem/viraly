@@ -129,9 +129,10 @@ TEXT_INTRO   = 'Use the mouse for initial selection and cursors for fine tuning:
 TEXT_SUMMARY = 'Stats:'
 TEXT_NOTES   ='<b>Notes:</b><br/>\
               &bull; Confinement phase is highlighted in red.<br/>\
-              &bull; Adjacent highlights represent transitions.<br/>\
+              &bull; Adjacent highlights represent transition periods.<br/>\
+              &bull; Pre/post confinement phases appear in white .<br/>\
               &bull; For each phase &beta; = hp.<br/>\
-              &bull; Source is available at github.com/ghomem/viraly'
+              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>'
 ### End of configuration
 
 ### Functions
@@ -345,6 +346,7 @@ plot4.add_tools(hover4)
 plot4.toolbar.active_inspect = None
 
 plot4.line('x', 'y', source=source6, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
+plot4.legend.location = 'bottom_right'
 
 # highlight phases with boxes
 transition1_begin = duration1.value
