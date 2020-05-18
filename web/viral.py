@@ -154,7 +154,7 @@ def get_data(x, pop, n0, period, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, 
 
     L = T_STDEV # global var for now
     tint  = d1
-    tint2 = tmax - (d1 + d2)
+    tint2 = d1 + d2
     progressive = prog_change # bool
     ttime  = tr1
     ttime2 = tr2
