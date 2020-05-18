@@ -166,7 +166,7 @@ def get_parameters ( h, p, h2, p2, t, tint, progressive = False, delta = 14, h3 
 
     # free phase
     if t < tint:
-        #print (t, 'free phase')
+        #print ("debug:", t, h, p, h*p, 'free phase')
         return h, p
 
     # first transition
@@ -177,32 +177,33 @@ def get_parameters ( h, p, h2, p2, t, tint, progressive = False, delta = 14, h3 
             delta_t  = t-(tint+ttime)
             p_h2     = h2 + ((h2-h)/ttime)*delta_t
             p_p2     = p2 + ((p2-p)/ttime)*delta_t
-            #print (t, 'first transition')
+            #print ("debug:", t, p_h2, p_p2, p_h2*p_p2, 'first transition')
             return p_h2, p_p2
 
     # contention phase
     if tint2 > 0 and  t in range(tint + ttime, tint2 ):
-        #print (t, 'contention')
+        #print ("debug:", t, h2, p2, h2*p2, 'contention')
         return h2, p2
 
     # second transition
     if tint2 > 0 and t in range(tint2, tint2 + ttime2):
         if progressive == False:
+            #print ("debug:", t, h3, p3, h3*p3, 'second free')
             return h3, p3
         else:
             delta_t  = t-(tint2+ttime2)
             p_h3     = h3 + ((h3-h2)/ttime2)*delta_t
             p_p3     = p3 + ((p3-p2)/ttime2)*delta_t
-            #print (t, 'second transition')
+            #print ("debug:", t, p_h3, p_p3, p_h3*p_p3, 'second transition')
             return p_h3, p_p3
 
     # either second free phase or contention still
     if t >= tint2 + ttime2 :
         if tint2 > 0:
-            #print (t, 'second free')
+            #print ("debug:", t, h3, p3, h3*p3, 'second free')
             return h3, p3
         else:
-            #print (t, 'contention')
+            #print ("debug:", t, h2, p2, h2*p2, 'contention')
             return h2,p2
 
 # plotting
