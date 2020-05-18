@@ -53,7 +53,7 @@ IIF_START = 4
 # Infectious period
 T_MIN   = 7
 T_MAX   = 50
-T_START = 25
+T_START = 19
 T_STDEV = 2  # this is currently hardcoded, not sure a slider for this adds that much value
 
 # Incubation period
@@ -66,7 +66,7 @@ DUR_MIN  = 1
 DUR1_MAX = 30
 DUR2_MAX = 60
 
-DUR1_START = 18
+DUR1_START = 20
 DUR2_START = 55
 
 # Transition durations
@@ -74,7 +74,7 @@ TRA_MIN  = 0
 TRA1_MAX = 45
 TRA2_MAX = 60
 
-TRA1_START = 20
+TRA1_START = 18
 TRA2_START = 40
 
 # Simulation time
@@ -93,11 +93,11 @@ BETA1_START = 0.46 * 10
 BETA1_STEP  = 0.01
 
 BETA2_MAX   = 0.1   * 10
-BETA2_START = 0.034 * 10
+BETA2_START = 0.036 * 10
 BETA2_STEP  = 0.01
 
 BETA3_MAX   = 0.6   * 10
-BETA3_START = 0.043 * 10
+BETA3_START = 0.057 * 10
 BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
@@ -127,7 +127,11 @@ DRATE_LABEL = 'Death rate (%)'
 
 TEXT_INTRO   = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY = 'Stats:'
-TEXT_NOTES   ='<b>Notes:</b><br/>&bull; Confinement phase is highlighted in red.<br/>&bull; Adjacent highlights represent transitions.<br/>&bull; Source is available at github.com/ghomem/viraly'
+TEXT_NOTES   ='<b>Notes:</b><br/>\
+              &bull; Confinement phase is highlighted in red.<br/>\
+              &bull; Adjacent highlights represent transitions.<br/>\
+              &bull; For each phase &beta; = hp.<br/>\
+              &bull; Source is available at github.com/ghomem/viraly'
 ### End of configuration
 
 ### Functions
