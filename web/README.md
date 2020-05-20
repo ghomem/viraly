@@ -9,4 +9,4 @@ cd $MYDIR
 bokeh serve --allow-websocket-origin=lo.gic.li  viral.py
 ```
 
-For production use an nginx (or equivalent reverse proxy) should be put in from of the web application.
+For production use an nginx (or equivalent reverse proxy) should be put in front of the web application.
