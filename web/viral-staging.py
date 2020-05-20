@@ -55,7 +55,7 @@ IIF_START = 4
 T_MIN   = 7
 T_MAX   = 50
 T_START = 19
-T_STDEV = 2  # this is currently hardcoded, not sure a slider for this adds that much value
+T_STDEV = 4  # this is currently hardcoded, not sure a slider for this adds that much value
 
 # Incubation period
 I_MIN   = 1
@@ -361,14 +361,14 @@ plot4.legend.location = 'bottom_right'
 
 # plot 5
 
-hover5 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0}")], mode="vline" )
+hover5 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover5.point_policy='snap_to_data'
 hover5.line_policy='nearest'
 
 plot5 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT5_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
 plot5.xaxis.axis_label = PLOT_X_LABEL
-plot5.yaxis.axis_label = PLOT_Y_LABEL2
-plot5.add_tools(hover3)
+plot5.yaxis.axis_label = PLOT_Y_LABEL
+plot5.add_tools(hover5)
 plot5.toolbar.active_inspect = None
 
 plot5.line('x', 'y', source=source_dead, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Dead' )
@@ -390,15 +390,14 @@ plot6.legend.location = 'bottom_right'
 plot6.add_tools(hover6)
 plot.toolbar.active_inspect = None
 
-# custom precision
-hover7 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0}")], mode="vline" )
+hover7 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover7.point_policy='snap_to_data'
 hover7.line_policy='nearest'
 
 plot7 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT7_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
 plot7.xaxis.axis_label = PLOT_X_LABEL
-plot7.yaxis.axis_label = PLOT_Y_LABEL2
-plot7.add_tools(hover3)
+plot7.yaxis.axis_label = PLOT_Y_LABEL
+plot7.add_tools(hover7)
 plot7.toolbar.active_inspect = None
 
 plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Deaths' )
