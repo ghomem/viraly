@@ -313,7 +313,6 @@ plot2.yaxis.axis_label = PLOT_Y_LABEL
 
 plot2.line('x', 'y', source=source2, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='New' )
 plot2.line('x', 'y', source=source3, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Recovered')
-plot2.line('x', 'y', source=source4, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR,      legend_label='Dead')
 plot2.add_tools(hover2)
 plot.toolbar.active_inspect = None
 
@@ -361,7 +360,7 @@ plot5.yaxis.axis_label = PLOT_Y_LABEL2
 plot5.add_tools(hover3)
 plot5.toolbar.active_inspect = None
 
-plot5.line('x', 'y', source=source5, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Dead' )
+plot5.line('x', 'y', source=source4, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Dead' )
 
 # highlight phases with boxes
 transition1_begin = duration1.value
@@ -411,4 +410,4 @@ curdoc().title = PAGE_TITLE
 
 # useful for mobile scrolling on the left side
 leftmargin = Spacer(width=80, height=400, width_policy='fixed', height_policy='auto')
-curdoc().add_root( row(leftmargin,inputs, column(plot, plot2), column(plot3, plot5, plot4)) )
+curdoc().add_root( row(leftmargin,inputs, column(plot, plot2), column(plot5, plot5), column(plot3, plot4)) )
