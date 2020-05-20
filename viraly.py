@@ -466,7 +466,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
         plt1.show(block = True)
     else:
         # the list cast is only to uniformized because some of the elements were converted to numpy arrays
-        dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history ]
+        dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
 
         return dataset
 
