@@ -348,6 +348,21 @@ plot4.toolbar.active_inspect = None
 plot4.line('x', 'y', source=source6, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
 plot4.legend.location = 'bottom_right'
 
+# plot 5
+
+# custom precision
+hover5 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
+hover5.point_policy='snap_to_data'
+hover5.line_policy='nearest'
+
+plot5 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT3_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
+plot5.xaxis.axis_label = PLOT_X_LABEL
+plot5.yaxis.axis_label = PLOT_Y_LABEL2
+plot5.add_tools(hover3)
+plot5.toolbar.active_inspect = None
+
+plot5.line('x', 'y', source=source5, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Dead' )
+
 # highlight phases with boxes
 transition1_begin = duration1.value
 transition1_end   = transition1_begin + transition1.value
@@ -376,6 +391,10 @@ plot4.add_layout(transition1_box)
 plot4.add_layout(confinement_box)
 plot4.add_layout(transition2_box)
 
+plot5.add_layout(transition1_box)
+plot5.add_layout(confinement_box)
+plot5.add_layout(transition2_box)
+
 # misc text
 intro.text    = TEXT_INTRO
 summary.text  = TEXT_SUMMARY
@@ -392,4 +411,4 @@ curdoc().title = PAGE_TITLE
 
 # useful for mobile scrolling on the left side
 leftmargin = Spacer(width=80, height=400, width_policy='fixed', height_policy='auto')
-curdoc().add_root( row(leftmargin,inputs, column(plot, plot2), column(plot3, plot4)) )
+curdoc().add_root( row(leftmargin,inputs, column(plot, plot2), column(plot3, plot5, plot4)) )
