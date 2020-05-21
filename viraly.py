@@ -505,7 +505,7 @@ def main():
     tint  = int  (myparams_list[7])  # time with initial parameters (i.e., before contention)
     tmax  = int  (myparams_list[8])  # total time
     M     = float(myparams_list[9])  # population size
-    N0    = float(myparams_list[10])  # initial number of infections
+    N0    = float(myparams_list[10]) # initial number of infections
     DR    = float(myparams_list[11]) # death rate
 
     if len(myparams_list) > 12:
@@ -542,9 +542,21 @@ def main():
         print('tint2 must be greater than', tint, '+', ttime)
         exit(E_ERR)
 
-    # simulation
+    # this is another bonus for the web version which does not break the historical CLI usage:
+    #   we allow them model selection to be done as a function of the value of L:
+    #     if L = 0 -> model 3
+    #     if L > 0 -> model 4
 
-    dataset = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent )
+    # simulation
+    if len(myparams_list) > 18:
+        if L == 0:
+            prefer_mod4 = False
+        else:
+            prefer_mod4 = True
+    else:
+        prefer_mod4 = PREFER_MOD4
+
+    dataset = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4 )
     #print(dataset)
  
 ### Main block ###
