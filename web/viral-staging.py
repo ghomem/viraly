@@ -55,7 +55,11 @@ IIF_START = 4
 T_MIN   = 7
 T_MAX   = 50
 T_START = 19
-T_STDEV = 4  # this is currently hardcoded, not sure a slider for this adds that much value
+
+# and its Standard Deviation
+T_STDEV_MIN   = 0
+T_STDEV_MAX   = 3
+T_STDEV_START = 0
 
 # Incubation period
 I_MIN   = 1
@@ -116,22 +120,23 @@ PLOT5_TITLE ='Dead'
 PLOT6_TITLE ='Accumulated cases / recoveries'
 PLOT7_TITLE ='Accumulated deaths'
 
-T_LABEL     = 'Infectious Period'
-I_LABEL     = 'Incubation Period'
-POP_LABEL   = 'Population (Millions)'
-IIF_LABEL   = 'Initial number of infections'
-DUR1_LABEL  = 'Free expansion duration'
-DUR2_LABEL  = 'Confinement duration (including transition)'
-TRA1_LABEL  = 'Transition to confinement duration'
-TRA2_LABEL  = 'Transition to deconfinement duration'
-BETA1_LABEL = 'Beta during free expansion (x10)'
-BETA2_LABEL = 'Beta during confinement (x10)'
-BETA3_LABEL = 'Beta after confinement (x10)'
-DRATE_LABEL = 'Death rate (%)'
+T_LABEL       = 'Infectious Period'
+T_STDEV_LABEL = 'Infectious Period Standard Deviation'
+I_LABEL       = 'Incubation Period'
+POP_LABEL     = 'Population (Millions)'
+IIF_LABEL     = 'Initial number of infections'
+DUR1_LABEL    = 'Free expansion duration'
+DUR2_LABEL    = 'Confinement duration (including transition)'
+TRA1_LABEL    = 'Transition to confinement duration'
+TRA2_LABEL    = 'Transition to deconfinement duration'
+BETA1_LABEL   = 'Beta during free expansion (x10)'
+BETA2_LABEL   = 'Beta during confinement (x10)'
+BETA3_LABEL   = 'Beta after confinement (x10)'
+DRATE_LABEL   = 'Death rate (%)'
 
-TEXT_INTRO   = 'Use the mouse for initial selection and cursors for fine tuning:'
-TEXT_SUMMARY = 'Stats:'
-TEXT_NOTES   ='<b>Notes:</b><br/>\
+TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
+TEXT_SUMMARY  = 'Stats:'
+TEXT_NOTES    ='<b>Notes:</b><br/>\
               &bull; Confinement phase is highlighted in red.<br/>\
               &bull; Adjacent highlights represent transition periods.<br/>\
               &bull; Pre/post confinement phases appear in white.<br/>\
@@ -142,7 +147,7 @@ TEXT_NOTES   ='<b>Notes:</b><br/>\
 ### Functions
 
 # the function that we are plotting
-def get_data(x, pop, n0, period, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change ):
+def get_data(x, pop, n0, period, period_stdev, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change ):
 
     h  = 1
     p  = float (b1 / 10) # input is multiplied by 10 for precision on the sliders
@@ -154,9 +159,9 @@ def get_data(x, pop, n0, period, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, 
     I  = incubation
     N0 = n0
     DR = float(dr/100) # input is in percentage
-    M =  pop*1000000   # input is in millions
+    M  =  pop*1000000   # input is in millions
+    L  = period_stdev
 
-    L = T_STDEV # global var for now
     tint  = d1
     tint2 = d1 + d2
     progressive = prog_change # bool
@@ -168,8 +173,14 @@ def get_data(x, pop, n0, period, incubation, d1, d2, tr1, tr2, b1, b2,b3, tmax, 
                                                                                                                           progressive=progressive, ttime=ttime, h3=h3, p3=p3, tint2=tint2, ttime2=ttime2)
     print(str_params)
 
+    # decide which model to use based on the value of L
+    if L == 0:
+        prefer_mod4 = False
+    else:
+        prefer_mod4 = True
+
     # this function is included from viraly.py
-    top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True )
+    top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True, prefer_mod4 )
 
     # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
     n_history  = top_level[0]
@@ -198,7 +209,7 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6, y7, y8, y9, ar_stats = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6, y7, y8, y9, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source_active.data = dict(x=x, y=y1)
@@ -251,7 +262,8 @@ def reset_data():
 population  = Slider(title=POP_LABEL, value=POP_START, start=POP_MIN, end=POP_MAX, step=POP_STEP)
 iinfections = Slider(title=IIF_LABEL, value=IIF_START, start=IIF_MIN, end=IIF_MAX, step=1)
 
-period = Slider(title=T_LABEL, value=T_START, start=T_MIN, end=T_MAX, step=1)
+period       = Slider(title=T_LABEL,       value=T_START,       start=T_MIN,       end=T_MAX,       step=1)
+period_stdev = Slider(title=T_STDEV_LABEL, value=T_STDEV_START, start=T_STDEV_MIN, end=T_STDEV_MAX, step=1)
 
 incubation = Slider(title=I_LABEL, value=I_START, start=I_MIN, end=I_MAX, step=1)
 
@@ -277,7 +289,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, incubation, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
+for w in [population, iinfections, period, period_stdev, incubation, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
@@ -285,7 +297,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(0, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6, y7, y8, y9, ar_stats = get_data(x, population.value, iinfections.value, period.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6, y7, y8, y9, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, incubation.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source_active = ColumnDataSource(data=dict(x=x, y=y1))
@@ -453,7 +465,7 @@ notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
-inputs = column(intro, population, iinfections, period, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
+inputs = column(intro, population, iinfections, period, period_stdev, incubation, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
