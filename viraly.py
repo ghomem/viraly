@@ -542,7 +542,7 @@ def main():
         print('tint2 must be greater than', tint, '+', ttime)
         exit(E_ERR)
 
-    # this is another bonus for the web version which does not break the historical CLI usage:
+    # this is another bonus for external tools integration which does not break the historical CLI usage:
     #   we allow them model selection to be done as a function of the value of L:
     #     if L = 0 -> model 3
     #     if L > 0 -> model 4
