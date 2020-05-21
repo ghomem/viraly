@@ -256,7 +256,7 @@ def print_output ( t, x1, x2, x3_data, x4_data , prefer_x4 = False, output_all =
 
 # main simulation function
 
-def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent ):
+def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4 = PREFER_MOD4 ):
 
     # initial infections
     n1 = N0
@@ -305,7 +305,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
     sp = p
 
     # initial situation
-    print_output (0, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
+    print_output (0, n1, n2, n3_data, n4_data, prefer_mod4, OUTPUT_ALL, silent )
 
     for t in range (1, tmax):
         # get new cases for the dummy models (new cases = active cases as there are no outgoers here)
@@ -356,7 +356,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 
         n3_data = [ n3, nc3, o3, m3, rt3 ]
         n4_data = [ n4, nc4, o4, m4, rt4 ]
-        print_output (t, n1, n2, n3_data, n4_data, PREFER_MOD4, OUTPUT_ALL, silent )
+        print_output (t, n1, n2, n3_data, n4_data, prefer_mod4, OUTPUT_ALL, silent )
 
     # deaths vs recoveries
 
@@ -367,7 +367,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 
     # choose which epidemic model in use from here on
 
-    if PREFER_MOD4:
+    if prefer_mod4:
         n_final    = n4
         m_final    = m4
         n_history  = n4_history
