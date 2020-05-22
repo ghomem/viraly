@@ -240,18 +240,19 @@ def update_data(attrname, old, new):
     stats.text = stats_str
 
 def reset_data():
-    population.value  = POP_START
-    iinfections.value = IIF_START
-    period.value      = T_START
-    incubation.value  = I_START
-    duration1.value   = DUR1_START
-    duration2.value   = DUR2_START
-    transition1.value = TRA1_START
-    transition2.value = TRA2_START
-    beta1.value       = BETA1_START
-    beta2.value       = BETA2_START
-    beta3.value       = BETA3_START
-    drate.value       = DRATE_START
+    population.value   = POP_START
+    iinfections.value  = IIF_START
+    period.value       = T_START
+    period_stdev.value = T_STDEV_START
+    incubation.value   = I_START
+    duration1.value    = DUR1_START
+    duration2.value    = DUR2_START
+    transition1.value  = TRA1_START
+    transition2.value  = TRA2_START
+    beta1.value        = BETA1_START
+    beta2.value        = BETA2_START
+    beta3.value        = BETA3_START
+    drate.value        = DRATE_START
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
