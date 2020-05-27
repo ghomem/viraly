@@ -59,7 +59,7 @@ T_START = 19
 # and its Standard Deviation
 T_STDEV_MIN   = 0
 T_STDEV_MAX   = 3
-T_STDEV_START = 0
+T_STDEV_START = 2
 
 # Incubation period
 I_MIN   = 1
@@ -98,7 +98,7 @@ BETA1_START = 0.46 * 10
 BETA1_STEP  = 0.01
 
 BETA2_MAX   = 0.1   * 10
-BETA2_START = 0.036 * 10
+BETA2_START = 0.042 * 10
 BETA2_STEP  = 0.01
 
 BETA3_MAX   = 0.6   * 10
@@ -106,9 +106,9 @@ BETA3_START = 0.057 * 10
 BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
-DRATE_MAX   = 100
-DRATE_START = 1
-DRATE_STEP  = 0.25
+DRATE_MAX   = 50
+DRATE_START = 0.85
+DRATE_STEP  = 0.05
 
 # labels and strings
 PAGE_TITLE  ='3 stage epidemic simulator'
