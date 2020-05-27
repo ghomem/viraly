@@ -108,7 +108,7 @@ BETA3_STEP  = 0.01
 DRATE_MIN   = 0
 DRATE_MAX   = 100
 DRATE_START = 1
-DRATE_STEP  = 0.25
+DRATE_STEP  = 0.125
 
 # labels and strings
 PAGE_TITLE  ='3 stage epidemic simulator'
