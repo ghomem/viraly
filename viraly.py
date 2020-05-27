@@ -95,9 +95,14 @@ def get_older_model4 ( time, history, M, T, L ):
     aux_nc   = 0
     count    = 0
 
+    if L == 0:
+        L_effective = 1
+    else:
+        L_effective = L
+
     for j in range (0, time):
         aux_nc = history[j]
-        aux_n = aux_nc*get_fraction( j + T , L, time-1, time )
+        aux_n = aux_nc*get_fraction( j + T, L_effective, time-1, time )
         count = count + aux_n
 
     return count
