@@ -323,6 +323,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
         h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
 
         # but nc3i and nc4i go for incubation still and we need to fetch the ones that are ready to infect
+        # in the SIER model incubation cases are called "Exposed" - they are infected but not infectious
         # note: we need to append before popping to support the case where the incubation time is 1 
         # which recovers the tried and tested behaviour we had before introducing this parameter
         incubator3.appendleft(nc3i)
@@ -348,10 +349,11 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
         n3_history.append(n3)
         n4_history.append(n4)
 
-        # neither the outgoing nor the infected are available targets for new infections
-        # but infected are still infecting causing new infections
-        m3 = max(m3 - nc3,0)
-        m4 = max(m4 - nc4,0)
+        # neither the outgoing nor the exposed (i.e. in incubation) are available targets for new infections
+        # but the infected are still causing new infections
+        # note: we remove the cases for the susceptibles pool as soon as they are exposed (nc3i instead of nc3, etc)
+        m3 = max(m3 - nc3i, 0)
+        m4 = max(m4 - nc4i, 0)
 
         m3_history.append(m3)
         m4_history.append(m4)
