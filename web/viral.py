@@ -59,7 +59,7 @@ T_START = 19
 # and its Standard Deviation
 T_STDEV_MIN   = 0
 T_STDEV_MAX   = 3
-T_STDEV_START = 2
+T_STDEV_START = 3
 
 # Incubation period
 I_MIN   = 1
@@ -80,7 +80,7 @@ TRA1_MAX = 45
 TRA2_MAX = 60
 
 TRA1_START = 18
-TRA2_START = 40
+TRA2_START = 30
 
 # Simulation time
 DAYS = 150 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
@@ -98,11 +98,11 @@ BETA1_START = 0.46 * 10
 BETA1_STEP  = 0.01
 
 BETA2_MAX   = 0.1   * 10
-BETA2_START = 0.042 * 10
+BETA2_START = 0.039 * 10
 BETA2_STEP  = 0.01
 
 BETA3_MAX   = 0.6   * 10
-BETA3_START = 0.057 * 10
+BETA3_START = 0.055 * 10
 BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
