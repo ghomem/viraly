@@ -68,11 +68,11 @@ I_START = 1
 
 # Stage durations 
 DUR_MIN  = 1
-DUR1_MAX = 55
+DUR1_MAX = 30
 DUR2_MAX = 60
 
 DUR1_START = 20
-DUR2_START = 30
+DUR2_START = 55
 
 # Transition durations
 TRA_MIN  = 0
