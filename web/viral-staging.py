@@ -68,7 +68,7 @@ I_START = 1
 
 # Stage durations 
 DUR_MIN  = 1
-DUR1_MAX = 30
+DUR1_MAX = 55
 DUR2_MAX = 60
 
 DUR1_START = 20
@@ -80,7 +80,7 @@ TRA1_MAX = 45
 TRA2_MAX = 60
 
 TRA1_START = 18
-TRA2_START = 40
+TRA2_START = 30
 
 # Simulation time
 DAYS = 150 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
