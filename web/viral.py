@@ -49,7 +49,7 @@ POP_STEP  = 0.5
 # Initial infections
 IIF_MIN   = 0
 IIF_MAX   = 50
-IIF_START = 4
+IIF_START = 5
 
 # Infectious period
 T_MIN   = 7
@@ -83,7 +83,7 @@ TRA1_START = 18
 TRA2_START = 30
 
 # Simulation time
-DAYS = 150 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
+DAYS = 180 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
 
 # Propagation rate parameters
 #
@@ -98,16 +98,16 @@ BETA1_START = 0.46 * 10
 BETA1_STEP  = 0.01
 
 BETA2_MAX   = 0.1   * 10
-BETA2_START = 0.039 * 10
+BETA2_START = 0.041 * 10
 BETA2_STEP  = 0.01
 
 BETA3_MAX   = 0.6   * 10
-BETA3_START = 0.055 * 10
+BETA3_START = 0.053 * 10
 BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
 DRATE_MAX   = 50
-DRATE_START = 0.85
+DRATE_START = 0.50
 DRATE_STEP  = 0.05
 
 # labels and strings
