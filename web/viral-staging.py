@@ -83,7 +83,7 @@ TRA1_START = 18
 TRA2_START = 30
 
 # Simulation time
-DAYS = 150 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
+DAYS = 180 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
 
 # Propagation rate parameters
 #
