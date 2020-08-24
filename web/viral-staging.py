@@ -61,7 +61,7 @@ T_STDEV_MIN   = 0
 T_STDEV_MAX   = 3
 T_STDEV_START = 3
 
-# Latent period 
+# Latent period
 # Not the same as incubation period, and can be shorter:
 # https://en.wikipedia.org/wiki/Latent_period_(epidemiology)
 L_MIN   = 1
