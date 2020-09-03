@@ -405,7 +405,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 
     # prepare some acumulated data
 
-    j = 0
+    j = 1
     na_history = []
     da_history = []
     ra_history = []
