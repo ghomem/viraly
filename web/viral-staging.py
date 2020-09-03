@@ -170,16 +170,20 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     ttime  = tr1
     ttime2 = tr2
 
-    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2, \
-                                                                                                                          tint=tint, tmax=tmax, M=M, N0=N0, DR=DR, \
-                                                                                                                          progressive=progressive, ttime=ttime, h3=h3, p3=p3, tint2=tint2, ttime2=ttime2)
-    print(str_params)
-
     # decide which model to use based on the value of L
     if L == 0:
         prefer_mod4 = False
     else:
         prefer_mod4 = True
+
+    silent = True
+
+    # prepare debug friendly string
+    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{silent},{prefer_mod4}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,       \
+                                                                                                                                                     tint=tint, tmax=tmax, M=M, N0=N0, DR=DR,           \
+                                                                                                                                                     progressive=progressive, ttime=ttime, h3=h3, p3=p3,\
+                                                                                                                                                     tint2=tint2, ttime2=ttime2, silent=silent, prefer_mod4=prefer_mod4)
+    print(str_params)
 
     # this function is included from viraly.py
     top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True, prefer_mod4 )
@@ -203,7 +207,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
 
     ar_stats = [ t_transmissions, t_recoveries, t_deaths ]
 
-    # Active, New, Recovered, Dead, Rt, Immunized
+    # Active, New, Recovered, Dead, Rt, Immunized + accumulated Cases, Recoveries and Deaths + Stats
     return n_history, nc_history, r_history, d_history, rt_history, im_history, na_history, ra_history, da_history, ar_stats
 
 # callback function dor updating the data
