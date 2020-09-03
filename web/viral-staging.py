@@ -176,17 +176,16 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     else:
         prefer_mod4 = True
 
-    silent = True
-
-    # prepare debug friendly string
-    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{silent},{prefer_mod4}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,       \
-                                                                                                                                                     tint=tint, tmax=tmax, M=M, N0=N0, DR=DR,           \
-                                                                                                                                                     progressive=progressive, ttime=ttime, h3=h3, p3=p3,\
-                                                                                                                                                     tint2=tint2, ttime2=ttime2, silent=silent, prefer_mod4=prefer_mod4)
+    # prepare debug friendly string for CLI troubleshoot
+    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{prefer_mod4}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,       \
+                                                                                                                                            tint=tint, tmax=tmax, M=M, N0=N0, DR=DR,           \
+                                                                                                                                            progressive=progressive, ttime=ttime, h3=h3, p3=p3,\
+                                                                                                                                            tint2=tint2, ttime2=ttime2, prefer_mod4=prefer_mod4)
     print(str_params)
 
     # this function is included from viraly.py
-    top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, True, prefer_mod4 )
+    silent = True
+    top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4 )
 
     # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
     n_history  = top_level[0]
