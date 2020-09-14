@@ -101,7 +101,7 @@ Example 8: output of early erratication case due to sub critical hp for model 4:
 
 **Bonus section**
 
-There are extra parameters not documented here which can be checkend on the source code. With those parameters a 3 stage simulation can be performed and the script can be integrated with an external application as demonstrated in this [web frontend](https://lo.gic.li/viral).
+There are extra parameters not documented here which can be checkend on the source code. With those parameters a 3 stage simulation can be performed and this command line program can be integrated with an external application as demonstrated in this [web frontend](https://lo.gic.li/viral).
 
 **Disclaimer**
 
