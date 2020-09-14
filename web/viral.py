@@ -112,6 +112,9 @@ DRATE_MAX   = 50
 DRATE_START = 0.50
 DRATE_STEP  = 0.05
 
+# for the incidence plot
+INCIDENCE_PERIOD = 14
+
 # labels and strings
 PAGE_TITLE  ='3 stage epidemic simulator'
 PLOT_TITLE  ='Active'
@@ -121,6 +124,7 @@ PLOT4_TITLE ='Immunity'
 PLOT5_TITLE ='Dead'
 PLOT6_TITLE ='Accumulated cases / recoveries'
 PLOT7_TITLE ='Accumulated deaths'
+PLOT8_TITLE =str(INCIDENCE_PERIOD) + ' day incidence per 100m habitants'
 
 T_LABEL       = 'Infectious Period'
 T_STDEV_LABEL = 'Infectious Period Standard Deviation'
@@ -200,6 +204,15 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     # calculate % of initial population which is immunized
     im_history = list ( numpy.array( ra_history ) * (100/M) )
 
+    # calculate standard 14 day incidence
+    ic_history = []
+    i = 0
+    for j in nc_history:
+        # list slicing tolerates going back more than possible, by returning an emtpy list <3
+        my_incidence = numpy.array( nc_history[ i - ( INCIDENCE_PERIOD + 1 ) : i-1 ] ).sum() / ( population.value / 0.1 )
+        ic_history.append( my_incidence )
+        i = i + 1
+
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())
     t_deaths        = int(numpy.array(d_history).sum())
@@ -207,14 +220,14 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     ar_stats = [ t_transmissions, t_recoveries, t_deaths ]
 
     # Active, New, Recovered, Dead, Rt, Immunized + accumulated Cases, Recoveries and Deaths + Stats
-    return n_history, nc_history, r_history, d_history, rt_history, im_history, na_history, ra_history, da_history, ar_stats
+    return n_history, nc_history, r_history, d_history, rt_history, im_history, na_history, ra_history, da_history, ic_history, ar_stats
 
 # callback function dor updating the data
 def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6, y7, y8, y9, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source_active.data = dict(x=x, y=y1)
@@ -226,6 +239,7 @@ def update_data(attrname, old, new):
     source_na.data     = dict(x=x, y=y7)
     source_ra.data     = dict(x=x, y=y8)
     source_da.data     = dict(x=x, y=y9)
+    source_ic.data     = dict(x=x, y=y10)
 
     transition1_begin = duration1.value
     transition1_end   = transition1_begin + transition1.value
@@ -303,7 +317,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(0, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6, y7, y8, y9, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source_active = ColumnDataSource(data=dict(x=x, y=y1))
@@ -315,6 +329,7 @@ source_im     = ColumnDataSource(data=dict(x=x, y=y6))
 source_na     = ColumnDataSource(data=dict(x=x, y=y7))
 source_ra     = ColumnDataSource(data=dict(x=x, y=y8))
 source_da     = ColumnDataSource(data=dict(x=x, y=y9))
+source_ic     = ColumnDataSource(data=dict(x=x, y=y10))
 
 # plot 1
 
@@ -421,6 +436,18 @@ plot7.toolbar.active_inspect = None
 plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Deaths' )
 plot7.legend.location = 'bottom_right'
 
+hover8 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
+hover8.point_policy='snap_to_data'
+hover8.line_policy='nearest'
+
+plot8 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT8_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
+plot8.xaxis.axis_label = PLOT_X_LABEL
+plot8.yaxis.axis_label = PLOT_Y_LABEL2
+plot8.add_tools(hover8)
+plot8.toolbar.active_inspect = None
+
+plot8.line('x', 'y', source=source_ic, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='14 day incidence per 100m' )
+
 # highlight phases with boxes
 transition1_begin = duration1.value
 transition1_end   = transition1_begin + transition1.value
@@ -461,6 +488,10 @@ plot7.add_layout(transition1_box)
 plot7.add_layout(confinement_box)
 plot7.add_layout(transition2_box)
 
+plot8.add_layout(transition1_box)
+plot8.add_layout(confinement_box)
+plot8.add_layout(transition2_box)
+
 # misc text
 intro.text    = TEXT_INTRO
 summary.text  = TEXT_SUMMARY
@@ -477,4 +508,4 @@ curdoc().title = PAGE_TITLE
 
 # useful for mobile scrolling on the left side
 leftmargin = Spacer(width=LMARGIN_WIDTH, height=400, width_policy='fixed', height_policy='auto')
-curdoc().add_root( row(leftmargin,inputs, column(plot, plot2, plot5), column(plot4, plot6, plot7), column(plot3)) )
+curdoc().add_root( row(leftmargin,inputs, column(plot, plot2, plot5), column(plot4, plot6, plot7), column(plot3, plot8)) )
