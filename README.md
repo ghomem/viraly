@@ -22,7 +22,7 @@ python3 viraly.py "h,p,T,L,I,h2,p2,tint,tmax,M,N0,DR"
 python3 viraly.py "h,p,T,L,I,h2,p2,tint,tmax,M,N0,DR,progressive,ttime"
 ```
 
-**Parameters and their meaning:**
+**Parameters and their meaning**
 ```
 h           # average number of contacts per unit of time
 p           # probability of transmission during a contact
@@ -51,7 +51,7 @@ Notes:
 * for model 3 the infections remain constant if hp = 1/T and decrease to zero if hp < 1/T
 * for model 4 hp needs to be slightly lower for the situations above to occur
 
-**Examples:**
+**Examples**
 ```
 python3 viraly.py "4,0.1145,15,3,1,2,0.02,120,120,10276617,4,0.03"
 python3 viraly.py "4,0.1145,15,3,1,2,0.02,24 ,120,10276617,4,0.03"
@@ -60,7 +60,7 @@ python3 viraly.py "4,0.1145,15,3,1,2,0.02,24 ,120,10276617,4,0.03,True,7"
 
 The first example simulates a free epidemic for 120 days, whereas the second example simulates an epidemic for 120 days with sudden change of h and p (contention) at time t=24. The third example is equal to the second but with a linear change of parameters over the course of 7 days.
 
-**Outputs:**
+**Outputs**
 
 * plot with active cases, new cases, recoveries an deaths
 * plot with acumulated cases and acumulated deaths
@@ -73,7 +73,7 @@ The first example simulates a free epidemic for 120 days, whereas the second exa
 
 The boolean global variable PREFER_MOD4 controls whether or not model4 is the preferred model for console output and plots. If PREFER_MOD4 is False the preferred model is model3.
 
-**Example outputs:**
+**Example outputs**
 
 Example 1: output for model 4 with a sudden parameter change (contention) at t=24 such that h<sub>2</sub>p<sub>2</sub>T < 1:
 ![Output for model4 with a parameter change shock at t=24 hpT < 1](https://github.com/ghomem/viraly/blob/master/images/example_t24_shock.png)
@@ -99,6 +99,10 @@ Example 7: same as above for model 4 where due to the gaussian recovery hp needs
 Example 8: output of early erratication case due to sub critical hp for model 4:
 ![Critical](https://github.com/ghomem/viraly/blob/master/images/example_no_shock_erradication_model4.png)
 
-**Disclaimer:**
+**Bonus section**
+
+There are extra parameters not documented here which can be checkend on the source code. With those parameters a 3 stage simulation can be performed and the script can be integrated with an external application as demonstrated in this [web frontend](https://lo.gic.li/viral).
+
+**Disclaimer**
 
 This is an experiment related to the math of virality and should not be used for decisions related to real world public health situations.
