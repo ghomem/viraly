@@ -112,6 +112,9 @@ DRATE_MAX   = 50
 DRATE_START = 0.50
 DRATE_STEP  = 0.05
 
+# for the incidence plot
+INCIDENCE_PERIOD = 14
+
 # labels and strings
 PAGE_TITLE  ='3 stage epidemic simulator'
 PLOT_TITLE  ='Active'
@@ -121,6 +124,7 @@ PLOT4_TITLE ='Immunity'
 PLOT5_TITLE ='Dead'
 PLOT6_TITLE ='Accumulated cases / recoveries'
 PLOT7_TITLE ='Accumulated deaths'
+PLOT8_TITLE =str(INCIDENCE_PERIOD) + ' day incidence per 100m habitants'
 
 T_LABEL       = 'Infectious Period'
 T_STDEV_LABEL = 'Infectious Period Standard Deviation'
@@ -202,10 +206,12 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
 
     # calculate standard 14 day incidence
     ic_history = []
+    i = 0
     for j in nc_history:
         # list slicing tolerates going back more than possible, by returning an emtpy list <3
-        my_incidence = list ( numpy.array( l[ pos -( INCIDENCE_PERIOD + 1 ) : pos-1 ] ).sum() / population.value ) )
+        my_incidence = numpy.array( nc_history[ i - ( INCIDENCE_PERIOD + 1 ) : i-1 ] ).sum() / ( population.value / 0.1 )
         ic_history.append( my_incidence )
+        i = i + 1
 
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())
@@ -221,7 +227,7 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6, y7, y8, y9, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source_active.data = dict(x=x, y=y1)
