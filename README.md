@@ -75,10 +75,10 @@ The boolean global variable PREFER_MOD4 controls whether or not model4 is the pr
 
 **Example outputs:**
 
-Example 1: output for model 4 with a sudden parameter change (contention) at t=24 such that h<sub>1</sub>p<sub>1</sub>T < 1:
+Example 1: output for model 4 with a sudden parameter change (contention) at t=24 such that h<sub>2</sub>p<sub>2</sub>T < 1:
 ![Output for model4 with a parameter change shock at t=24 hpT < 1](https://github.com/ghomem/viraly/blob/master/images/example_t24_shock.png)
 
-Example 2: output for model 4 with a sudden parameter change (contention) at t=24 such that h<sub>1</sub>p<sub>1</sub>T > 1:
+Example 2: output for model 4 with a sudden parameter change (contention) at t=24 such that h<sub>2</sub>p<sub>2</sub>T > 1:
 ![Output for model4 with a parameter change shock at t=24 htT > 1](https://github.com/ghomem/viraly/blob/master/images/example_t24_shock_larger_R.png)
 
 Example 3: same as above but as a free epidemic (no parameter change):
