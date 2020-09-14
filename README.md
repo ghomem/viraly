@@ -15,6 +15,13 @@ An epidemic is the propagation of something (a disease, a phrase, a brand, an id
 
 Scipy, Numpy and Matplotlib
 
+**Usage**
+
+```
+python3 viraly.py "h,p,T,L,I,h2,p2,tint,tmax,M,N0,DR"
+python3 viraly.py "h,p,T,L,I,h2,p2,tint,tmax,M,N0,DR,progressive,ttime"
+```
+
 **Parameters and their meaning:**
 ```
 h           # average number of contacts per unit of time
