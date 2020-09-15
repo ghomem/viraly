@@ -446,7 +446,7 @@ plot8.yaxis.axis_label = PLOT_Y_LABEL2
 plot8.add_tools(hover8)
 plot8.toolbar.active_inspect = None
 
-plot8.line('x', 'y', source=source_ic, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='14 day incidence per 100m' )
+plot8.line('x', 'y', source=source_ic, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='Incidence' )
 
 # highlight phases with boxes
 transition1_begin = duration1.value
