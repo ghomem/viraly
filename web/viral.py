@@ -317,7 +317,7 @@ for w in [population, iinfections, period, period_stdev, latent, duration1, dura
 button.on_click(reset_data)
 
 # initial plot
-x = np.linspace(0, DAYS, DAYS)
+x = np.linspace(1, DAYS, DAYS)
 y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
@@ -334,7 +334,7 @@ source_ic     = ColumnDataSource(data=dict(x=x, y=y10))
 
 # plot 1
 
-hover = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
+hover = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover.point_policy='snap_to_data'
 hover.line_policy='nearest'
 
@@ -349,7 +349,7 @@ plot.line('x', 'y', source=source_active, line_width=PLOT_LINE_WIDTH, line_alpha
 # plot 2
 
 # using mode="mouse" because the vline mode produces overlapping tooltips when multiple lines are used
-hover2 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
+hover2 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
 hover2.point_policy='snap_to_data'
 hover2.line_policy='nearest'
 
@@ -365,7 +365,7 @@ plot.toolbar.active_inspect = None
 # plot 3
 
 # custom precision
-hover3 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
+hover3 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover3.point_policy='snap_to_data'
 hover3.line_policy='nearest'
 
@@ -380,7 +380,7 @@ plot3.line('x', 'y', source=source_rt, line_width=PLOT_LINE_WIDTH, line_alpha=PL
 # plot 4
 
 # custom precision
-hover4 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
+hover4 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover4.point_policy='snap_to_data'
 hover4.line_policy='nearest'
 
@@ -395,7 +395,7 @@ plot4.legend.location = 'bottom_right'
 
 # plot 5
 
-hover5 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
+hover5 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover5.point_policy='snap_to_data'
 hover5.line_policy='nearest'
 
@@ -410,7 +410,7 @@ plot5.line('x', 'y', source=source_dead, line_width=PLOT_LINE_WIDTH, line_alpha=
 # plot 6
 
 # using mode="mouse" because the vline mode produces overlapping tooltips when multiple lines are used
-hover6 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
+hover6 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
 hover6.point_policy='snap_to_data'
 hover6.line_policy='nearest'
 
@@ -424,7 +424,7 @@ plot6.legend.location = 'bottom_right'
 plot6.add_tools(hover6)
 plot.toolbar.active_inspect = None
 
-hover7 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
+hover7 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover7.point_policy='snap_to_data'
 hover7.line_policy='nearest'
 
@@ -437,7 +437,7 @@ plot7.toolbar.active_inspect = None
 plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Deaths' )
 plot7.legend.location = 'bottom_right'
 
-hover8 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
+hover8 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover8.point_policy='snap_to_data'
 hover8.line_policy='nearest'
 
