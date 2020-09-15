@@ -192,26 +192,27 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4 )
 
     # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
-    n_history  = top_level[0]
-    nc_history = top_level[1]
-    r_history  = top_level[2]
-    d_history  = top_level[3]
-    ra_history = top_level[6]
-    da_history = top_level[7]
-    rt_history = top_level[8]
-    na_history = top_level[9]
+    # we chop the first element because it is the initial condition (ex: new cases don't make sense there, especially on a second wave simulation )
+    n_history  = top_level[0][1:]
+    nc_history = top_level[1][1:]
+    r_history  = top_level[2][1:]
+    d_history  = top_level[3][1:]
+    ra_history = top_level[6][1:]
+    da_history = top_level[7][1:]
+    rt_history = top_level[8][1:]
+    na_history = top_level[9][1:]
 
     # calculate % of initial population which is immunized
     im_history = list ( numpy.array( ra_history ) * (100/M) )
 
     # calculate standard 14 day incidence
     ic_history = []
-    i = 0
-    for j in nc_history:
-        # list slicing tolerates going back more than possible, by returning an emtpy list <3
-        my_incidence = numpy.array( nc_history[ i - ( INCIDENCE_PERIOD + 1 ) : i-1 ] ).sum() / ( population.value / 0.1 )
+    for j in range (0, len(n_history)):
+        if ( j < INCIDENCE_PERIOD ):
+            my_incidence = 0
+        else:
+            my_incidence = numpy.array( nc_history[ j - ( INCIDENCE_PERIOD + 1 ) : j-1 ] ).sum() / ( population.value / 0.1 )
         ic_history.append( my_incidence )
-        i = i + 1
 
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())
@@ -446,7 +447,7 @@ plot8.yaxis.axis_label = PLOT_Y_LABEL2
 plot8.add_tools(hover8)
 plot8.toolbar.active_inspect = None
 
-plot8.line('x', 'y', source=source_ic, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='14 day incidence per 100m' )
+plot8.line('x', 'y', source=source_ic, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='Incidence' )
 
 # highlight phases with boxes
 transition1_begin = duration1.value
