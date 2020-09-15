@@ -206,12 +206,12 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
 
     # calculate standard 14 day incidence
     ic_history = []
-    i = 0
-    for j in nc_history:
-        # list slicing tolerates going back more than possible, by returning an emtpy list <3
-        my_incidence = numpy.array( nc_history[ i - ( INCIDENCE_PERIOD + 1 ) : i-1 ] ).sum() / ( population.value / 0.1 )
+    for j in range (0, len(n_history)):
+        if ( j < INCIDENCE_PERIOD ):
+            my_incidence = 0
+        else:
+            my_incidence = numpy.array( nc_history[ j - ( INCIDENCE_PERIOD + 1 ) : j-1 ] ).sum() / ( population.value / 0.1 )
         ic_history.append( my_incidence )
-        i = i + 1
 
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())

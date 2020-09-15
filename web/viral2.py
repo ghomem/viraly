@@ -192,14 +192,15 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     top_level = run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4 )
 
     # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
-    n_history  = top_level[0]
-    nc_history = top_level[1]
-    r_history  = top_level[2]
-    d_history  = top_level[3]
-    ra_history = top_level[6]
-    da_history = top_level[7]
-    rt_history = top_level[8]
-    na_history = top_level[9]
+    # we chop the first element because it is the initial condition (ex: new cases don't make sense there, especially on a second wave simulation )
+    n_history  = top_level[0][1:]
+    nc_history = top_level[1][1:]
+    r_history  = top_level[2][1:]
+    d_history  = top_level[3][1:]
+    ra_history = top_level[6][1:]
+    da_history = top_level[7][1:]
+    rt_history = top_level[8][1:]
+    na_history = top_level[9][1:]
 
     # calculate % of initial population which is immunized
     im_history = list ( numpy.array( ra_history ) * (100/M) )

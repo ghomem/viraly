@@ -312,7 +312,8 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
     # initial situation
     print_output (0, n1, n2, n3_data, n4_data, prefer_mod4, OUTPUT_ALL, silent )
 
-    for t in range (1, tmax):
+    # we simulate tmax days, but the result contains the extra initial condition day at position 0
+    for t in range (1, tmax + 1):
         # get new cases for the dummy models (new cases = active cases as there are no outgoers here)
         n1 = get_next_model1 (n1, h, p, M)
         n2 = get_next_model2 (n2, h, p, M)
