@@ -48,8 +48,8 @@ POP_STEP  = 0.5
 
 # Initial infections
 IIF_MIN   = 0
-IIF_MAX   = 500000
-IIF_START = 30957
+IIF_MAX   = 50
+IIF_START = 5
 
 # Infectious period
 T_MIN   = 7
@@ -79,13 +79,13 @@ DUR2_START = 55
 # Transition durations
 TRA_MIN  = 0
 TRA1_MAX = 45
-TRA2_MAX = 60
+TRA2_MAX = 180
 
 TRA1_START = 18
-TRA2_START = 30
+TRA2_START = 90
 
 # Simulation time
-DAYS = 180 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
+DAYS = 300 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
 
 # Propagation rate parameters
 #
@@ -96,15 +96,15 @@ DAYS = 180 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS
 BETA_MIN  =  0
 
 BETA1_MAX   = 0.6  * 10
-BETA1_START = 0.053 * 10
+BETA1_START = 0.46 * 10
 BETA1_STEP  = 0.01
 
 BETA2_MAX   = 0.1   * 10
 BETA2_START = 0.041 * 10
 BETA2_STEP  = 0.01
 
-BETA3_MAX   = 0.6   * 10
-BETA3_START = 0.053 * 10
+BETA3_MAX   = 0.1   * 10
+BETA3_START = 0.059 * 10
 BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
@@ -207,12 +207,12 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
 
     # calculate standard 14 day incidence
     ic_history = []
-    i = 0
-    for j in nc_history:
-        # list slicing tolerates going back more than possible, by returning an emtpy list <3
-        my_incidence = numpy.array( nc_history[ i - ( INCIDENCE_PERIOD + 1 ) : i-1 ] ).sum() / ( population.value / 0.1 )
+    for j in range (0, len(n_history)):
+        if ( j < INCIDENCE_PERIOD ):
+            my_incidence = 0
+        else:
+            my_incidence = numpy.array( nc_history[ j - ( INCIDENCE_PERIOD + 1 ) : j-1 ] ).sum() / ( population.value / 0.1 )
         ic_history.append( my_incidence )
-        i = i + 1
 
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())
@@ -317,7 +317,7 @@ for w in [population, iinfections, period, period_stdev, latent, duration1, dura
 button.on_click(reset_data)
 
 # initial plot
-x = np.linspace(0, DAYS, DAYS)
+x = np.linspace(1, DAYS, DAYS)
 y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
@@ -334,7 +334,7 @@ source_ic     = ColumnDataSource(data=dict(x=x, y=y10))
 
 # plot 1
 
-hover = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
+hover = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover.point_policy='snap_to_data'
 hover.line_policy='nearest'
 
@@ -349,7 +349,7 @@ plot.line('x', 'y', source=source_active, line_width=PLOT_LINE_WIDTH, line_alpha
 # plot 2
 
 # using mode="mouse" because the vline mode produces overlapping tooltips when multiple lines are used
-hover2 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
+hover2 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
 hover2.point_policy='snap_to_data'
 hover2.line_policy='nearest'
 
@@ -365,7 +365,7 @@ plot.toolbar.active_inspect = None
 # plot 3
 
 # custom precision
-hover3 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
+hover3 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover3.point_policy='snap_to_data'
 hover3.line_policy='nearest'
 
@@ -380,7 +380,7 @@ plot3.line('x', 'y', source=source_rt, line_width=PLOT_LINE_WIDTH, line_alpha=PL
 # plot 4
 
 # custom precision
-hover4 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
+hover4 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover4.point_policy='snap_to_data'
 hover4.line_policy='nearest'
 
@@ -395,7 +395,7 @@ plot4.legend.location = 'bottom_right'
 
 # plot 5
 
-hover5 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
+hover5 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover5.point_policy='snap_to_data'
 hover5.line_policy='nearest'
 
@@ -410,7 +410,7 @@ plot5.line('x', 'y', source=source_dead, line_width=PLOT_LINE_WIDTH, line_alpha=
 # plot 6
 
 # using mode="mouse" because the vline mode produces overlapping tooltips when multiple lines are used
-hover6 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
+hover6 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="mouse" )
 hover6.point_policy='snap_to_data'
 hover6.line_policy='nearest'
 
@@ -424,7 +424,7 @@ plot6.legend.location = 'bottom_right'
 plot6.add_tools(hover6)
 plot.toolbar.active_inspect = None
 
-hover7 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
+hover7 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover7.point_policy='snap_to_data'
 hover7.line_policy='nearest'
 
@@ -437,7 +437,7 @@ plot7.toolbar.active_inspect = None
 plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Deaths' )
 plot7.legend.location = 'bottom_right'
 
-hover8 = HoverTool(tooltips=[ (PLOT_X_LABEL, "$index"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
+hover8 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover8.point_policy='snap_to_data'
 hover8.line_policy='nearest'
 
@@ -447,7 +447,7 @@ plot8.yaxis.axis_label = PLOT_Y_LABEL2
 plot8.add_tools(hover8)
 plot8.toolbar.active_inspect = None
 
-plot8.line('x', 'y', source=source_ic, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='14 day incidence per 100m' )
+plot8.line('x', 'y', source=source_ic, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='Incidence' )
 
 # highlight phases with boxes
 transition1_begin = duration1.value
