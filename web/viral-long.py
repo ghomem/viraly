@@ -308,9 +308,9 @@ summary = Div(text='', width=TEXT_WIDTH)
 stats   = Div(text='', width=TEXT_WIDTH)
 notes   = Div(text='', width=TEXT_WIDTH)
 
-# Assign widgets to the call back function - period_stdev is NOT inserted because long running simulations get very slow
+# Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, latent, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
+for w in [population, iinfections, period, period_stdev, latent, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
@@ -503,7 +503,9 @@ notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
-inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
+
+# we removed period_stedev from this simulation because performance is too slow for long simulations
+inputs = column(intro, population, iinfections, period,                , latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
