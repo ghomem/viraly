@@ -62,9 +62,12 @@ def get_older_model3 ( time, history, T ):
 
 # model 4 - temporary infection with gaussian duration of parameters T and L, finite population corrections
 
-# note: this model leaves a residue of infections that do not disappear which is noticeable if L is high compared to T
+# NOTE: 
+# This model leaves a residue of infections that do not disappear which is noticeable if L is high compared to T
 # it could be fixed by complicating the code, but the physical situation does not make much sense
-# 99% (so to say) of the normal should be to the right of t=0, or the physical model is not good
+# 99% (so to say) of the normal should be to the right of t=0, or the physical model is not good.
+#
+# Furthermore, it is much slower than model3 and the results not very different
 
 def get_fraction ( center, stdev, t1, t2 ):
 
