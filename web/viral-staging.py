@@ -189,8 +189,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
 
     # this function is included from viraly.py
     silent = True
-    # FIXME when T=0
-    top_level = run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2 )
+    top_level = run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4 )
 
     # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
     # we chop the first element because it is the initial condition (ex: new cases don't make sense there, especially on a second wave simulation )

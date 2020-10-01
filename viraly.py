@@ -481,9 +481,8 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 # optimized version only to be used by the web interface:
 # runs model 4 and is silent
 
-def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2 ):
+def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4 ):
 
-    silent = True
     n4 = N0
     R0 = h*p*T
 
@@ -518,7 +517,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     for t in range (1, tmax + 1):
 
         # get new cases, outgoing and rt
-        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
+        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, prefer_mod4)
         # update simulation parameters over time
         h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
 
