@@ -59,7 +59,7 @@ T_START = 19
 # and its Standard Deviation
 T_STDEV_MIN   = 0
 T_STDEV_MAX   = 3
-T_STDEV_START = 3
+T_STDEV_START = 0
 
 # Latent period
 # Not the same as incubation period, and can be shorter:

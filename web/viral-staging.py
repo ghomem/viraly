@@ -59,7 +59,7 @@ T_START = 19
 # and its Standard Deviation
 T_STDEV_MIN   = 0
 T_STDEV_MAX   = 3
-T_STDEV_START = 3
+T_STDEV_START = 0
 
 # Latent period
 # Not the same as incubation period, and can be shorter:
@@ -79,13 +79,13 @@ DUR2_START = 55
 # Transition durations
 TRA_MIN  = 0
 TRA1_MAX = 45
-TRA2_MAX = 60
+TRA2_MAX = 180
 
 TRA1_START = 18
-TRA2_START = 30
+TRA2_START = 90
 
 # Simulation time
-DAYS = 180 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
+DAYS = 720 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
 
 # Propagation rate parameters
 #
@@ -103,8 +103,8 @@ BETA2_MAX   = 0.1   * 10
 BETA2_START = 0.041 * 10
 BETA2_STEP  = 0.01
 
-BETA3_MAX   = 0.6   * 10
-BETA3_START = 0.053 * 10
+BETA3_MAX   = 0.1   * 10
+BETA3_START = 0.059 * 10
 BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
@@ -127,7 +127,7 @@ PLOT7_TITLE ='Accumulated deaths'
 PLOT8_TITLE =str(INCIDENCE_PERIOD) + ' day incidence per 100m habitants'
 
 T_LABEL       = 'Infectious Period'
-T_STDEV_LABEL = 'Infectious Period STDEV'
+T_STDEV_LABEL = 'Infectious Period Standard Deviation'
 L_LABEL       = 'Latent Period'
 POP_LABEL     = 'Population (Millions)'
 IIF_LABEL     = 'Initial number of infections'

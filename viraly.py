@@ -670,6 +670,8 @@ def main():
     #   we allow them model selection to be done as a function of the value of L:
     #     if L = 0 -> model 3
     #     if L > 0 -> model 4
+    #
+    # NOTE: model4 is much much slower than model3
 
     # simulation
     if len(myparams_list) > 18:
