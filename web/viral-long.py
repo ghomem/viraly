@@ -284,9 +284,7 @@ population  = Slider(title=POP_LABEL, value=POP_START, start=POP_MIN, end=POP_MA
 iinfections = Slider(title=IIF_LABEL, value=IIF_START, start=IIF_MIN, end=IIF_MAX, step=1)
 
 period       = Slider(title=T_LABEL,       value=T_START,       start=T_MIN,       end=T_MAX,       step=1)
-
-## let's not show this control because performance is not acceptable for longer simulations such as this one
-#period_stdev = Slider(title=T_STDEV_LABEL, value=T_STDEV_START, start=T_STDEV_MIN, end=T_STDEV_MAX, step=1)
+period_stdev = Slider(title=T_STDEV_LABEL, value=T_STDEV_START, start=T_STDEV_MIN, end=T_STDEV_MAX, step=1)
 
 latent = Slider(title=L_LABEL, value=L_START, start=L_MIN, end=L_MAX, step=1)
 
@@ -310,9 +308,9 @@ summary = Div(text='', width=TEXT_WIDTH)
 stats   = Div(text='', width=TEXT_WIDTH)
 notes   = Div(text='', width=TEXT_WIDTH)
 
-# Assign widgets to the call back function
+# Assign widgets to the call back function - period_stdev is NOT inserted because long running simulations get very slow
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
+for w in [population, iinfections, period, latent, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
