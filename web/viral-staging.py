@@ -127,7 +127,7 @@ PLOT7_TITLE ='Accumulated deaths'
 PLOT8_TITLE =str(INCIDENCE_PERIOD) + ' day incidence per 100m habitants'
 
 T_LABEL       = 'Infectious Period'
-T_STDEV_LABEL = 'Infectious Period Standard Deviation'
+T_STDEV_LABEL = 'Infectious Period STDEV'
 L_LABEL       = 'Latent Period'
 POP_LABEL     = 'Population (Millions)'
 IIF_LABEL     = 'Initial number of infections'
