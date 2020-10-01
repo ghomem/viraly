@@ -478,6 +478,123 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 
         return dataset
 
+# optimized version only to be used by the web interface:
+# runs model 4 and is silent
+
+def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2 ):
+
+    silent = True
+    n4 = N0
+    R0 = h*p*T
+
+    # history of active numbers
+    n4_history = [ N0 ]
+
+    # fifos for cases in incubation
+    incubator4 = deque([0]*(I-1))
+
+    # history of outgoing numbers
+    o4_history = [ 0 ]
+
+    # history of new cases
+    nc4_history = [ N0 ]
+
+    # currently available population
+    m4 = M - N0
+
+    # history of available population
+    m4_history = [ m4 ]
+
+    n4_data = [ n4, N0, 0, M, R0 ]
+
+    # Rt history
+    rt4_history = [ R0 ]
+
+    # stored parameters because h and p change over time
+    sh = h
+    sp = p
+
+    # we simulate tmax days, but the result contains the extra initial condition day at position 0
+    for t in range (1, tmax + 1):
+
+        # get new cases, outgoing and rt
+        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, True)
+        # update simulation parameters over time
+        h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
+
+        # but nc3i and nc4i go for incubation still and we need to fetch the ones that are ready to infect
+        # in the SIER model incubation cases are called "Exposed" - they are infected but not infectious
+        # note: we need to append before popping to support the case where the incubation time is 1
+        # which recovers the tried and tested behaviour we had before introducing this parameter
+        incubator4.appendleft(nc4i)
+        nc4 = incubator4.pop()
+
+        # new current - it sometimes goes negative by a very small value
+        n4 = max(n4 + nc4 - o4,0)
+
+        # new cases that appeared at time t
+        nc4_history.append(nc4)
+
+        # cases that went out at time t
+        o4_history.append(o4)
+
+        # number of active cases at time t
+        n4_history.append(n4)
+
+        # neither the outgoing nor the exposed (i.e. in incubation) are available targets for new infections
+        # but the infected are still causing new infections
+        # note: we remove the cases for the susceptibles pool as soon as they are exposed (nc3i instead of nc3, etc)
+        m4 = max(m4 - nc4i, 0)
+        m4_history.append(m4)
+
+        rt4_history.append(rt4)
+
+        n4_data = [ n4, nc4, o4, m4, rt4 ]
+
+    # deaths vs recoveries
+
+    d4_history = numpy.array(o4_history) * DR
+    r4_history = numpy.array(o4_history) * (1-DR)
+
+    n_final    = n4
+    m_final    = m4
+    n_history  = n4_history
+    nc_history = nc4_history
+    d_history  = d4_history
+    r_history  = r4_history
+    o_history  = o4_history
+    m_history  = m4_history
+    rt_history = rt4_history
+
+    # calculate and print some statistics
+
+    t_transmissions = numpy.array(nc_history).sum()
+    t_infections    = t_transmissions + N0
+    t_inactivations = numpy.array(d_history).sum()
+    t_recoveries    = numpy.array(r_history).sum()
+    t_removals      = numpy.array(o_history).sum()
+
+    # prepare some acumulated data
+
+    j = 1
+    na_history = []
+    da_history = []
+    ra_history = []
+
+    for value in n_history:
+        na = numpy.array(nc_history[0:j]).sum()
+        da = numpy.array(d_history[0:j]).sum()
+        ra = numpy.array(r_history[0:j]).sum()
+        na_history.append(na)
+        da_history.append(da)
+        ra_history.append(ra)
+        j=j+1
+
+    # the list cast is only to uniformized because some of the elements were converted to numpy arrays
+    dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
+
+    return dataset
+
 def main():
 
     # the silent mode is for integration with external tools, it only exports dataset
