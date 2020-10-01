@@ -505,7 +505,7 @@ notes.text    = TEXT_NOTES
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 
 # we removed period_stedev from this simulation because performance is too slow for long simulations
-inputs = column(intro, population, iinfections, period,                , latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
+inputs = column(intro, population, iinfections, period,                latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
