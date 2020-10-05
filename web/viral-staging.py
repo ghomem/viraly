@@ -219,6 +219,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     pr_history = []
     for j in range (0, len(n_history)):
         my_prevalence = ( na_history[j] / population.value * 1000000 ) * 100
+        pr_history.appent ( my_prevalence )
 
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())
@@ -227,7 +228,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     ar_stats = [ t_transmissions, t_recoveries, t_deaths ]
 
     # Active, New, Recovered, Dead, Rt, Immunized + accumulated Cases, Recoveries and Deaths + Stats
-    return n_history, nc_history, r_history, d_history, rt_history, im_history, na_history, ra_history, da_history, ic_history, ar_stats
+    return n_history, nc_history, r_history, d_history, rt_history, im_history, na_history, ra_history, da_history, ic_history, pr_history, ar_stats
 
 # callback function dor updating the data
 def update_data(attrname, old, new):
