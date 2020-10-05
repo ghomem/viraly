@@ -219,7 +219,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     pr_history = []
     for j in range (0, len(n_history)):
         my_prevalence = ( na_history[j] / population.value * 1000000 ) * 100
-        pr_history.appent ( my_prevalence )
+        pr_history.append ( my_prevalence )
 
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())
