@@ -58,7 +58,7 @@ T_START = 19
 
 # and its Standard Deviation
 T_STDEV_MIN   = 0
-T_STDEV_MAX   = 0
+T_STDEV_MAX   = 3
 T_STDEV_START = 0
 
 # Latent period
@@ -528,7 +528,9 @@ notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
-inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
+#inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
+# not adding STDEV as it is too slow on a long simulation
+inputs = column(intro, population, iinfections, period,                latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
