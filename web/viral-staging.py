@@ -120,7 +120,7 @@ L_LABEL       = 'Latent Period'
 POP_LABEL     = 'Relevant audience size (Millions)'
 IIF_LABEL     = 'Sponsored contacts'
 H1_LABEL      = 'Organic interactions per day'
-P1_LABEL      = 'Probability of transmission (x100)'
+P1_LABEL      = 'Probability of transmission (%)'
 DRATE_LABEL   = 'Conversion rate (%)'
 CPC_LABEL     = 'Cost per contact'
 
