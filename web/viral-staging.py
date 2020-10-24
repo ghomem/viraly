@@ -233,7 +233,7 @@ def update_data(attrname, old, new):
     source_pr.data     = dict(x=x, y=y11)
 
     # including cost stats for marketing version
-    beta          = round ( h1.value * p1.value , 2)
+    beta          = round ( h1.value * p1.value / 100 , 2)
     R0            = round ( beta * period.value , 2)
     pre_str       = '<br/>Beta: ' + str(beta) + '<br/>R0: ' + str(R0) 
     tcost         = round ( cpc.value * iinfections.value , 2 )
@@ -440,7 +440,7 @@ summary.text  = TEXT_SUMMARY
 summary.style = { 'font-weight' : 'bold' }
 
 # including cost stats for marketing version
-beta          = round ( h1.value * p1.value , 2)
+beta          = round ( h1.value * p1.value / 100 , 2)
 R0            = round ( beta * period.value , 2)
 pre_str       = '<br/>Beta: ' + str(beta) + '<br/>R0: ' + str(R0)
 tcost         = round ( cpc.value * iinfections.value , 2 )
