@@ -102,8 +102,8 @@ H1_START = 20
 H1_STEP  = 0.1
 
 P1_MIN   = 0
-P1_MAX   = 10
-P1_START = 0.016 * 10
+P1_MAX   = 100
+P1_START = 0.017 * 100
 P1_STEP  = 0.01
 
 # NOT IN USE #
@@ -153,7 +153,7 @@ DUR2_LABEL    = 'Second phase duration (including transition)'
 TRA1_LABEL    = 'Transition to second phase duration'
 TRA2_LABEL    = 'Transition to third phase duration'
 H1_LABEL      = 'Interactions per day'
-P1_LABEL      = 'Probability of transmission (x10)'
+P1_LABEL      = 'Probability of transmission (x100)'
 BETA2_LABEL   = 'NOT IN USE Beta during second phase (x10)'
 BETA3_LABEL   = 'NOT IN USE Beta during third phase (x10)'
 DRATE_LABEL   = 'Conversion rate (%)'
@@ -174,11 +174,11 @@ TEXT_NOTES    ='<b>Notes:</b><br/>\
 def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change ):
 
     h  = 1
-    p  = float (b1 / 10) # input is multiplied by 10 for precision on the sliders
+    p  = float (b1 / 100) # input is multiplied by 100 for precision on the sliders
     h2 = 1
-    p2 = float (b2 / 10) # input is multiplied by 10 for precision on the sliders
+    p2 = float (b2 / 100) # input is multiplied by 100 for precision on the sliders
     h3 = 1
-    p3 = float (b3 / 10) # input is multiplied by 10 for precision on the sliders
+    p3 = float (b3 / 100) # input is multiplied by 100 for precision on the sliders
     T  = period
     I  = latent
     N0 = n0
