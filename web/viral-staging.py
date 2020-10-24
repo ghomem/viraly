@@ -321,8 +321,8 @@ duration2 = Slider(title=DUR2_LABEL, value=DUR2_START, start=DUR_MIN, end=DUR2_M
 transition1 = Slider(title=TRA1_LABEL, value=TRA1_START, start=TRA_MIN, end=TRA1_MAX, step=1)
 transition2 = Slider(title=TRA2_LABEL, value=TRA2_START, start=TRA_MIN, end=TRA2_MAX, step=1)
 
-h1 = Slider(title=H1_LABEL, value=H1_START, start=BETA_MIN, end=H1_MAX, step=H1_STEP)
-p1 = Slider(title=P1_LABEL, value=P1_START, start=P_MIN,    end=P1_MAX, step=P1_STEP)
+h1 = Slider(title=H1_LABEL, value=H1_START, start=H1_MIN, end=H1_MAX, step=H1_STEP)
+p1 = Slider(title=P1_LABEL, value=P1_START, start=P1_MIN, end=P1_MAX, step=P1_STEP)
 
 beta2 = Slider(title=BETA2_LABEL, value=BETA2_START, start=BETA_MIN, end=BETA2_MAX, step=BETA2_STEP)
 beta3 = Slider(title=BETA3_LABEL, value=BETA3_START, start=BETA_MIN, end=BETA3_MAX, step=BETA3_STEP)
