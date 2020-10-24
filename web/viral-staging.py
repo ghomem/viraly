@@ -43,13 +43,13 @@ CMD_PYTHON = '/usr/bin/python3'
 # Population
 POP_MIN   = 1
 POP_MAX   = 330
-POP_START = 100 # people that can get infected with the message, not the businesses themselves
+POP_START = 54  # people that can get infected with the message, not the businesses themselves
 POP_STEP  = 0.5 # conversion rate from infected people to businesses
 
 # Initial infections
 IIF_MIN   = 1000
 IIF_MAX   = 50000
-IIF_START = 20000
+IIF_START = 15000
 
 # Infectious period
 T_MIN   = 1
@@ -73,7 +73,7 @@ DUR_MIN  = 1
 DUR1_MAX = 30
 DUR2_MAX = 60
 
-DUR1_START = 720
+DUR1_START = 365
 DUR2_START = 0
 
 # Transition durations
@@ -96,9 +96,15 @@ DAYS = DUR1_START
 #
 BETA_MIN  =  0
 
-BETA1_MAX   = 0.8  * 10
-BETA1_START = 0.335* 10
-BETA1_STEP  = 0.01
+H1_MAX   = 0
+H1_START = 100
+H1_STEP  = 1
+
+P1_MIN   = 0
+P1_START = 0.016
+P1_STEP  = 0.01
+
+# NOT IN USE #
 
 BETA2_MAX   = 0.2* 10
 BETA2_START = 0.1* 10
@@ -108,8 +114,10 @@ BETA3_MAX   = 0.2* 10
 BETA3_START = 0.1* 10
 BETA3_STEP  = 0.01
 
-DRATE_MIN   = 0
-DRATE_MAX   = 50
+# / NOT IN USE #
+
+DRATE_MIN   = 0.05
+DRATE_MAX   = 10
 DRATE_START = 0.50
 DRATE_STEP  = 0.05
 
@@ -133,16 +141,16 @@ PLOT7_TITLE ='Accumulated customers'
 PLOT8_TITLE =str(INCIDENCE_PERIOD) + ' day incidence per 100m'
 PLOT9_TITLE ='Prevalence'
 
-T_LABEL       = 'Infectious Period'
+T_LABEL       = 'Stickyness period'
 T_STDEV_LABEL = 'NOT IN USE Infectious Period Standard Deviation'
 L_LABEL       = 'Latent Period'
-POP_LABEL     = 'Relevant Population Size (Millions)'
-IIF_LABEL     = 'Initial awareness'
+POP_LABEL     = 'Relevant audience size (Millions)'
+IIF_LABEL     = 'Sponsored contacts'
 DUR1_LABEL    = 'First phase duration'
 DUR2_LABEL    = 'Second phase duration (including transition)'
 TRA1_LABEL    = 'Transition to second phase duration'
 TRA2_LABEL    = 'Transition to third phase duration'
-BETA1_LABEL   = 'Beta (x10)'
+H1_LABEL   = 'Beta (x10)'
 BETA2_LABEL   = 'NOT IN USE Beta during second phase (x10)'
 BETA3_LABEL   = 'NOT IN USE Beta during third phase (x10)'
 DRATE_LABEL   = 'Conversion rate (%)'
@@ -151,9 +159,9 @@ CPC_LABEL     = 'Cost per contact'
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
-              &bull; &beta; = hp.<br/>\
-              &bull; R0 = hpT.<br/>\
-              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>.<br/>\
+              &bull; &beta; = hp<br/>\
+              &bull; R0 = hpT<br/>\
+              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a><br/>\
               &bull; Background info at <a href="https://web.stanford.edu/class/symbsys205/tipping_point.html">web.stanford.eu</a>'
 ### End of configuration
 
@@ -241,7 +249,7 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, h1.value*p1.value*10, beta2.value, beta3.value, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source_active.data = dict(x=x, y=y1)
@@ -281,12 +289,13 @@ def reset_data():
     iinfections.value  = IIF_START
     period.value       = T_START
     period_stdev.value = T_STDEV_START
-    latent.value   = L_START
+    latent.value       = L_START
     duration1.value    = DUR1_START
     duration2.value    = DUR2_START
     transition1.value  = TRA1_START
     transition2.value  = TRA2_START
-    beta1.value        = BETA1_START
+    h1.value           = H1_START
+    p1.value           = P1_START
     beta2.value        = BETA2_START
     beta3.value        = BETA3_START
     drate.value        = DRATE_START
@@ -312,7 +321,9 @@ duration2 = Slider(title=DUR2_LABEL, value=DUR2_START, start=DUR_MIN, end=DUR2_M
 transition1 = Slider(title=TRA1_LABEL, value=TRA1_START, start=TRA_MIN, end=TRA1_MAX, step=1)
 transition2 = Slider(title=TRA2_LABEL, value=TRA2_START, start=TRA_MIN, end=TRA2_MAX, step=1)
 
-beta1 = Slider(title=BETA1_LABEL, value=BETA1_START, start=BETA_MIN, end=BETA1_MAX, step=BETA1_STEP)
+h1 = Slider(title=H1_LABEL, value=H1_START, start=BETA_MIN, end=H1_MAX, step=H1_STEP)
+p1 = Slider(title=P1_LABEL, value=P1_START, start=P_MIN,    end=P1_MAX, step=P1_STEP)
+
 beta2 = Slider(title=BETA2_LABEL, value=BETA2_START, start=BETA_MIN, end=BETA2_MAX, step=BETA2_STEP)
 beta3 = Slider(title=BETA3_LABEL, value=BETA3_START, start=BETA_MIN, end=BETA3_MAX, step=BETA3_STEP)
 
@@ -329,7 +340,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate, cpc ]:
+for w in [population, iinfections, period, period_stdev, latent, duration1, duration2, transition1, transition2, h1, p1, beta2, beta3, drate, cpc ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
@@ -337,7 +348,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(1, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, beta1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, h1.value*p1.value*10, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source_active = ColumnDataSource(data=dict(x=x, y=y1))
@@ -543,9 +554,9 @@ notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
-#inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
-# not adding STDEV as it is too slow on a long simulation
-inputs = column(intro, population, iinfections, period,                latent, beta1, drate, cpc, button, summary, stats, notespacer, notes)
+
+# simplified set for the marketing simulation
+inputs = column(intro, population, iinfections, period, h1, p1, drate, cpc, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
