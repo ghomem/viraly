@@ -521,7 +521,7 @@ plot9.add_layout(transition2_box)
 intro.text    = TEXT_INTRO
 summary.text  = TEXT_SUMMARY
 summary.style = { 'font-weight' : 'bold' }
-stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2])
+stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2])
 stats.text    = stats_str
 notes.text    = TEXT_NOTES
 
