@@ -73,19 +73,20 @@ DUR_MIN  = 1
 DUR1_MAX = 30
 DUR2_MAX = 60
 
-DUR1_START = 20
-DUR2_START = 55
+DUR1_START = 720
+DUR2_START = 0
 
 # Transition durations
 TRA_MIN  = 0
 TRA1_MAX = 45
 TRA2_MAX = 180
 
-TRA1_START = 18
-TRA2_START = 90
+# Transition values set to 0, and widgets not displayed
+TRA1_START = 0
+TRA2_START = 0
 
 # Simulation time
-DAYS = 720 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS
+DAYS = DUR1_START
 
 # Propagation rate parameters
 #
@@ -121,9 +122,9 @@ PLOT_TITLE  ='Aware'
 PLOT2_TITLE ='New, Recovered'
 PLOT3_TITLE ='Rt estimation'
 PLOT4_TITLE ='Immunity'
-PLOT5_TITLE ='Customers'
+PLOT5_TITLE ='New Customers'
 PLOT6_TITLE ='Accumulated awareness / forgettings'
-PLOT7_TITLE ='Accumulated sales'
+PLOT7_TITLE ='Accumulated customers'
 PLOT8_TITLE =str(INCIDENCE_PERIOD) + ' day incidence per 100m habitants'
 PLOT9_TITLE ='Prevalence'
 
