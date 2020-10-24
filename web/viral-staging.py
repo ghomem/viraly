@@ -131,15 +131,15 @@ PLOT9_TITLE ='Prevalence'
 T_LABEL       = 'Infectious Period'
 T_STDEV_LABEL = 'NOT IN USE Infectious Period Standard Deviation'
 L_LABEL       = 'Latent Period'
-POP_LABEL     = 'Market Size (Millions)'
+POP_LABEL     = 'Interested Population Size (Millions)'
 IIF_LABEL     = 'Initial awareness'
 DUR1_LABEL    = 'First phase duration'
 DUR2_LABEL    = 'Second phase duration (including transition)'
 TRA1_LABEL    = 'Transition to second phase duration'
 TRA2_LABEL    = 'Transition to third phase duration'
-BETA1_LABEL   = 'Beta during first phase (x10)'
-BETA2_LABEL   = 'Beta during second phase (x10)'
-BETA3_LABEL   = 'Beta during third phase (x10)'
+BETA1_LABEL   = 'Beta (x10)'
+BETA2_LABEL   = 'NOT IN USE Beta during second phase (x10)'
+BETA3_LABEL   = 'NOT IN USE Beta during third phase (x10)'
 DRATE_LABEL   = 'Conversion rate (%)'
 
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
@@ -531,7 +531,7 @@ notes.text    = TEXT_NOTES
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 #inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 # not adding STDEV as it is too slow on a long simulation
-inputs = column(intro, population, iinfections, period,                latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
+inputs = column(intro, population, iinfections, period,                latent, beta1, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
