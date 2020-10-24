@@ -113,6 +113,11 @@ DRATE_MAX   = 50
 DRATE_START = 0.50
 DRATE_STEP  = 0.05
 
+CPC_MIN     = 0.05
+CPC_MAX     = 2
+CPC_START   = 0.4
+CPC_STEP    = 0.05
+
 # for the incidence plot
 INCIDENCE_PERIOD = 14
 
@@ -141,6 +146,7 @@ BETA1_LABEL   = 'Beta (x10)'
 BETA2_LABEL   = 'NOT IN USE Beta during second phase (x10)'
 BETA3_LABEL   = 'NOT IN USE Beta during third phase (x10)'
 DRATE_LABEL   = 'Conversion rate (%)'
+CPC_LABEL     = 'Cost per contact'
 
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
@@ -307,6 +313,7 @@ beta2 = Slider(title=BETA2_LABEL, value=BETA2_START, start=BETA_MIN, end=BETA2_M
 beta3 = Slider(title=BETA3_LABEL, value=BETA3_START, start=BETA_MIN, end=BETA3_MAX, step=BETA3_STEP)
 
 drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_MAX, step=DRATE_STEP)
+cpc   = Slider(title=CPC_LABEL,   value=CPC_START,   start=CPC_MIN,   end=CPC_MAX,   step=CPC_STEP)
 
 button = Button(label="Reset", button_type="default")
 
@@ -318,7 +325,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate ]:
+for w in [population, iinfections, period, period_stdev, latent, duration1, duration2, transition1, transition2, beta1, beta2, beta3, drate, cpc ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
@@ -414,7 +421,7 @@ plot5.yaxis.axis_label = PLOT_Y_LABEL
 plot5.add_tools(hover5)
 plot5.toolbar.active_inspect = None
 
-plot5.line('x', 'y', source=source_dead, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Dead' )
+plot5.line('x', 'y', source=source_dead, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='New customers' )
 
 # plot 6
 
@@ -522,7 +529,11 @@ plot9.add_layout(transition2_box)
 intro.text    = TEXT_INTRO
 summary.text  = TEXT_SUMMARY
 summary.style = { 'font-weight' : 'bold' }
-stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2])
+
+# including cost stats for marketing version
+tcost         = cpc.value * iinfections.value
+extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( tcost / ar_stats[2] )
+stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2]) + extra_str
 stats.text    = stats_str
 notes.text    = TEXT_NOTES
 
@@ -530,7 +541,7 @@ notes.text    = TEXT_NOTES
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 #inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 # not adding STDEV as it is too slow on a long simulation
-inputs = column(intro, population, iinfections, period,                latent, beta1, drate, button, summary, stats, notespacer, notes)
+inputs = column(intro, population, iinfections, period,                latent, beta1, drate, cpc, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
