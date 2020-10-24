@@ -68,23 +68,6 @@ L_MIN   = 1
 L_MAX   = 20
 L_START = 1
 
-# Stage durations 
-DUR_MIN  = 1
-DUR1_MAX = 30
-DUR2_MAX = 60
-
-DUR1_START = 365
-DUR2_START = 0
-
-# Transition durations
-TRA_MIN  = 0
-TRA1_MAX = 45
-TRA2_MAX = 180
-
-# Transition values set to 0, and widgets not displayed
-TRA1_START = 0
-TRA2_START = 0
-
 # Simulation time
 DAYS = 365
 
