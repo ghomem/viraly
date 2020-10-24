@@ -449,7 +449,7 @@ stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + '<br/>Reco
 stats.text = stats_str
 
 # Set up layouts and add to document
-notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
+notespacer = Spacer(width=TEXT_WIDTH, height=20, width_policy='auto', height_policy='fixed')
 
 # simplified set for the marketing simulation
 inputs = column(intro, population, iinfections, period, h1, p1, drate, cpc, button, summary, stats, notespacer, notes)
