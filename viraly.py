@@ -128,8 +128,8 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     # the correction here is different becase current does not include outgoers...
     # we need to use the share of the population available for infection
     correction = max(( 1 - (M-m)/M ),0)
-    # new cases
-    nc = current*h*p*correction
+    # new cases - not more than the available population please!
+    nc = max( current*h*p*correction, m)
     # Rt - attempt at estimating
     rt = h*p*T*correction
 
