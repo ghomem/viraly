@@ -43,13 +43,13 @@ CMD_PYTHON = '/usr/bin/python3'
 # Population
 POP_MIN   = 1
 POP_MAX   = 330
-POP_START = 100 # people that can get infected with the message, not the businesses themselves
+POP_START = 54  # people that can get infected with the message, not the businesses themselves
 POP_STEP  = 0.5 # conversion rate from infected people to businesses
 
 # Initial infections
 IIF_MIN   = 1000
 IIF_MAX   = 50000
-IIF_START = 20000
+IIF_START = 15000
 
 # Infectious period
 T_MIN   = 1
@@ -97,7 +97,7 @@ DAYS = DUR1_START
 BETA_MIN  =  0
 
 BETA1_MAX   = 0.8  * 10
-BETA1_START = 0.335* 10
+BETA1_START = 0.37 * 10
 BETA1_STEP  = 0.01
 
 # NOT IN USE #
