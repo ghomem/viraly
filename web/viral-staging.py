@@ -103,7 +103,7 @@ CPC_STEP    = 0.05
 INCIDENCE_PERIOD = 14
 
 # labels and strings
-PAGE_TITLE  ='Startup marketing simulator'
+PAGE_TITLE  ='Viral marketing simulator'
 PLOT_TITLE  ='Aware'
 PLOT2_TITLE ='New awareness, New unawareness'
 PLOT3_TITLE ='Rt estimation'
