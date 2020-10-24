@@ -43,11 +43,11 @@ CMD_PYTHON = '/usr/bin/python3'
 # Population
 POP_MIN   = 1
 POP_MAX   = 330
-POP_START = 10.2
-POP_STEP  = 0.5
+POP_START = 100 # people that can get infected with the message, not the businesses themselves
+POP_STEP  = 0.5 # conversion rate from infected people to businesses
 
 # Initial infections
-IIF_MIN   = 100
+IIF_MIN   = 5000
 IIF_MAX   = 50000
 IIF_START = 5
 
@@ -97,7 +97,7 @@ DAYS = DUR1_START
 BETA_MIN  =  0
 
 BETA1_MAX   = 0.8  * 10
-BETA1_START = 0.1* 10
+BETA1_START = 0.35* 10
 BETA1_STEP  = 0.01
 
 BETA2_MAX   = 0.2   * 10
@@ -263,7 +263,7 @@ def update_data(attrname, old, new):
     transition2_box.left  = transition2_begin
     transition2_box.right = transition2_end
 
-    stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2])
+    stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2])
     stats.text = stats_str
 
 def reset_data():
