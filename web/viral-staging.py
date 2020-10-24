@@ -49,7 +49,7 @@ POP_STEP  = 0.5 # conversion rate from infected people to businesses
 # Initial infections
 IIF_MIN   = 1000
 IIF_MAX   = 50000
-IIF_START = 5000
+IIF_START = 20000
 
 # Infectious period
 T_MIN   = 1
@@ -97,14 +97,14 @@ DAYS = DUR1_START
 BETA_MIN  =  0
 
 BETA1_MAX   = 0.8  * 10
-BETA1_START = 0.338* 10
+BETA1_START = 0.335* 10
 BETA1_STEP  = 0.01
 
-BETA2_MAX   = 0.2   * 10
+BETA2_MAX   = 0.2* 10
 BETA2_START = 0.1* 10
 BETA2_STEP  = 0.01
 
-BETA3_MAX   = 0.2   * 10
+BETA3_MAX   = 0.2* 10
 BETA3_START = 0.1* 10
 BETA3_STEP  = 0.01
 
