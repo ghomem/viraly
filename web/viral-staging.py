@@ -119,7 +119,7 @@ INCIDENCE_PERIOD = 14
 # labels and strings
 PAGE_TITLE  ='Startup marketing simulator'
 PLOT_TITLE  ='Aware'
-PLOT2_TITLE ='New, Recovered'
+PLOT2_TITLE ='New awareness, New unawareness'
 PLOT3_TITLE ='Rt estimation'
 PLOT4_TITLE ='Immunity'
 PLOT5_TITLE ='New Customers'
@@ -131,7 +131,7 @@ PLOT9_TITLE ='Prevalence'
 T_LABEL       = 'Infectious Period'
 T_STDEV_LABEL = 'NOT IN USE Infectious Period Standard Deviation'
 L_LABEL       = 'Latent Period'
-POP_LABEL     = 'Interested Population Size (Millions)'
+POP_LABEL     = 'Relevant Population Size (Millions)'
 IIF_LABEL     = 'Initial awareness'
 DUR1_LABEL    = 'First phase duration'
 DUR2_LABEL    = 'Second phase duration (including transition)'
@@ -145,9 +145,10 @@ DRATE_LABEL   = 'Conversion rate (%)'
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
-              &bull;&beta; = hp.<br/>\
-              &bull;R0 = hpT.<br/>\
-              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>'
+              &bull; &beta; = hp.<br/>\
+              &bull; R0 = hpT.<br/>\
+              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>\
+              &bull; Background info at <a href="https://web.stanford.edu/class/symbsys205/tipping_point.html">web.stanford.eu</a>'
 ### End of configuration
 
 ### Functions
@@ -366,7 +367,7 @@ plot2.xaxis.axis_label = PLOT_X_LABEL
 plot2.yaxis.axis_label = PLOT_Y_LABEL
 
 plot2.line('x', 'y', source=source_new, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='New awareness' )
-plot2.line('x', 'y', source=source_rec, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='New forgettings')
+plot2.line('x', 'y', source=source_rec, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='New unawareness')
 plot2.add_tools(hover2)
 plot.toolbar.active_inspect = None
 
@@ -426,8 +427,8 @@ plot6 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT6_TITLE
 plot6.xaxis.axis_label = PLOT_X_LABEL
 plot6.yaxis.axis_label = PLOT_Y_LABEL
 
-plot6.line('x', 'y', source=source_na, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='Cases' )
-plot6.line('x', 'y', source=source_ra, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Recoveries')
+plot6.line('x', 'y', source=source_na, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='Once aware' )
+plot6.line('x', 'y', source=source_ra, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Unaware')
 plot6.legend.location = 'bottom_right'
 plot6.add_tools(hover6)
 plot.toolbar.active_inspect = None
