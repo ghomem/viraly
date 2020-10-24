@@ -73,7 +73,7 @@ DUR_MIN  = 1
 DUR1_MAX = 30
 DUR2_MAX = 60
 
-DUR1_START = 720
+DUR1_START = 365
 DUR2_START = 0
 
 # Transition durations
