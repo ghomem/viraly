@@ -99,7 +99,7 @@ BETA_MIN  =  0
 H1_MIN   = 0
 H1_MAX   = 100
 H1_START = 20
-H1_STEP  = 1
+H1_STEP  = 0.01
 
 P1_MIN   = 0
 P1_MAX   = 10
