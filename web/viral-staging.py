@@ -279,7 +279,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, h1, p1, beta2, beta3, drate, cpc ]:
+for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, cpc ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
@@ -287,7 +287,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(1, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source_active = ColumnDataSource(data=dict(x=x, y=y1))
