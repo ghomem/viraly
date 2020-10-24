@@ -233,8 +233,8 @@ def update_data(attrname, old, new):
     source_pr.data     = dict(x=x, y=y11)
 
     # including cost stats for marketing version
-    beta          = round ( h1.value * p1.value / 100 , 2)
-    R0            = round ( beta * period.value , 2)
+    beta          = round ( h1.value * p1.value / 100 , 4)
+    R0            = round ( beta * period.value , 4)
     pre_str       = '<br/>Beta: ' + str(beta) + '<br/>R0: ' + str(R0) 
     tcost         = round ( cpc.value * iinfections.value , 2 )
     extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
@@ -441,7 +441,7 @@ summary.style = { 'font-weight' : 'bold' }
 
 # including cost stats for marketing version
 beta          = round ( h1.value * p1.value / 100 , 2)
-R0            = round ( beta * period.value , 2)
+R0            = round ( beta * period.value , 4)
 pre_str       = '<br/>Beta: ' + str(beta) + '<br/>R0: ' + str(R0)
 tcost         = round ( cpc.value * iinfections.value , 2 )
 extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
