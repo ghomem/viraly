@@ -102,8 +102,8 @@ H1_START = 20
 H1_STEP  = 1
 
 P1_MIN   = 0
-P1_MAX   = 1
-P1_START = 0.016
+P1_MAX   = 10
+P1_START = 0.016 * 10
 P1_STEP  = 0.01
 
 # NOT IN USE #
@@ -153,7 +153,7 @@ DUR2_LABEL    = 'Second phase duration (including transition)'
 TRA1_LABEL    = 'Transition to second phase duration'
 TRA2_LABEL    = 'Transition to third phase duration'
 H1_LABEL      = 'Interactions per day'
-P1_LABEL      = 'Probability of transmission'
+P1_LABEL      = 'Probability of transmission (x10)'
 BETA2_LABEL   = 'NOT IN USE Beta during second phase (x10)'
 BETA3_LABEL   = 'NOT IN USE Beta during third phase (x10)'
 DRATE_LABEL   = 'Conversion rate (%)'
@@ -252,7 +252,7 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, h1.value*p1.value*10, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, h1.value*p1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source_active.data = dict(x=x, y=y1)
@@ -351,7 +351,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(1, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, h1.value*p1.value*10, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, h1.value*p1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source_active = ColumnDataSource(data=dict(x=x, y=y1))
