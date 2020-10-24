@@ -96,11 +96,13 @@ DAYS = DUR1_START
 #
 BETA_MIN  =  0
 
-H1_MAX   = 0
-H1_START = 100
+H1_MIN   = 0
+H1_MAX   = 100
+H1_START = 20
 H1_STEP  = 1
 
 P1_MIN   = 0
+P1_MAX   = 1
 P1_START = 0.016
 P1_STEP  = 0.01
 
