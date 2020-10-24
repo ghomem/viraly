@@ -153,7 +153,7 @@ TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
               &bull; &beta; = hp.<br/>\
               &bull; R0 = hpT.<br/>\
-              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>\
+              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>.<br/>\
               &bull; Background info at <a href="https://web.stanford.edu/class/symbsys205/tipping_point.html">web.stanford.eu</a>'
 ### End of configuration
 
@@ -271,7 +271,7 @@ def update_data(attrname, old, new):
     transition2_box.right = transition2_end
 
     # including cost stats for marketing version
-    tcost         = cpc.value * iinfections.value
+    tcost         = round ( cpc.value * iinfections.value , 2 )
     extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
     stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2]) + extra_str
     stats.text = stats_str
@@ -290,6 +290,7 @@ def reset_data():
     beta2.value        = BETA2_START
     beta3.value        = BETA3_START
     drate.value        = DRATE_START
+    cpc.value          = CPC_START
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
@@ -534,7 +535,7 @@ summary.text  = TEXT_SUMMARY
 summary.style = { 'font-weight' : 'bold' }
 
 # including cost stats for marketing version
-tcost         = cpc.value * iinfections.value
+tcost         = round ( cpc.value * iinfections.value , 2 )
 extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
 stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2]) + extra_str
 stats.text    = stats_str
