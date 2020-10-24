@@ -96,9 +96,11 @@ DAYS = DUR1_START
 #
 BETA_MIN  =  0
 
-BETA1_MAX   = 0.8  * 10
-BETA1_START = 0.335* 10
+BETA1_MAX   = 0.8
+BETA1_START = 0.335
 BETA1_STEP  = 0.01
+
+# NOT IN USE #
 
 BETA2_MAX   = 0.2* 10
 BETA2_START = 0.1* 10
@@ -107,6 +109,8 @@ BETA2_STEP  = 0.01
 BETA3_MAX   = 0.2* 10
 BETA3_START = 0.1* 10
 BETA3_STEP  = 0.01
+
+# / NOT IN USE #
 
 DRATE_MIN   = 0.05
 DRATE_MAX   = 10
@@ -142,7 +146,7 @@ DUR1_LABEL    = 'First phase duration'
 DUR2_LABEL    = 'Second phase duration (including transition)'
 TRA1_LABEL    = 'Transition to second phase duration'
 TRA2_LABEL    = 'Transition to third phase duration'
-BETA1_LABEL   = 'Beta (x10)'
+BETA1_LABEL   = 'Beta'
 BETA2_LABEL   = 'NOT IN USE Beta during second phase (x10)'
 BETA3_LABEL   = 'NOT IN USE Beta during third phase (x10)'
 DRATE_LABEL   = 'Conversion rate (%)'
@@ -151,9 +155,9 @@ CPC_LABEL     = 'Cost per contact'
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
-              &bull; &beta; = hp.<br/>\
-              &bull; R0 = hpT.<br/>\
-              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>.<br/>\
+              &bull; &beta; = hp<br/>\
+              &bull; R0 = hpT<br/>\
+              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a><br/>\
               &bull; Background info at <a href="https://web.stanford.edu/class/symbsys205/tipping_point.html">web.stanford.eu</a>'
 ### End of configuration
 
