@@ -85,7 +85,7 @@ TRA1_START = 18
 TRA2_START = 90
 
 # Simulation time
-DAYS = 720 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS 
+DAYS = 720 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS
 
 # Propagation rate parameters
 #
@@ -96,15 +96,15 @@ DAYS = 720 # DUR1_MAX + DUR2_MAX + DUR3 < DAYS
 BETA_MIN  =  0
 
 BETA1_MAX   = 0.6  * 10
-BETA1_START = 0.46 * 10
+BETA1_START = 0.2* 10
 BETA1_STEP  = 0.01
 
-BETA2_MAX   = 0.1   * 10
-BETA2_START = 0.041 * 10
+BETA2_MAX   = 0.6   * 10
+BETA2_START = 0.2* 10
 BETA2_STEP  = 0.01
 
-BETA3_MAX   = 0.1   * 10
-BETA3_START = 0.059 * 10
+BETA3_MAX   = 0.6   * 10
+BETA3_START = 0.2* 10
 BETA3_STEP  = 0.01
 
 DRATE_MIN   = 0
@@ -117,29 +117,29 @@ INCIDENCE_PERIOD = 14
 
 # labels and strings
 PAGE_TITLE  ='3 stage epidemic simulator'
-PLOT_TITLE  ='Active'
+PLOT_TITLE  ='Aware'
 PLOT2_TITLE ='New, Recovered'
 PLOT3_TITLE ='Rt estimation'
 PLOT4_TITLE ='Immunity'
-PLOT5_TITLE ='Dead'
-PLOT6_TITLE ='Accumulated cases / recoveries'
-PLOT7_TITLE ='Accumulated deaths'
+PLOT5_TITLE ='Customers'
+PLOT6_TITLE ='Accumulated awareness / forgettings'
+PLOT7_TITLE ='Accumulated sales'
 PLOT8_TITLE =str(INCIDENCE_PERIOD) + ' day incidence per 100m habitants'
 PLOT9_TITLE ='Prevalence'
 
 T_LABEL       = 'Infectious Period'
-T_STDEV_LABEL = 'Infectious Period Standard Deviation'
+T_STDEV_LABEL = 'NOT IN USE Infectious Period Standard Deviation'
 L_LABEL       = 'Latent Period'
-POP_LABEL     = 'Population (Millions)'
-IIF_LABEL     = 'Initial number of infections'
-DUR1_LABEL    = 'Free expansion duration'
-DUR2_LABEL    = 'Confinement duration (including transition)'
-TRA1_LABEL    = 'Transition to confinement duration'
-TRA2_LABEL    = 'Transition to deconfinement duration'
-BETA1_LABEL   = 'Beta during free expansion (x10)'
-BETA2_LABEL   = 'Beta during confinement (x10)'
-BETA3_LABEL   = 'Beta after confinement (x10)'
-DRATE_LABEL   = 'Death rate (%)'
+POP_LABEL     = 'Market Size (Millions)'
+IIF_LABEL     = 'Initial awareness'
+DUR1_LABEL    = 'First phase duration'
+DUR2_LABEL    = 'Second phase duration (including transition)'
+TRA1_LABEL    = 'Transition to second phase duration'
+TRA2_LABEL    = 'Transition to third phase duration'
+BETA1_LABEL   = 'Beta during first phase (x10)'
+BETA2_LABEL   = 'Beta during second phase (x10)'
+BETA3_LABEL   = 'Beta during third phase (x10)'
+DRATE_LABEL   = 'Conversion rate (%)'
 
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
@@ -206,7 +206,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     # calculate % of initial population which is immunized
     im_history = list ( numpy.array( ra_history ) * (100/M) )
 
-    # calculate standard 14 day incidence por 100 000 people
+    # calculate standard 14 day incidence per 100 000 people
     ic_history = []
     for j in range (0, len(n_history)):
         if ( j < INCIDENCE_PERIOD ):
@@ -528,7 +528,9 @@ notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
-inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
+#inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
+# not adding STDEV as it is too slow on a long simulation
+inputs = column(intro, population, iinfections, period,                latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
