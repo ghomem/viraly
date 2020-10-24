@@ -86,7 +86,7 @@ TRA1_START = 0
 TRA2_START = 0
 
 # Simulation time
-DAYS = DUR1_START
+DAYS = 365
 
 # Propagation rate parameters
 #
@@ -105,18 +105,6 @@ P1_MIN   = 0
 P1_MAX   = 100
 P1_START = 0.0169 * 100
 P1_STEP  = 0.01
-
-# NOT IN USE #
-
-BETA2_MAX   = 0
-BETA2_START = 0
-BETA2_STEP  = 0
-
-BETA3_MAX   = 0
-BETA3_START = 0
-BETA3_STEP  = 0
-
-# / NOT IN USE #
 
 DRATE_MIN   = 0.05
 DRATE_MAX   = 10
@@ -148,14 +136,8 @@ T_STDEV_LABEL = 'NOT IN USE Infectious Period Standard Deviation'
 L_LABEL       = 'Latent Period'
 POP_LABEL     = 'Relevant audience size (Millions)'
 IIF_LABEL     = 'Sponsored contacts'
-DUR1_LABEL    = 'First phase duration'
-DUR2_LABEL    = 'Second phase duration (including transition)'
-TRA1_LABEL    = 'Transition to second phase duration'
-TRA2_LABEL    = 'Transition to third phase duration'
 H1_LABEL      = 'Interactions per day'
 P1_LABEL      = 'Probability of transmission (x100)'
-BETA2_LABEL   = 'NOT IN USE Beta during second phase (x10)'
-BETA3_LABEL   = 'NOT IN USE Beta during third phase (x10)'
 DRATE_LABEL   = 'Conversion rate (%)'
 CPC_LABEL     = 'Cost per contact'
 
@@ -252,7 +234,7 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, h1.value*p1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source_active.data = dict(x=x, y=y1)
@@ -267,20 +249,6 @@ def update_data(attrname, old, new):
     source_ic.data     = dict(x=x, y=y10)
     source_pr.data     = dict(x=x, y=y11)
 
-    transition1_begin = duration1.value
-    transition1_end   = transition1_begin + transition1.value
-    confinement_begin = transition1_end
-    confinement_end   = confinement_begin + ( duration2.value - transition1.value )
-    transition2_begin = confinement_end
-    transition2_end   = transition2_begin + transition2.value
-
-    transition1_box.left  = transition1_begin
-    transition1_box.right = transition1_end
-    confinement_box.left  = confinement_begin
-    confinement_box.right = confinement_end
-    transition2_box.left  = transition2_begin
-    transition2_box.right = transition2_end
-
     # including cost stats for marketing version
     tcost         = round ( cpc.value * iinfections.value , 2 )
     extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
@@ -293,14 +261,8 @@ def reset_data():
     period.value       = T_START
     period_stdev.value = T_STDEV_START
     latent.value       = L_START
-    duration1.value    = DUR1_START
-    duration2.value    = DUR2_START
-    transition1.value  = TRA1_START
-    transition2.value  = TRA2_START
     h1.value           = H1_START
     p1.value           = P1_START
-    beta2.value        = BETA2_START
-    beta3.value        = BETA3_START
     drate.value        = DRATE_START
     cpc.value          = CPC_START
 
@@ -318,17 +280,8 @@ period_stdev = Slider(title=T_STDEV_LABEL, value=T_STDEV_START, start=T_STDEV_MI
 
 latent = Slider(title=L_LABEL, value=L_START, start=L_MIN, end=L_MAX, step=1)
 
-duration1 = Slider(title=DUR1_LABEL, value=DUR1_START, start=DUR_MIN, end=DUR1_MAX, step=1)
-duration2 = Slider(title=DUR2_LABEL, value=DUR2_START, start=DUR_MIN, end=DUR2_MAX, step=1)
-
-transition1 = Slider(title=TRA1_LABEL, value=TRA1_START, start=TRA_MIN, end=TRA1_MAX, step=1)
-transition2 = Slider(title=TRA2_LABEL, value=TRA2_START, start=TRA_MIN, end=TRA2_MAX, step=1)
-
 h1 = Slider(title=H1_LABEL, value=H1_START, start=H1_MIN, end=H1_MAX, step=H1_STEP)
 p1 = Slider(title=P1_LABEL, value=P1_START, start=P1_MIN, end=P1_MAX, step=P1_STEP)
-
-beta2 = Slider(title=BETA2_LABEL, value=BETA2_START, start=BETA_MIN, end=BETA2_MAX, step=BETA2_STEP)
-beta3 = Slider(title=BETA3_LABEL, value=BETA3_START, start=BETA_MIN, end=BETA3_MAX, step=BETA3_STEP)
 
 drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_MAX, step=DRATE_STEP)
 cpc   = Slider(title=CPC_LABEL,   value=CPC_START,   start=CPC_MIN,   end=CPC_MAX,   step=CPC_STEP)
@@ -343,7 +296,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, duration1, duration2, transition1, transition2, h1, p1, beta2, beta3, drate, cpc ]:
+for w in [population, iinfections, period, period_stdev, latent, h1, p1, beta2, beta3, drate, cpc ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
@@ -351,7 +304,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(1, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, duration1.value, duration2.value, transition1.value, transition2.value, h1.value*p1.value, beta2.value, beta3.value, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, beta2.value, beta3.value, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source_active = ColumnDataSource(data=dict(x=x, y=y1))
@@ -494,54 +447,6 @@ plot9.add_tools(hover8)
 plot9.toolbar.active_inspect = None
 
 plot9.line('x', 'y', source=source_pr, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='% Prevalence' )
-
-# highlight phases with boxes
-transition1_begin = duration1.value
-transition1_end   = transition1_begin + transition1.value
-confinement_begin = transition1_end
-confinement_end   = confinement_begin + ( duration2.value - transition1.value)
-transition2_begin = confinement_end
-transition2_end   = transition2_begin + transition2.value
-
-transition1_box = BoxAnnotation(left=transition1_begin, right=transition1_end, fill_alpha=0.1, fill_color='red')
-confinement_box = BoxAnnotation(left=confinement_begin, right=confinement_end, fill_alpha=0.2, fill_color='red')
-transition2_box = BoxAnnotation(left=transition2_begin, right=transition2_end, fill_alpha=0.1, fill_color='yellow')
-
-plot.add_layout(transition1_box)
-plot.add_layout(confinement_box)
-plot.add_layout(transition2_box)
-
-plot2.add_layout(transition1_box)
-plot2.add_layout(confinement_box)
-plot2.add_layout(transition2_box)
-
-plot3.add_layout(transition1_box)
-plot3.add_layout(confinement_box)
-plot3.add_layout(transition2_box)
-
-plot4.add_layout(transition1_box)
-plot4.add_layout(confinement_box)
-plot4.add_layout(transition2_box)
-
-plot5.add_layout(transition1_box)
-plot5.add_layout(confinement_box)
-plot5.add_layout(transition2_box)
-
-plot6.add_layout(transition1_box)
-plot6.add_layout(confinement_box)
-plot6.add_layout(transition2_box)
-
-plot7.add_layout(transition1_box)
-plot7.add_layout(confinement_box)
-plot7.add_layout(transition2_box)
-
-plot8.add_layout(transition1_box)
-plot8.add_layout(confinement_box)
-plot8.add_layout(transition2_box)
-
-plot9.add_layout(transition1_box)
-plot9.add_layout(confinement_box)
-plot9.add_layout(transition2_box)
 
 # misc text
 intro.text    = TEXT_INTRO
