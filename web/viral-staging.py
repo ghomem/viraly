@@ -446,7 +446,8 @@ pre_str       = 'Beta: ' + str(beta) + '<br/>R0: ' + str(R0)
 tcost         = round ( cpc.value * iinfections.value , 2 )
 extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
 stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2]) + extra_str
-stats.text = stats_str
+stats.text    = stats_str
+notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
