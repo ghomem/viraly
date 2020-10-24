@@ -117,7 +117,7 @@ DRATE_STEP  = 0.05
 INCIDENCE_PERIOD = 14
 
 # labels and strings
-PAGE_TITLE  ='Startup markeing simulator'
+PAGE_TITLE  ='Startup marketing simulator'
 PLOT_TITLE  ='Aware'
 PLOT2_TITLE ='New, Recovered'
 PLOT3_TITLE ='Rt estimation'
