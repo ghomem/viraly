@@ -96,7 +96,7 @@ DAYS = DUR1_START
 #
 BETA_MIN  =  0
 
-BETA1_MAX   = 0.2  * 10
+BETA1_MAX   = 0.8  * 10
 BETA1_START = 0.1* 10
 BETA1_STEP  = 0.01
 
@@ -117,7 +117,7 @@ DRATE_STEP  = 0.05
 INCIDENCE_PERIOD = 14
 
 # labels and strings
-PAGE_TITLE  ='3 stage epidemic simulator'
+PAGE_TITLE  ='Startup markeing simulator'
 PLOT_TITLE  ='Aware'
 PLOT2_TITLE ='New, Recovered'
 PLOT3_TITLE ='Rt estimation'
@@ -145,10 +145,8 @@ DRATE_LABEL   = 'Conversion rate (%)'
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
-              &bull; Confinement phase is highlighted in red.<br/>\
-              &bull; Adjacent highlights represent transition periods.<br/>\
-              &bull; Pre/post confinement phases appear in white.<br/>\
-              &bull; For each phase &beta; = hp.<br/>\
+              &bull;&beta; = hp.<br/>\
+              &bull;R0 = hpT.<br/>\
               &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>'
 ### End of configuration
 
@@ -354,7 +352,7 @@ plot.yaxis.axis_label = PLOT_Y_LABEL
 plot.add_tools(hover)
 plot.toolbar.active_inspect = None
 
-plot.line('x', 'y', source=source_active, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Active' )
+plot.line('x', 'y', source=source_active, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Aware' )
 
 # plot 2
 
@@ -367,8 +365,8 @@ plot2 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT2_TITLE
 plot2.xaxis.axis_label = PLOT_X_LABEL
 plot2.yaxis.axis_label = PLOT_Y_LABEL
 
-plot2.line('x', 'y', source=source_new, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='New cases' )
-plot2.line('x', 'y', source=source_rec, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Recoveries')
+plot2.line('x', 'y', source=source_new, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='New awareness' )
+plot2.line('x', 'y', source=source_rec, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='New forgettings')
 plot2.add_tools(hover2)
 plot.toolbar.active_inspect = None
 
@@ -444,7 +442,7 @@ plot7.yaxis.axis_label = PLOT_Y_LABEL
 plot7.add_tools(hover7)
 plot7.toolbar.active_inspect = None
 
-plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Deaths' )
+plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Customers' )
 plot7.legend.location = 'bottom_right'
 
 hover8 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
