@@ -285,7 +285,7 @@ def reset_data():
     iinfections.value  = IIF_START
     period.value       = T_START
     period_stdev.value = T_STDEV_START
-    latent.value   = L_START
+    latent.value       = L_START
     duration1.value    = DUR1_START
     duration2.value    = DUR2_START
     transition1.value  = TRA1_START
@@ -547,9 +547,9 @@ notes.text    = TEXT_NOTES
 
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
-#inputs = column(intro, population, iinfections, period, period_stdev, latent, duration1, transition1, duration2, transition2, beta1, beta2, beta3, drate, button, summary, stats, notespacer, notes)
-# not adding STDEV as it is too slow on a long simulation
-inputs = column(intro, population, iinfections, period,                latent, beta1, drate, cpc, button, summary, stats, notespacer, notes)
+
+# simplified set for the marketing simulation
+inputs = column(intro, population, iinfections, period, beta1, drate, cpc, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
