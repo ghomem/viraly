@@ -270,7 +270,10 @@ def update_data(attrname, old, new):
     transition2_box.left  = transition2_begin
     transition2_box.right = transition2_end
 
-    stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2])
+    # including cost stats for marketing version
+    tcost         = cpc.value * iinfections.value
+    extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
+    stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2]) + extra_str
     stats.text = stats_str
 
 def reset_data():
@@ -532,7 +535,7 @@ summary.style = { 'font-weight' : 'bold' }
 
 # including cost stats for marketing version
 tcost         = cpc.value * iinfections.value
-extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( tcost / ar_stats[2] )
+extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
 stats_str     = 'Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2]) + extra_str
 stats.text    = stats_str
 notes.text    = TEXT_NOTES
