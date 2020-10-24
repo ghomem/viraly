@@ -129,8 +129,8 @@ TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
               &bull; &beta; = hp<br/>\
               &bull; R0 = hpT<br/>\
-              &bull; More info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a><br/>\
-              &bull; Background info at <a href="https://web.stanford.edu/class/symbsys205/tipping_point.html">web.stanford.eu</a>'
+              &bull; Technical info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a><br/>\
+              &bull; Inspirational info at <a href="https://web.stanford.edu/class/symbsys205/tipping_point.html">web.stanford.eu</a>'
 ### End of configuration
 
 ### Functions
