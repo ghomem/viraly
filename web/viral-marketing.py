@@ -48,7 +48,7 @@ POP_STEP  = 0.5 # conversion rate from infected people to businesses
 
 # Initial infections
 IIF_MIN   = 1000
-IIF_MAX   = 50000
+IIF_MAX   = 100000
 IIF_START = 15000
 
 # Infectious period
