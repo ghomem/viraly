@@ -48,7 +48,7 @@ POP_STEP  = 0.5 # conversion rate from infected people to businesses
 
 # Initial infections
 IIF_MIN   = 1000
-IIF_MAX   = 50000
+IIF_MAX   = 100000
 IIF_START = 15000
 
 # Infectious period
@@ -94,43 +94,36 @@ DRATE_MAX   = 10
 DRATE_START = 0.50
 DRATE_STEP  = 0.05
 
-CPC_MIN     = 0.05
-CPC_MAX     = 2
-CPC_START   = 0.4
-CPC_STEP    = 0.05
-
 # for the incidence plot
 INCIDENCE_PERIOD = 14
 
 # labels and strings
-PAGE_TITLE  ='Viral marketing simulator'
-PLOT_TITLE  ='Aware'
-PLOT2_TITLE ='New awareness, New unawareness'
+PAGE_TITLE  ='Simple epidemic simulator'
+PLOT_TITLE  ='Active'
+PLOT2_TITLE ='New, Recovered'
 PLOT3_TITLE ='Rt estimation'
 PLOT4_TITLE ='Immunity'
-PLOT5_TITLE ='New customers'
-PLOT6_TITLE ='Accumulated awareness, accumulated unawareness'
-PLOT7_TITLE ='Accumulated customers'
+PLOT5_TITLE ='Dead'
+PLOT6_TITLE ='Accumulated cases / recoveries'
+PLOT7_TITLE ='Accumulated deaths'
 PLOT8_TITLE =str(INCIDENCE_PERIOD) + ' day incidence per 100m'
 PLOT9_TITLE ='Prevalence'
 
-T_LABEL       = 'Stickyness period'
+T_LABEL       = 'Infectious period'
 T_STDEV_LABEL = 'NOT IN USE Infectious Period Standard Deviation'
 L_LABEL       = 'Latent Period'
-POP_LABEL     = 'Relevant audience size (Millions)'
-IIF_LABEL     = 'Sponsored contacts (one shot)'
+POP_LABEL     = 'Population (Millions)'
+IIF_LABEL     = 'Initial number of infections'
 H1_LABEL      = 'Organic contacts per day'
 P1_LABEL      = 'Probability of transmission (%)'
-DRATE_LABEL   = 'Conversion rate (%)'
-CPC_LABEL     = 'Cost per contact'
+DRATE_LABEL   = 'Death rate (%)'
 
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
               &bull; &beta; = hp<br/>\
               &bull; R0 = hpT<br/>\
-              &bull; Technical info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a><br/>\
-              &bull; Inspirational info at <a href="https://web.stanford.edu/class/symbsys205/tipping_point.html">web.stanford.eu</a>'
+              &bull; Technical info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>'
 ### End of configuration
 
 ### Functions
@@ -236,9 +229,8 @@ def update_data(attrname, old, new):
     beta          = round ( h1.value * p1.value / 100 , 4)
     R0            = round ( beta * period.value , 4)
     pre_str       = 'Beta: ' + str(beta) + '<br/>R0: ' + str(R0) 
-    tcost         = round ( cpc.value * iinfections.value , 2 )
-    extra_str     = '<br/>Total cost: ' + str( tcost ) + '<br/>Cost per customer: ' + str ( round( tcost / ar_stats[2], 2 ) )
-    stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Customers: ' + str(ar_stats[2]) + extra_str
+    extra_str     = 
+    stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
     stats.text = stats_str
 
 def reset_data():
@@ -250,7 +242,6 @@ def reset_data():
     h1.value           = H1_START
     p1.value           = P1_START
     drate.value        = DRATE_START
-    cpc.value          = CPC_START
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
@@ -270,7 +261,6 @@ h1 = Slider(title=H1_LABEL, value=H1_START, start=H1_MIN, end=H1_MAX, step=H1_ST
 p1 = Slider(title=P1_LABEL, value=P1_START, start=P1_MIN, end=P1_MAX, step=P1_STEP)
 
 drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_MAX, step=DRATE_STEP)
-cpc   = Slider(title=CPC_LABEL,   value=CPC_START,   start=CPC_MIN,   end=CPC_MAX,   step=CPC_STEP)
 
 button = Button(label="Reset", button_type="default")
 
