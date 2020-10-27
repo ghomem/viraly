@@ -47,9 +47,9 @@ POP_START = 54  # people that can get infected with the message, not the busines
 POP_STEP  = 0.5 # conversion rate from infected people to businesses
 
 # Initial infections
-IIF_MIN   = 1000
+IIF_MIN   = 100
 IIF_MAX   = 100000
-IIF_START = 15000
+IIF_START = 2000
 
 # Infectious period
 T_MIN   = 1
