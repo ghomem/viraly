@@ -271,7 +271,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, cpc ]:
+for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
@@ -440,7 +440,7 @@ notes.text    = TEXT_NOTES
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 
 # simplified set for the marketing simulation
-inputs = column(intro, population, iinfections, period, h1, p1, drate, cpc, button, summary, stats, notespacer, notes)
+inputs = column(intro, population, iinfections, period, h1, p1, drate, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
