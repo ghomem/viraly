@@ -47,9 +47,9 @@ POP_START = 10.2
 POP_STEP  = 0.5
 
 # Initial infections
-IIF_MIN   = 100
-IIF_MAX   = 100000
-IIF_START = 2000
+IIF_MIN   = 50
+IIF_MAX   = 5000
+IIF_START = 100
 
 # Infectious period
 T_MIN   = 1
