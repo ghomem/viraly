@@ -54,7 +54,7 @@ IIF_START = 2000
 # Infectious period
 T_MIN   = 1
 T_MAX   = 15
-T_START = 3
+T_START = 4
 
 # and its Standard Deviation
 T_STDEV_MIN   = 0
@@ -81,17 +81,17 @@ BETA_MIN  =  0
 
 H1_MIN   = 0
 H1_MAX   = 100
-H1_START = 20
+H1_START = 18
 H1_STEP  = 0.1
 
 P1_MIN   = 0
 P1_MAX   = 100
-P1_START = 0.0169 * 100
+P1_START = 0.0163 * 100
 P1_STEP  = 0.01
 
 DRATE_MIN   = 0.05
 DRATE_MAX   = 10
-DRATE_START = 0.50
+DRATE_START = 0.1
 DRATE_STEP  = 0.05
 
 # for the incidence plot
