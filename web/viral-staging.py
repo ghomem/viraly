@@ -319,8 +319,8 @@ plot2 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT2_TITLE
 plot2.xaxis.axis_label = PLOT_X_LABEL
 plot2.yaxis.axis_label = PLOT_Y_LABEL
 
-plot2.line('x', 'y', source=source_new, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='New awareness' )
-plot2.line('x', 'y', source=source_rec, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='New unawareness')
+plot2.line('x', 'y', source=source_new, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='New cases' )
+plot2.line('x', 'y', source=source_rec, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Recoveries')
 plot2.add_tools(hover2)
 plot.toolbar.active_inspect = None
 
@@ -367,7 +367,7 @@ plot5.yaxis.axis_label = PLOT_Y_LABEL
 plot5.add_tools(hover5)
 plot5.toolbar.active_inspect = None
 
-plot5.line('x', 'y', source=source_dead, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='New customers' )
+plot5.line('x', 'y', source=source_dead, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Deaths' )
 
 # plot 6
 
@@ -380,8 +380,8 @@ plot6 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT6_TITLE
 plot6.xaxis.axis_label = PLOT_X_LABEL
 plot6.yaxis.axis_label = PLOT_Y_LABEL
 
-plot6.line('x', 'y', source=source_na, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='Once aware' )
-plot6.line('x', 'y', source=source_ra, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Unaware')
+plot6.line('x', 'y', source=source_na, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='Cases' )
+plot6.line('x', 'y', source=source_ra, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Recoveries')
 plot6.legend.location = 'bottom_right'
 plot6.add_tools(hover6)
 plot.toolbar.active_inspect = None
@@ -396,7 +396,7 @@ plot7.yaxis.axis_label = PLOT_Y_LABEL
 plot7.add_tools(hover7)
 plot7.toolbar.active_inspect = None
 
-plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Customers' )
+plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Dead' )
 plot7.legend.location = 'bottom_right'
 
 hover8 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
