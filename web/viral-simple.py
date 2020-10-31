@@ -306,7 +306,7 @@ plot.yaxis.axis_label = PLOT_Y_LABEL
 plot.add_tools(hover)
 plot.toolbar.active_inspect = None
 
-plot.line('x', 'y', source=source_active, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Aware' )
+plot.line('x', 'y', source=source_active, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Active' )
 
 # plot 2
 
