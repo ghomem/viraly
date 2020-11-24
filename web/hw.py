@@ -12,7 +12,7 @@ from bokeh.models import ColumnDataSource, Slider, TextInput, BoxAnnotation, Hov
 from bokeh.plotting import figure
 
 TEXT_WIDTH     = 300
-TEXT_STR       = 'Under construction L2'
+TEXT_STR       = 'Website under construction L2. Hello world :-)'
 PAGE_TITLE     = 'L2 Website HW'
 
 hw             = Div(text=TEXT_STR, width=TEXT_WIDTH)
