@@ -265,7 +265,11 @@ def vaccinate_data():
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
 
+def vaccinate50_data():
+        im.value  = 50
 
+    # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
+    update_data('xxxx',0,0)
 
 ### Main
 
@@ -285,8 +289,9 @@ drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_
 
 im = Slider(title=IM_LABEL, value=IM_START, start=IM_MIN, end=IM_MAX, step=IM_STEP)
 
-button  = Button(label="Reset",     button_type="default")
-button2 = Button(label="Vaccinate", button_type="default")
+button  = Button(label="Reset",         button_type="default")
+button2 = Button(label="Vaccinate min", button_type="default")
+button3 = Button(label="Vaccinate 50%", button_type="default")
 
 # text widgets
 intro   = Div(text='', width=TEXT_WIDTH)
@@ -304,6 +309,7 @@ button.on_click(reset_data)
 
 # vaccinate the population
 button2.on_click(vaccinate_data)
+button3.on_click(vaccinate50_data)
 
 # initial plot
 x = np.linspace(1, DAYS, DAYS)
@@ -471,7 +477,7 @@ notes.text    = TEXT_NOTES
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 
 # simplified set
-inputs = column(intro, population, iinfections, period, h1, p1, drate, im, button2, button, summary, stats, notespacer, notes)
+inputs = column(intro, population, iinfections, period, h1, p1, drate, im, button2, button3, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
