@@ -94,6 +94,11 @@ DRATE_MAX   = 10
 DRATE_START = 0.25
 DRATE_STEP  = 0.05
 
+IM_MIN   = 0
+IM_MIN   = 100
+IM_START = 0
+IM_STEP  = 0.5
+
 # for the incidence plot
 INCIDENCE_PERIOD = 14
 
@@ -117,6 +122,7 @@ IIF_LABEL     = 'Initial number of infections'
 H1_LABEL      = 'Organic contacts per day'
 P1_LABEL      = 'Probability of transmission (%)'
 DRATE_LABEL   = 'Death rate (%)'
+IM_LABEL      = 'Pre immunized (%)'
 
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
@@ -167,7 +173,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     silent = True
     top_level = run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4 )
 
-    # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
+    # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history, i_history ]
     # we chop the first element because it is the initial condition (ex: new cases don't make sense there, especially on a second wave simulation )
     n_history  = top_level[0][1:]
     nc_history = top_level[1][1:]
@@ -177,9 +183,12 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     da_history = top_level[7][1:]
     rt_history = top_level[8][1:]
     na_history = top_level[9][1:]
+    i_history = top_level[10][1:]
 
-    # calculate % of initial population which is immunized
-    im_history = list ( numpy.array( ra_history ) * (100/M) )
+    # calculate % of initial population which is recovered
+    rc_history = list ( numpy.array( ra_history ) * (100/M) )
+    # same % calculation for immunity history which comes in absolute numbers
+    im_history = list ( numpy.array( i_history )  * (100/M) )
 
     # calculate standard 14 day incidence per 100 000 people
     ic_history = []
@@ -203,7 +212,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     ar_stats = [ t_transmissions, t_recoveries, t_deaths ]
 
     # Active, New, Recovered, Dead, Rt, Immunized + accumulated Cases, Recoveries and Deaths + Stats
-    return n_history, nc_history, r_history, d_history, rt_history, im_history, na_history, ra_history, da_history, ic_history, pr_history, ar_stats
+    return n_history, nc_history, r_history, d_history, rt_history, rc_history, im_history, na_history, ra_history, da_history, ic_history, pr_history, ar_stats
 
 # callback function dor updating the data
 def update_data(attrname, old, new):
@@ -218,12 +227,13 @@ def update_data(attrname, old, new):
     source_rec.data    = dict(x=x, y=y3)
     source_dead.data   = dict(x=x, y=y4)
     source_rt.data     = dict(x=x, y=y5)
-    source_im.data     = dict(x=x, y=y6)
-    source_na.data     = dict(x=x, y=y7)
-    source_ra.data     = dict(x=x, y=y8)
-    source_da.data     = dict(x=x, y=y9)
-    source_ic.data     = dict(x=x, y=y10)
-    source_pr.data     = dict(x=x, y=y11)
+    source_rc.data     = dict(x=x, y=y6)
+    source_im.data     = dict(x=x, y=y7)
+    source_na.data     = dict(x=x, y=y8)
+    source_ra.data     = dict(x=x, y=y9)
+    source_da.data     = dict(x=x, y=y10)
+    source_ic.data     = dict(x=x, y=y11)
+    source_pr.data     = dict(x=x, y=y12)
 
     beta          = round ( h1.value * p1.value / 100 , 4)
     R0            = round ( beta * period.value , 4)
@@ -241,6 +251,7 @@ def reset_data():
     h1.value           = H1_START
     p1.value           = P1_START
     drate.value        = DRATE_START
+    im.value           = IM_START
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
@@ -260,6 +271,8 @@ h1 = Slider(title=H1_LABEL, value=H1_START, start=H1_MIN, end=H1_MAX, step=H1_ST
 p1 = Slider(title=P1_LABEL, value=P1_START, start=P1_MIN, end=P1_MAX, step=P1_STEP)
 
 drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_MAX, step=DRATE_STEP)
+
+im = Slider(title=IM_LABEL, value=IM_START, start=IM_MIN, end=IM_MAX, step=IM_STEP)
 
 button = Button(label="Reset", button_type="default")
 
@@ -287,12 +300,13 @@ source_new    = ColumnDataSource(data=dict(x=x, y=y2))
 source_rec    = ColumnDataSource(data=dict(x=x, y=y3))
 source_dead   = ColumnDataSource(data=dict(x=x, y=y4))
 source_rt     = ColumnDataSource(data=dict(x=x, y=y5))
-source_im     = ColumnDataSource(data=dict(x=x, y=y6))
-source_na     = ColumnDataSource(data=dict(x=x, y=y7))
-source_ra     = ColumnDataSource(data=dict(x=x, y=y8))
-source_da     = ColumnDataSource(data=dict(x=x, y=y9))
-source_ic     = ColumnDataSource(data=dict(x=x, y=y10))
-source_pr     = ColumnDataSource(data=dict(x=x, y=y11))
+source_rc     = ColumnDataSource(data=dict(x=x, y=y6))
+source_im     = ColumnDataSource(data=dict(x=x, y=y7))
+source_na     = ColumnDataSource(data=dict(x=x, y=y8))
+source_ra     = ColumnDataSource(data=dict(x=x, y=y9))
+source_da     = ColumnDataSource(data=dict(x=x, y=y10))
+source_ic     = ColumnDataSource(data=dict(x=x, y=y11))
+source_pr     = ColumnDataSource(data=dict(x=x, y=y12))
 
 # plot 1
 
@@ -352,6 +366,7 @@ plot4.yaxis.axis_label = PLOT_Y_LABEL2
 plot4.add_tools(hover4)
 plot4.toolbar.active_inspect = None
 
+plot4.line('x', 'y', source=source_rc, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Recovered' )
 plot4.line('x', 'y', source=source_im, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
 plot4.legend.location = 'bottom_right'
 

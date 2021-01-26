@@ -112,7 +112,7 @@ def get_older_model4 ( time, history, M, T, L ):
 
 # common to models 3 and 4
 
-def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False ):
+def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False, I0 = 0 ):
 
     # we get the outgoing cases (recoveries, deaths) from the gaussian
     # outgoers are computed from the history of new cases either with
@@ -126,8 +126,10 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
         outgoing = get_older_model3 ( time, nc_history, T )
 
     # the correction here is different becase current does not include outgoers...
-    # we need to use the share of the population available for infection
-    correction = max(( 1 - (M-m)/M ),0)
+    # we need to use the effective share of the population available for infection
+    eff_M = M * (1 - I0)
+    # updated as time goes by...
+    correction  = max(( 1 - (eff_M-m)/eff_M ),0)
     # new cases - not more than the available population please!
     nc = min( current*h*p*correction, m)
     # Rt - attempt at estimating
@@ -484,9 +486,10 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 # optimized version only to be used by the web interface:
 # runs model 4 and is silent
 
-def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4 ):
+def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4, I0 = 0 ):
 
     n4 = N0
+    i4 = I0
     R0 = h*p*T
 
     # history of active numbers
@@ -500,6 +503,9 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
 
     # history of new cases
     nc4_history = [ N0 ]
+
+    # history if immune participants
+    i4_history = [ I0 ]
 
     # currently available population
     m4 = M - N0
@@ -534,6 +540,9 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
         # cases that went out at time t
         o4_history.append(o4)
 
+        i4 = i4 + o4 * (1-DR)
+        i4_history.append(i4)
+
         # number of active cases at time t
         n4_history.append(n4)
 
@@ -555,6 +564,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     d_history  = d4_history
     r_history  = r4_history
     o_history  = o4_history
+    i_history  = i4_history
     m_history  = m4_history
     rt_history = rt4_history
 
@@ -575,7 +585,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
         j=j+1
 
     # the list cast is only to uniformized because some of the elements were converted to numpy arrays
-    dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
+    dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history, i_history ]
 
     return dataset
 
