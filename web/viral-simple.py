@@ -55,7 +55,7 @@ IIF_STEP  = 50
 # Infectious period
 T_MIN   = 1
 T_MAX   = 15
-T_START = 5
+T_START = 10
 
 # and its Standard Deviation
 T_STDEV_MIN   = 0
@@ -82,12 +82,12 @@ BETA_MIN  =  0
 
 H1_MIN   = 0
 H1_MAX   = 100
-H1_START = 10
+H1_START = 9
 H1_STEP  = 0.1
 
 P1_MIN   = 0
 P1_MAX   = 100
-P1_START = 0.06 * 100
+P1_START = 0.04 * 100
 P1_STEP  = 0.01
 
 DRATE_MIN   = 0.05
