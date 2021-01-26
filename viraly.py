@@ -561,6 +561,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     # we need to round for the limiting immunization cases
     # doesn't make much difference otherwise
     numpy.round(d4_history,0)
+    print (d4_history)
     numpy.round(r4_history,0)
 
     n_history  = n4_history
