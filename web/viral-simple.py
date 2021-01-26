@@ -367,8 +367,8 @@ plot4.yaxis.axis_label = PLOT_Y_LABEL2
 plot4.add_tools(hover4)
 plot4.toolbar.active_inspect = None
 
-plot4.line('x', 'y', source=source_rc, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Recovered' )
-plot4.line('x', 'y', source=source_im, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='% Immune' )
+plot4.line('x', 'y', source=source_rc, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='% Recovered' )
+plot4.line('x', 'y', source=source_im, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR,    legend_label='% Immune' )
 plot4.legend.location = 'bottom_right'
 
 # plot 5
