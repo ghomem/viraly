@@ -127,9 +127,8 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
 
     # the correction here is different becase current does not include outgoers...
     # we need to use the effective share of the population available for infection
-    eff_M = M - I0
-    # updated as time goes by...
-    correction  = max(( 1 - (eff_M-m)/M ),0)
+
+    correction  = max(( 1 - (M-m)/M ),0)
     # new cases - not more than the available population please!
     nc = min( current*h*p*correction, m)
     # Rt - attempt at estimating
@@ -508,7 +507,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     i4_history = [ I0 ]
 
     # currently available population
-    m4 = M - N0
+    m4 = M - N0 - I0
 
     # history of available population
     m4_history = [ m4 ]
