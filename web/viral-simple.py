@@ -258,6 +258,15 @@ def reset_data():
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
 
+def vaccinate_data():
+     R0       = h1.value * p1.value * period.value
+    im.value  = (1 - 1 / (R0)) * 100
+
+    # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
+    update_data('xxxx',0,0)
+
+
+
 ### Main
 
 # Set up widgets
@@ -294,7 +303,7 @@ for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, 
 button.on_click(reset_data)
 
 # TODO
-button2.on_click(reset_data)
+button2.on_click(vaccinate_data)
 
 # initial plot
 x = np.linspace(1, DAYS, DAYS)
@@ -461,7 +470,7 @@ notes.text    = TEXT_NOTES
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 
-# simplified set for the marketing simulation
+# simplified set
 inputs = column(intro, population, iinfections, period, h1, p1, drate, im, button2, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
