@@ -507,14 +507,8 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     # history of available population
     m4_history = [ m4 ]
 
-    n4_data = [ n4, N0, 0, M, R0 ]
-
     # Rt history
     rt4_history = [ R0 ]
-
-    # stored parameters because h and p change over time
-    sh = h
-    sp = p
 
     # we simulate tmax days, but the result contains the extra initial condition day at position 0
     for t in range (1, tmax + 1):
