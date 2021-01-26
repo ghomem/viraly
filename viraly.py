@@ -112,7 +112,7 @@ def get_older_model4 ( time, history, M, T, L ):
 
 # common to models 3 and 4
 
-def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False, I0 = 0 ):
+def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False):
 
     # we get the outgoing cases (recoveries, deaths) from the gaussian
     # outgoers are computed from the history of new cases either with
