@@ -135,7 +135,7 @@ TEXT_NOTES    ='<b>Notes:</b><br/>\
 ### Functions
 
 # the function that we are plotting
-def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change, IM ):
+def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change, I0 = 0 ):
 
     h  = 1
     p  = float (b1 / 100) # input is multiplied by 100 for precision on the sliders
