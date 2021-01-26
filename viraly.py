@@ -519,7 +519,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     for t in range (1, tmax + 1):
 
         # get new cases, outgoing and rt
-        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, prefer_mod4, I0)
+        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, prefer_mod4)
         # update simulation parameters over time
         h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
 
