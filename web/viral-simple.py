@@ -86,7 +86,7 @@ H1_STEP  = 0.1
 
 P1_MIN   = 0
 P1_MAX   = 100
-P1_START = 0.03 * 100
+P1_START = 0.06 * 100
 P1_STEP  = 0.01
 
 DRATE_MIN   = 0.05
