@@ -507,7 +507,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     i4_history = [ I0 ]
 
     # currently available population
-    m4 = M - N0 - I0
+    m4 = M - N0
 
     # history of available population
     m4_history = [ m4 ]
