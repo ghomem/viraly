@@ -260,7 +260,7 @@ def reset_data():
 
 def vaccinate_data():
     R0       = h1.value * (p1.value / 100) * period.value
-    im.value  = (1 - 1 / (R0)) * 100
+    im.value  = max ((1 - 1 / (R0)) * 100, 0)
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
@@ -460,7 +460,7 @@ summary.style = { 'font-weight' : 'bold' }
 
 beta          = round ( h1.value * p1.value / 100 , 4)
 R0            = round ( beta * period.value , 4)
-im_threshold  = round ( ( 1 - 1/R0 )*100, 2 )
+im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ), 0) # could go negative for R0 < 1
 pre_str       = '&beta;: ' + str(beta) + '<br/>R0: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)+'%'
 extra_str     = ''
 stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
