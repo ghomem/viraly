@@ -48,8 +48,9 @@ POP_STEP  = 0.5
 
 # Initial infections
 IIF_MIN   = 0
-IIF_MAX   = 1000
+IIF_MAX   = 300000
 IIF_START = 100
+IIF_STEP  = 50
 
 # Infectious period
 T_MIN   = 1
@@ -275,7 +276,7 @@ def vaccinate50_data():
 
 # Set up widgets
 population  = Slider(title=POP_LABEL, value=POP_START, start=POP_MIN, end=POP_MAX, step=POP_STEP)
-iinfections = Slider(title=IIF_LABEL, value=IIF_START, start=IIF_MIN, end=IIF_MAX, step=1)
+iinfections = Slider(title=IIF_LABEL, value=IIF_START, start=IIF_MIN, end=IIF_MAX, step=IIF_STEP)
 
 period       = Slider(title=T_LABEL,       value=T_START,       start=T_MIN,       end=T_MAX,       step=1)
 period_stdev = Slider(title=T_STDEV_LABEL, value=T_STDEV_START, start=T_STDEV_MIN, end=T_STDEV_MAX, step=1)
