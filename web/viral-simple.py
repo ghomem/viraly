@@ -128,7 +128,7 @@ TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning
 TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
               &bull; &beta; = hp<br/>\
-              &bull; R0 = hpT<br/>\
+              &bull; R<sub>0</sub> = hpT<br/>\
               &bull; Technical info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>'
 ### End of configuration
 
@@ -238,7 +238,8 @@ def update_data(attrname, old, new):
 
     beta          = round ( h1.value * p1.value / 100 , 4)
     R0            = round ( beta * period.value , 4)
-    pre_str       = 'Beta: ' + str(beta) + '<br/>R0: ' + str(R0) 
+    im_threshold  = round ( ( 1 - 1/R0 )*100, 2 )
+    pre_str       = '&beta;: ' + str(beta) + '<br/>R0: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)
     extra_str     = ''
     stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
     stats.text = stats_str
