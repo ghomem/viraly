@@ -555,8 +555,8 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
 
     # deaths vs recoveries
 
-    d4_history = numpy.array(o4_history) * DR
-    r4_history = numpy.array(o4_history) * (1-DR)
+    d4_history = round(numpy.array(o4_history) * DR)
+    r4_history = round(numpy.array(o4_history) * (1-DR))
 
     n_history  = n4_history
     nc_history = nc4_history
