@@ -551,15 +551,11 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
 
         rt4_history.append(rt4)
 
-        n4_data = [ n4, nc4, o4, m4, rt4 ]
-
     # deaths vs recoveries
 
     d4_history = numpy.array(o4_history) * DR
     r4_history = numpy.array(o4_history) * (1-DR)
 
-    n_final    = n4
-    m_final    = m4
     n_history  = n4_history
     nc_history = nc4_history
     d_history  = d4_history
@@ -567,14 +563,6 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     o_history  = o4_history
     m_history  = m4_history
     rt_history = rt4_history
-
-    # calculate and print some statistics
-
-    t_transmissions = numpy.array(nc_history).sum()
-    t_infections    = t_transmissions + N0
-    t_inactivations = numpy.array(d_history).sum()
-    t_recoveries    = numpy.array(r_history).sum()
-    t_removals      = numpy.array(o_history).sum()
 
     # prepare some acumulated data
 
