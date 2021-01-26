@@ -259,7 +259,7 @@ def reset_data():
     update_data('xxxx',0,0)
 
 def vaccinate_data():
-     R0       = h1.value * p1.value * period.value
+    R0       = h1.value * p1.value * period.value
     im.value  = (1 - 1 / (R0)) * 100
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
