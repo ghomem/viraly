@@ -135,7 +135,7 @@ TEXT_NOTES    ='<b>Notes:</b><br/>\
 ### Functions
 
 # the function that we are plotting
-def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change, I0 = 0 ):
+def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change, IM = 0 ):
 
     h  = 1
     p  = float (b1 / 100) # input is multiplied by 100 for precision on the sliders
@@ -146,9 +146,10 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     T  = period
     I  = latent
     N0 = n0
-    DR = float(dr/100) # input is in percentage
-    M  =  pop*1000000   # input is in millions
+    DR = float(dr/100)   # input is in percentage
+    M  =  pop*1000000    # input is in millions
     L  = period_stdev
+    I0 = round(M*IM/100) # input is in percentage
 
     tint  = d1
     tint2 = d1 + d2
@@ -163,7 +164,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
         prefer_mod4 = True
 
     # prepare debug friendly string for CLI troubleshoot
-    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{prefer_mod4}, {I0}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,       \
+    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{prefer_mod4},{I0}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,       \
                                                                                                                                                   tint=tint, tmax=tmax, M=M, N0=N0, DR=DR,           \
                                                                                                                                                   progressive=progressive, ttime=ttime, h3=h3, p3=p3,\
                                                                                                                                                   tint2=tint2, ttime2=ttime2, prefer_mod4=prefer_mod4, I0=I0)
@@ -214,7 +215,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     # Active, New, Recovered, Dead, Rt, Immunized + accumulated Cases, Recoveries and Deaths + Stats
     return n_history, nc_history, r_history, d_history, rt_history, rc_history, im_history, na_history, ra_history, da_history, ic_history, pr_history, ar_stats
 
-# callback function dor updating the data
+# callback function for updating the data
 def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
