@@ -266,7 +266,7 @@ def vaccinate_data():
     update_data('xxxx',0,0)
 
 def vaccinate50_data():
-        im.value  = 50
+    im.value  = 50
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
