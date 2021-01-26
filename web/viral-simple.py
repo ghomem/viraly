@@ -219,7 +219,7 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True )
+    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True )
 
     # Only the global variable data sources need to be updated
     source_active.data = dict(x=x, y=y1)
@@ -292,7 +292,7 @@ button.on_click(reset_data)
 
 # initial plot
 x = np.linspace(1, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True )
+y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True )
 
 # Active, New, Recovered, Dead, Rt, % Immunine
 source_active = ColumnDataSource(data=dict(x=x, y=y1))
