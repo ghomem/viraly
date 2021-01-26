@@ -289,9 +289,9 @@ drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_
 
 im = Slider(title=IM_LABEL, value=IM_START, start=IM_MIN, end=IM_MAX, step=IM_STEP)
 
-button  = Button(label="Reset",         button_type="default")
-button2 = Button(label="Vaccinate min", button_type="default")
-button3 = Button(label="Vaccinate 50%", button_type="default")
+button  = Button(label="Reset",                    button_type="default")
+button2 = Button(label="Vaccinate min proportion", button_type="default")
+button3 = Button(label="Vaccinate 50%",            button_type="default")
 
 # text widgets
 intro   = Div(text='', width=TEXT_WIDTH)
