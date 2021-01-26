@@ -555,14 +555,10 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
 
     # deaths vs recoveries
 
-    d4_history = numpy.array(o4_history) * DR
-    r4_history = numpy.array(o4_history) * (1-DR)
-    
-    # we need to round for the limiting immunization cases
+# we need to round for the limiting immunization cases
     # doesn't make much difference otherwise
-    numpy.round(d4_history,0)
-    print (d4_history)
-    numpy.round(r4_history,0)
+    d4_history = numpy.round(numpy.array(o4_history) * DR,0)
+    r4_history = numpy.round(numpy.array(o4_history) * (1-DR),0)
 
     n_history  = n4_history
     nc_history = nc4_history
