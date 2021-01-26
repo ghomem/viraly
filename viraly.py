@@ -112,7 +112,7 @@ def get_older_model4 ( time, history, M, T, L ):
 
 # common to models 3 and 4
 
-def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False ):
+def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False):
 
     # we get the outgoing cases (recoveries, deaths) from the gaussian
     # outgoers are computed from the history of new cases either with
@@ -126,7 +126,8 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
         outgoing = get_older_model3 ( time, nc_history, T )
 
     # the correction here is different becase current does not include outgoers...
-    # we need to use the share of the population available for infection
+    # we need to use the effective share of the population available for infection
+
     correction = max(( 1 - (M-m)/M ),0)
     # new cases - not more than the available population please!
     nc = min( current*h*p*correction, m)
@@ -484,9 +485,10 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 # optimized version only to be used by the web interface:
 # runs model 4 and is silent
 
-def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4 ):
+def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4, I0 = 0 ):
 
     n4 = N0
+    i4 = I0
     R0 = h*p*T
 
     # history of active numbers
@@ -501,20 +503,17 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     # history of new cases
     nc4_history = [ N0 ]
 
+    # history if immune participants
+    i4_history = [ I0 ]
+
     # currently available population
-    m4 = M - N0
+    m4 = M - N0 - I0
 
     # history of available population
     m4_history = [ m4 ]
 
-    n4_data = [ n4, N0, 0, M, R0 ]
-
     # Rt history
     rt4_history = [ R0 ]
-
-    # stored parameters because h and p change over time
-    sh = h
-    sp = p
 
     # we simulate tmax days, but the result contains the extra initial condition day at position 0
     for t in range (1, tmax + 1):
@@ -540,6 +539,9 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
         # cases that went out at time t
         o4_history.append(o4)
 
+        i4 = i4 + o4 * (1-DR)
+        i4_history.append(i4)
+
         # number of active cases at time t
         n4_history.append(n4)
 
@@ -551,30 +553,21 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
 
         rt4_history.append(rt4)
 
-        n4_data = [ n4, nc4, o4, m4, rt4 ]
-
     # deaths vs recoveries
 
-    d4_history = numpy.array(o4_history) * DR
-    r4_history = numpy.array(o4_history) * (1-DR)
+    # we need to round for the limiting immunization cases
+    # doesn't make much difference otherwise
+    d4_history = numpy.round(numpy.array(o4_history) * DR,0)
+    r4_history = numpy.round(numpy.array(o4_history) * (1-DR),0)
 
-    n_final    = n4
-    m_final    = m4
     n_history  = n4_history
     nc_history = nc4_history
     d_history  = d4_history
     r_history  = r4_history
     o_history  = o4_history
+    i_history  = i4_history
     m_history  = m4_history
     rt_history = rt4_history
-
-    # calculate and print some statistics
-
-    t_transmissions = numpy.array(nc_history).sum()
-    t_infections    = t_transmissions + N0
-    t_inactivations = numpy.array(d_history).sum()
-    t_recoveries    = numpy.array(r_history).sum()
-    t_removals      = numpy.array(o_history).sum()
 
     # prepare some acumulated data
 
@@ -593,7 +586,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
         j=j+1
 
     # the list cast is only to uniformized because some of the elements were converted to numpy arrays
-    dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history ]
+    dataset = [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history, i_history ]
 
     return dataset
 
