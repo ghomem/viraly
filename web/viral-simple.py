@@ -166,7 +166,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{prefer_mod4}, {I0}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,       \
                                                                                                                                                   tint=tint, tmax=tmax, M=M, N0=N0, DR=DR,           \
                                                                                                                                                   progressive=progressive, ttime=ttime, h3=h3, p3=p3,\
-                                                                                                                                                  tint2=tint2, ttime2=ttime2, prefer_mod4=prefer_mod4, I0 = I0)
+                                                                                                                                                  tint2=tint2, ttime2=ttime2, prefer_mod4=prefer_mod4, I0=I0)
     print(str_params)
 
     # this function is included from viraly.py
@@ -284,7 +284,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, ]:
+for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, im ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
