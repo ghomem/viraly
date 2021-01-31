@@ -210,7 +210,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())
     t_deaths        = int(numpy.array(d_history).sum())
-    p_transmissions = round((t_transmissions / (M * 1000000))*1000,2)
+    p_transmissions = round( (t_transmissions / M )*100 ,2)
 
     ar_stats = [ t_transmissions, t_recoveries, t_deaths, p_transmissions ]
 
