@@ -539,9 +539,6 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
         # cases that went out at time t
         o4_history.append(o4)
 
-        i4 = i4 + o4 * (1-DR)
-        i4_history.append(i4)
-
         # number of active cases at time t
         n4_history.append(n4)
 
@@ -552,6 +549,11 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
         m4_history.append(m4)
 
         rt4_history.append(rt4)
+
+        # immunity takes into account the new infected cases that won't die, since they are removed from the pool of susceptibles
+        # immune != recovered, those who don't die will recover later
+        i4 = i4 + nc4i * (1-DR)
+        i4_history.append(i4)
 
     # deaths vs recoveries
 
