@@ -479,7 +479,7 @@ notes.text    = TEXT_NOTES
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 
 # simplified set
-inputs = column(intro, population, iinfections, period, h1, p1, drate, im, button2, button3, button, summary, stats, notespacer, notes)
+inputs = column(intro, population, iinfections, period, latent, h1, p1, drate, im, button2, button3, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
