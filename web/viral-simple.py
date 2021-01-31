@@ -210,8 +210,9 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
     t_transmissions = int(numpy.array(nc_history).sum())
     t_recoveries    = int(numpy.array(r_history).sum())
     t_deaths        = int(numpy.array(d_history).sum())
+    p_transmissions = round((t_transmissions / (M * 1000000))*1000,2)
 
-    ar_stats = [ t_transmissions, t_recoveries, t_deaths ]
+    ar_stats = [ t_transmissions, t_recoveries, t_deaths, p_transmissions ]
 
     # Active, New, Recovered, Dead, Rt, Immunized + accumulated Cases, Recoveries and Deaths + Stats
     return n_history, nc_history, r_history, d_history, rt_history, rc_history, im_history, na_history, ra_history, da_history, ic_history, pr_history, ar_stats
@@ -242,7 +243,7 @@ def update_data(attrname, old, new):
     im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ),0)
     pre_str       = '&beta;: ' + str(beta) + '<br/>R<sub>0</sub>: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)+'%'
     extra_str     = ''
-    stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
+    stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + str(ar_stats[3]) + '%' '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
     stats.text = stats_str
 
 def reset_data():
@@ -470,7 +471,7 @@ R0            = round ( beta * period.value , 4)
 im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ), 0) # could go negative for R0 < 1
 pre_str       = '&beta;: ' + str(beta) + '<br/>R0: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)+'%'
 extra_str     = ''
-stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
+stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + str(ar_stats[3]) + '%' '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
 stats.text = stats_str
 notes.text    = TEXT_NOTES
 
