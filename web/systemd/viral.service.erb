@@ -4,7 +4,7 @@ After=syslog.target
 After=network.target
 
 [Service]
-ExecStart=/home/deployment/viral/start-viral.sh =<%= @my_origin %>
+ExecStart=/home/deployment/viral/start-viral.sh <%= @my_origin %>
 KillMode=control-group
 
 [Install]
