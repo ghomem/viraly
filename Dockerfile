@@ -24,4 +24,4 @@ EXPOSE $MYPORT
 
 # docker run  -e "MYORIGIN=yourhostname.net" -v -d -p 5006:5006 viraly
 
-CMD bokeh serve --disable-index --allow-websocket-origin=localhost:$MYPORT --allow-websocket-origin=$MYORIGIN viral.py viral2.py viral-long.py viral-staging.py viral-marketing.py viral-simple.py
+CMD bokeh serve --port $MYPORT --disable-index --allow-websocket-origin=localhost:$MYPORT --allow-websocket-origin=$MYORIGIN viral.py viral2.py viral-long.py viral-staging.py viral-marketing.py viral-simple.py
