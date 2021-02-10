@@ -8,7 +8,7 @@ ENV MYORIGIN=lo.gic.li
 ENV MYPORT=5006
 
 RUN apt-get update -y && \
-    DEBIAN_FRONTEND='noninteractive' apt-get install -y python3-numpy python3-scipy python3-pip python3-jinja2 python3-markupsafe python3-dateutil python3-tornado python3-typing-extensions python3-matplotlib python3-distutils net-tools iputils-ping
+    DEBIAN_FRONTEND='noninteractive' apt-get install -y python3-numpy python3-scipy python3-pip python3-jinja2 python3-markupsafe python3-dateutil python3-tornado python3-typing-extensions python3-matplotlib python3-distutils net-tools iputils-ping telnet
 
 RUN pip3 install bokeh
 
