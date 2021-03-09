@@ -507,7 +507,8 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     i4_history = [ I0 ]
 
     # currently available population
-    m4 = M - N0 - I0
+    # this can't go under zero no matter how much %immunity is specified on the UI
+    m4 = max (M - N0 - I0, 0)
 
     # history of available population
     m4_history = [ m4 ]
