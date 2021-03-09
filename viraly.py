@@ -488,7 +488,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4, I0 = 0 ):
 
     n4 = N0
-    i4 = I0
+    i4 = I0 + N0
     R0 = h*p*T
 
     # history of active numbers
@@ -504,7 +504,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     nc4_history = [ N0 ]
 
     # history if immune participants
-    i4_history = [ I0 ]
+    i4_history = [ i4 ]
 
     # currently available population
     # this can't go under zero no matter how much %immunity is specified on the UI
