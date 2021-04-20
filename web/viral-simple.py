@@ -16,6 +16,9 @@ from viraly import *
 
 ### Configuration
 
+# Risk plot, for testing
+ENABLE_RISK = False
+
 # Geometry and visuals
 PLOT_TOOLS    ='save,reset,pan,wheel_zoom,box_zoom'
 PLOT_HEIGHT   = 300
@@ -238,6 +241,9 @@ def update_data(attrname, old, new):
     source_ic.data     = dict(x=x, y=y11)
     source_pr.data     = dict(x=x, y=y12)
 
+    # active vs rt
+    source_phase_space.data = dict(x=y5, y=y11)
+
     beta          = round ( h1.value * p1.value / 100 , 4)
     R0            = round ( beta * period.value , 4)
     im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ),0)
@@ -346,6 +352,9 @@ source_ra     = ColumnDataSource(data=dict(x=x, y=y9))
 source_da     = ColumnDataSource(data=dict(x=x, y=y10))
 source_ic     = ColumnDataSource(data=dict(x=x, y=y11))
 source_pr     = ColumnDataSource(data=dict(x=x, y=y12))
+
+# active vs rt
+source_phase_space = ColumnDataSource(data=dict(x=y5, y=y11))
 
 # plot 1
 
@@ -479,6 +488,36 @@ stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + st
 stats.text = stats_str
 notes.text    = TEXT_NOTES
 
+# plot 10 - test plot for evolution of risk
+
+PLOT10_TITLE = 'Risk evolution'
+RT_LIM = 1
+IC_LIM = 120
+PLOT10_ALPHA  = 0.2
+
+hover10 = HoverTool(tooltips=[ ('Rt', "@x{0}"), ('Incidence', "@y{0.00}")], mode="vline" )
+hover10.point_policy='snap_to_data'
+hover10.line_policy='nearest'
+
+plot10 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT10_TITLE, tools=PLOT_TOOLS, x_range=[0, R0], )
+
+plot10.line('x', 'y', source=source_phase_space, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, )
+
+set_plot_details(plot10, hover10, PLOT_Y_LABEL2)
+
+plot10.xaxis.axis_label = 'Rt'
+plot10.yaxis.axis_label = '14 day Incidence per 100m'
+
+quadrant3 = BoxAnnotation(left=0, right=RT_LIM, bottom=0, top=IC_LIM, fill_alpha=PLOT10_ALPHA, fill_color='green')
+quadrant4 = BoxAnnotation(left=1, right=R0    , bottom=0, top=IC_LIM, fill_alpha=PLOT10_ALPHA, fill_color='orange')
+quadrant1 = BoxAnnotation(left=1, right=R0    , bottom=IC_LIM,        fill_alpha=PLOT10_ALPHA, fill_color='red')
+quadrant2 = BoxAnnotation(left=0, right=1     , bottom=IC_LIM,        fill_alpha=PLOT10_ALPHA, fill_color='orange')
+
+plot10.add_layout(quadrant1)
+plot10.add_layout(quadrant2)
+plot10.add_layout(quadrant3)
+plot10.add_layout(quadrant4)
+
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 
@@ -487,6 +526,11 @@ inputs = column(intro, population, iinfections, period, latent, h1, p1, drate, i
 
 curdoc().title = PAGE_TITLE
 
+if ENABLE_RISK:
+    last_plot = plot10
+else:
+    last_plot = plot9
+
 # useful for mobile scrolling on the left side
 leftmargin = Spacer(width=LMARGIN_WIDTH, height=400, width_policy='fixed', height_policy='auto')
-curdoc().add_root( row(leftmargin,inputs, column(plot, plot2, plot5), column(plot4, plot6, plot7), column(plot3, plot8, plot9)) )
+curdoc().add_root( row(leftmargin,inputs, column(plot, plot2, plot5), column(plot4, plot6, plot7), column(plot3, plot8, last_plot)) )
