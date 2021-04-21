@@ -241,7 +241,7 @@ def update_data(attrname, old, new):
     source_ic.data     = dict(x=x, y=y11)
     source_pr.data     = dict(x=x, y=y12)
 
-    # active vs rt
+    # Incidence vs Rt
     source_phase_space.data = dict(x=y5, y=y11)
 
     beta          = round ( h1.value * p1.value / 100 , 4)
@@ -353,7 +353,7 @@ source_da     = ColumnDataSource(data=dict(x=x, y=y10))
 source_ic     = ColumnDataSource(data=dict(x=x, y=y11))
 source_pr     = ColumnDataSource(data=dict(x=x, y=y12))
 
-# active vs rt
+# Incidence vs Rt
 source_phase_space = ColumnDataSource(data=dict(x=y5, y=y11))
 
 # plot 1
