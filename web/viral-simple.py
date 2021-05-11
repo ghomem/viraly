@@ -16,6 +16,9 @@ from viraly import *
 
 ### Configuration
 
+# Risk plot, for testing
+ENABLE_RISK = False
+
 # Geometry and visuals
 PLOT_TOOLS    ='save,reset,pan,wheel_zoom,box_zoom'
 PLOT_HEIGHT   = 300
@@ -238,6 +241,9 @@ def update_data(attrname, old, new):
     source_ic.data     = dict(x=x, y=y11)
     source_pr.data     = dict(x=x, y=y12)
 
+    # Incidence vs Rt
+    source_phase_space.data = dict(x=y5, y=y11)
+
     beta          = round ( h1.value * p1.value / 100 , 4)
     R0            = round ( beta * period.value , 4)
     im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ),0)
@@ -272,6 +278,22 @@ def vaccinate50_data():
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
+
+# set properties common to all the plots
+def set_plot_details ( aplot, ahover, alabel = PLOT_Y_LABEL ):
+    aplot.toolbar.active_drag    = None
+    aplot.toolbar.active_scroll  = None
+    aplot.toolbar.active_tap     = None
+
+    # add the hover tool
+    aplot.add_tools(ahover)
+    aplot.toolbar.active_inspect = ahover
+
+    # control placement / visibility of toolbar
+    aplot.toolbar_location       = None
+
+    aplot.xaxis.axis_label = PLOT_X_LABEL
+    aplot.yaxis.axis_label = alabel
 
 ### Main
 
@@ -331,6 +353,9 @@ source_da     = ColumnDataSource(data=dict(x=x, y=y10))
 source_ic     = ColumnDataSource(data=dict(x=x, y=y11))
 source_pr     = ColumnDataSource(data=dict(x=x, y=y12))
 
+# Incidence vs Rt
+source_phase_space = ColumnDataSource(data=dict(x=y5, y=y11))
+
 # plot 1
 
 hover = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
@@ -338,12 +363,10 @@ hover.point_policy='snap_to_data'
 hover.line_policy='nearest'
 
 plot = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
-plot.xaxis.axis_label = PLOT_X_LABEL
-plot.yaxis.axis_label = PLOT_Y_LABEL
-plot.add_tools(hover)
-plot.toolbar.active_inspect = None
 
 plot.line('x', 'y', source=source_active, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Active' )
+
+set_plot_details(plot, hover)
 
 # plot 2
 
@@ -353,13 +376,11 @@ hover2.point_policy='snap_to_data'
 hover2.line_policy='nearest'
 
 plot2 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT2_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS],)
-plot2.xaxis.axis_label = PLOT_X_LABEL
-plot2.yaxis.axis_label = PLOT_Y_LABEL
 
 plot2.line('x', 'y', source=source_new, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='New cases' )
 plot2.line('x', 'y', source=source_rec, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Recoveries')
-plot2.add_tools(hover2)
-plot.toolbar.active_inspect = None
+
+set_plot_details(plot2, hover2)
 
 # plot 3
 
@@ -369,12 +390,10 @@ hover3.point_policy='snap_to_data'
 hover3.line_policy='nearest'
 
 plot3 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT3_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
-plot3.xaxis.axis_label = PLOT_X_LABEL
-plot3.yaxis.axis_label = PLOT_Y_LABEL2
-plot3.add_tools(hover3)
-plot3.toolbar.active_inspect = None
 
 plot3.line('x', 'y', source=source_rt, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Rt' )
+
+set_plot_details(plot3, hover3, PLOT_Y_LABEL2)
 
 # plot 4
 
@@ -384,14 +403,12 @@ hover4.point_policy='snap_to_data'
 hover4.line_policy='nearest'
 
 plot4 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT4_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
-plot4.xaxis.axis_label = PLOT_X_LABEL
-plot4.yaxis.axis_label = PLOT_Y_LABEL2
-plot4.add_tools(hover4)
-plot4.toolbar.active_inspect = None
 
 plot4.line('x', 'y', source=source_rc, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='% Recovered' )
 plot4.line('x', 'y', source=source_im, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR,    legend_label='% Immune' )
 plot4.legend.location = 'bottom_right'
+
+set_plot_details(plot4, hover4, PLOT_Y_LABEL2)
 
 # plot 5
 
@@ -400,12 +417,10 @@ hover5.point_policy='snap_to_data'
 hover5.line_policy='nearest'
 
 plot5 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT5_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
-plot5.xaxis.axis_label = PLOT_X_LABEL
-plot5.yaxis.axis_label = PLOT_Y_LABEL
-plot5.add_tools(hover5)
-plot5.toolbar.active_inspect = None
 
 plot5.line('x', 'y', source=source_dead, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Deaths' )
+
+set_plot_details(plot5, hover5)
 
 # plot 6
 
@@ -415,51 +430,49 @@ hover6.point_policy='snap_to_data'
 hover6.line_policy='nearest'
 
 plot6 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT6_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS],)
-plot6.xaxis.axis_label = PLOT_X_LABEL
-plot6.yaxis.axis_label = PLOT_Y_LABEL
 
 plot6.line('x', 'y', source=source_na, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR,       legend_label='Cases' )
 plot6.line('x', 'y', source=source_ra, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR, legend_label='Recoveries')
 plot6.legend.location = 'bottom_right'
-plot6.add_tools(hover6)
-plot.toolbar.active_inspect = None
+
+set_plot_details(plot6, hover6)
+
+# plot 7
 
 hover7 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL, "@y{0}")], mode="vline" )
 hover7.point_policy='snap_to_data'
 hover7.line_policy='nearest'
 
 plot7 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT7_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
-plot7.xaxis.axis_label = PLOT_X_LABEL
-plot7.yaxis.axis_label = PLOT_Y_LABEL
-plot7.add_tools(hover7)
-plot7.toolbar.active_inspect = None
 
 plot7.line('x', 'y', source=source_da, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, legend_label='Dead' )
 plot7.legend.location = 'bottom_right'
+
+set_plot_details(plot7, hover7)
+
+# plot 8
 
 hover8 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover8.point_policy='snap_to_data'
 hover8.line_policy='nearest'
 
 plot8 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT8_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
-plot8.xaxis.axis_label = PLOT_X_LABEL
-plot8.yaxis.axis_label = PLOT_Y_LABEL2
-plot8.add_tools(hover8)
-plot8.toolbar.active_inspect = None
 
 plot8.line('x', 'y', source=source_ic, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='Incidence' )
+
+set_plot_details(plot8, hover8, PLOT_Y_LABEL2)
+
+# plot 9
 
 hover9 = HoverTool(tooltips=[ (PLOT_X_LABEL, "@x{0}"), (PLOT_Y_LABEL2, "@y{0.00}")], mode="vline" )
 hover9.point_policy='snap_to_data'
 hover9.line_policy='nearest'
 
 plot9 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT9_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
-plot9.xaxis.axis_label = PLOT_X_LABEL
-plot9.yaxis.axis_label = PLOT_Y_LABEL2
-plot9.add_tools(hover8)
-plot9.toolbar.active_inspect = None
 
 plot9.line('x', 'y', source=source_pr, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_NEW_COLOR, legend_label='% Prevalence' )
+
+set_plot_details(plot9, hover9, PLOT_Y_LABEL2)
 
 # misc text
 intro.text    = TEXT_INTRO
@@ -475,6 +488,36 @@ stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + st
 stats.text = stats_str
 notes.text    = TEXT_NOTES
 
+# plot 10 - test plot for evolution of risk
+
+PLOT10_TITLE = 'Risk evolution'
+RT_LIM = 1
+IC_LIM = 120
+PLOT10_ALPHA  = 0.2
+
+hover10 = HoverTool(tooltips=[ ('Rt', "@x{0}"), ('Incidence', "@y{0.00}")], mode="vline" )
+hover10.point_policy='snap_to_data'
+hover10.line_policy='nearest'
+
+plot10 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT10_TITLE, tools=PLOT_TOOLS, x_range=[0, R0], )
+
+plot10.line('x', 'y', source=source_phase_space, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_DEAD_COLOR, )
+
+set_plot_details(plot10, hover10, PLOT_Y_LABEL2)
+
+plot10.xaxis.axis_label = 'Rt'
+plot10.yaxis.axis_label = '14 day Incidence per 100m'
+
+quadrant3 = BoxAnnotation(left=0, right=RT_LIM, bottom=0, top=IC_LIM, fill_alpha=PLOT10_ALPHA, fill_color='green')
+quadrant4 = BoxAnnotation(left=1, right=R0    , bottom=0, top=IC_LIM, fill_alpha=PLOT10_ALPHA, fill_color='orange')
+quadrant1 = BoxAnnotation(left=1, right=R0    , bottom=IC_LIM,        fill_alpha=PLOT10_ALPHA, fill_color='red')
+quadrant2 = BoxAnnotation(left=0, right=1     , bottom=IC_LIM,        fill_alpha=PLOT10_ALPHA, fill_color='orange')
+
+plot10.add_layout(quadrant1)
+plot10.add_layout(quadrant2)
+plot10.add_layout(quadrant3)
+plot10.add_layout(quadrant4)
+
 # Set up layouts and add to document
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 
@@ -483,6 +526,11 @@ inputs = column(intro, population, iinfections, period, latent, h1, p1, drate, i
 
 curdoc().title = PAGE_TITLE
 
+if ENABLE_RISK:
+    last_plot = plot10
+else:
+    last_plot = plot9
+
 # useful for mobile scrolling on the left side
 leftmargin = Spacer(width=LMARGIN_WIDTH, height=400, width_policy='fixed', height_policy='auto')
-curdoc().add_root( row(leftmargin,inputs, column(plot, plot2, plot5), column(plot4, plot6, plot7), column(plot3, plot8, plot9)) )
+curdoc().add_root( row(leftmargin,inputs, column(plot, plot2, plot5), column(plot4, plot6, plot7), column(plot3, plot8, last_plot)) )
