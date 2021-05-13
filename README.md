@@ -9,7 +9,10 @@ This is a simple command line program that simulates an epidemic in 4 different 
 3. temporary infection with duration T, finite population: epidemic curve
 4. temporary infection with guassian duration of avg T and stdev L, finite population: epidemic curve
 
-An epidemic is the propagation of something (a disease, a phrase, a brand, an idea, ...) over a population by means of interactions between elements. A technical summary document can be found [here](https://github.com/ghomem/viraly/blob/master/doc/viral-summary-github.pdf). There is a bokeh based web frontend on the /web folder an instance of which is live [here](https://lo.gic.li/viral).
+An epidemic is the propagation of something (a disease, a phrase, a brand, an idea, ...) over a population by means of interactions between elements. A technical summary document can be found [here](https://github.com/ghomem/viraly/blob/master/doc/viral-summary-github.pdf). There is a bokeh based web frontend on the /web folder an instance of which is available with examples for:
+
+* a [free epidemic] (https://lo.gic.li/viral-simple)
+* a controlled [3 stage epidemic] (https://lo.gic.li/viral)
 
 **Requirements**
 
@@ -101,7 +104,7 @@ Example 8: output of early erratication case due to sub critical hp for model 4:
 
 **Bonus section**
 
-There are extra parameters not documented here which can be checked on the source code. With those parameters a 3 stage simulation can be performed and this command line program can be integrated with an external application as demonstrated in this [web frontend](https://lo.gic.li/viral).
+There are extra parameters not documented here which can be checked on the source code. With those parameters a 3 stage simulation can be performed and this command line program can be integrated with an external application as demonstrated on the web frontends mentionedin the introduction.
 
 **Disclaimer**
 
