@@ -141,8 +141,15 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     correction = max(( 1 - (M-m)/M ),0)
     # seasonal attenuation is 1, unless w is explicitly passed
     sa = get_seasonal_attenuation (time, ddy, saa)
+
+    # we need to allow the epidemic to grow again in the right season
+    if saa !=0:
+        bg_noise = min(1, m)
+    else:
+        bg_noise = 0
+
     # new cases - not more than the available population please!
-    nc = min( current*h*p*sa*correction, m)
+    nc = min( current*h*p*sa*correction, m) + bg_noise = 0
     # Rt - attempt at estimating
     rt = h*p*T*correction
 
