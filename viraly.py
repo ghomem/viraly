@@ -5,6 +5,7 @@ import sys
 import scipy.stats
 import numpy
 import json
+import math
 import matplotlib.pyplot as plt 
 from distutils.util import strtobool
 from collections import deque
@@ -30,6 +31,16 @@ def print_usage ():
     print()
     print( 'Usage:\n\npython3 ' + basename + ' \"h,p,T,L,I,h2,p2,tint,tmax,M,N0,DR\"')
     print( 'python3 ' + basename + ' \"h,p,T,L,I,h2,p2,tint,tmax,M,N0,DR,progressive,ttime\"\n')
+
+# An empiric seasonal attenuation function that takes the following parameters:
+# time - present day
+# t0   - initial day relative to the day of the year where propagation is maximum
+# w    - seasonal modulation amplitude ( 0 <= w <= 1 )
+#
+# This function varies between 1 an w over the course of 365 days. If w = 0 it simply returns 1.
+
+def get_seasonal_attenuation ( time, t0, w ):
+    return  (1 - 0.5 * w * ( math.cos ( 2 * math.pi / 365 * (time - 182 - t0) ) + 1) )
 
 # model 1 - permanent infection, infinite population
 
@@ -111,8 +122,8 @@ def get_older_model4 ( time, history, M, T, L ):
     return count
 
 # common to models 3 and 4
-
-def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False):
+# ddy is day of the year, saa is seasonal attenuation amplitude
+def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False, ddy = 0, saa = 0):
 
     # we get the outgoing cases (recoveries, deaths) from the gaussian
     # outgoers are computed from the history of new cases either with
@@ -127,10 +138,11 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
 
     # the correction here is different becase current does not include outgoers...
     # we need to use the effective share of the population available for infection
-
     correction = max(( 1 - (M-m)/M ),0)
+    # seasonal attenuation is 1, unless w is explicitly passed
+    sa = get_seasonal_attenuation (time, ddy, saa)
     # new cases - not more than the available population please!
-    nc = min( current*h*p*correction, m)
+    nc = min( current*h*p*sa*correction, m)
     # Rt - attempt at estimating
     rt = h*p*T*correction
 
@@ -485,7 +497,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 # optimized version only to be used by the web interface:
 # runs model 4 and is silent
 
-def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4, I0 = 0 ):
+def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4, I0 = 0, ddy = 0, ssa = 0 ):
 
     n4 = N0
     i4 = I0 + N0
@@ -519,8 +531,8 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     # we simulate tmax days, but the result contains the extra initial condition day at position 0
     for t in range (1, tmax + 1):
 
-        # get new cases, outgoing and rt
-        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, prefer_mod4)
+        # get new cases, outgoing and rt; ddy and ssa are seasonal parameters
+        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, prefer_mod4, ddy, saa)
         # update simulation parameters over time
         h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
 
@@ -666,7 +678,7 @@ def main():
         exit(E_ERR)
 
     # this is another bonus for external tools integration which does not break the historical CLI usage:
-    #   we allow them model selection to be done as a function of the value of L:
+    #   we allow the model selection to be done as a function of the value of L:
     #     if L = 0 -> model 3
     #     if L > 0 -> model 4
     #
