@@ -329,10 +329,10 @@ drate = Slider(title=DRATE_LABEL, value=DRATE_START, start=DRATE_MIN, end=DRATE_
 im = Slider(title=IM_LABEL, value=IM_START, start=IM_MIN, end=IM_MAX, step=IM_STEP)
 
 # day of the year
-ddy = Slider(title=DDY_LABEL, value=DDY_START, start=DDY_MIN, end=DDY_MAX, set=DDY_STEP)
+ddy = Slider(title=DDY_LABEL, value=DDY_START, start=DDY_MIN, end=DDY_MAX, step=DDY_STEP)
 
 # seasonal attenuation amplitude
-saa = Slider(title=SAA_LABEL, value=SAA_START, start=SAA_MIN, end=SAA_MAX, set=SAA_STEP)
+saa = Slider(title=SAA_LABEL, value=SAA_START, start=SAA_MIN, end=SAA_MAX, step=SAA_STEP)
 
 button  = Button(label="Reset",                         button_type="default")
 button2 = Button(label="Vaccinate critical proportion", button_type="default")
