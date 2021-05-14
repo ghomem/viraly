@@ -144,7 +144,8 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
 
     # we need to allow the epidemic to grow again in the right season
     if saa !=0:
-        bg_noise = min(1, m)
+        bg_noise = 0
+        #bg_noise = min(1, m)
     else:
         bg_noise = 0
 

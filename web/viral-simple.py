@@ -145,7 +145,7 @@ TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
               &bull; &beta; = hp<br/>\
               &bull; R<sub>0</sub> = hpT<br/>\
-              &bull; Seasonal day of the year is the initial simulation day number, counted from most transmission prone day of the season <br/>\
+              &bull; Seasonal day of the year is the index of the first simulation day, counted from most transmission prone day of the season <br/>\
               &bull; Technical info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>'
 ### End of configuration
 
