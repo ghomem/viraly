@@ -149,7 +149,7 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
         bg_noise = 0
 
     # new cases - not more than the available population please!
-    nc = min( current*h*p*sa*correction, m) + bg_noise = 0
+    nc = min( current*h*p*sa*correction, m) + bg_noise
     # Rt - attempt at estimating
     rt = h*p*T*correction
 
