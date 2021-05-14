@@ -346,7 +346,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, im ]:
+for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, im, ddy, saa ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
