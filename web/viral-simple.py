@@ -180,11 +180,11 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
         prefer_mod4 = True
 
     # prepare debug friendly string for CLI troubleshoot
-    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{prefer_mod4},{I0},{t0},{saa}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,        \
+    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{prefer_mod4},{I0},{ddy},{saa}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,        \
                                                                                                                                                             tint=tint, tmax=tmax, M=M, N0=N0, DR=DR,            \
                                                                                                                                                             progressive=progressive, ttime=ttime, h3=h3, p3=p3, \
                                                                                                                                                             tint2=tint2, ttime2=ttime2, prefer_mod4=prefer_mod4,\
-                                                                                                                                                            I0=I0, t0=t0, saa=saa)
+                                                                                                                                                            I0=I0, ddy=ddy, saa=saa)
     print(str_params)
 
     # this function is included from viraly.py
