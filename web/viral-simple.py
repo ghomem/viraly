@@ -276,7 +276,7 @@ def reset_data():
     drate.value        = DRATE_START
     im.value           = IM_START
     ddy.value          = DDY_START
-    saa.value          = SSA_START
+    saa.value          = SAA_START
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
