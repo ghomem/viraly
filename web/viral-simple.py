@@ -137,7 +137,7 @@ H1_LABEL      = 'Organic contacts per day'
 P1_LABEL      = 'Probability of transmission (%)'
 DRATE_LABEL   = 'Death rate (%)'
 IM_LABEL      = 'Pre immunized (%)'
-DDY_LABEL     = 'Day of the year'
+DDY_LABEL     = 'Seasonal day of the year'
 SAA_LABEL     = 'Seasonal attenuation amplitude'
 
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
@@ -145,6 +145,7 @@ TEXT_SUMMARY  = 'Stats:'
 TEXT_NOTES    ='<b>Notes:</b><br/>\
               &bull; &beta; = hp<br/>\
               &bull; R<sub>0</sub> = hpT<br/>\
+              &bull; Seasonal day of the year is the initial simulation day number, counted from most transmission prone day of the season <br/>\
               &bull; Technical info at <a href="https://github.com/ghomem/viraly">github.com/ghomem/viraly</a>'
 ### End of configuration
 
