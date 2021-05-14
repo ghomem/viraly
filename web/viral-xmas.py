@@ -78,7 +78,7 @@ DUR2_START = 8
 
 # Transition durations
 TRA_MIN  = 0
-TRA1_MAX = 5
+TRA1_MAX = 15
 TRA2_MAX = 20
 
 TRA1_START = 3
