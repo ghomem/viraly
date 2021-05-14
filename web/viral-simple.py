@@ -137,8 +137,8 @@ H1_LABEL      = 'Organic contacts per day'
 P1_LABEL      = 'Probability of transmission (%)'
 DRATE_LABEL   = 'Death rate (%)'
 IM_LABEL      = 'Pre immunized (%)'
-DDY_LABEL     = 'Day of the year counting from max seasonal propagation'
-SAA_LABEL    = 'Seasonal attenuation amplitude'
+DDY_LABEL     = 'Day of the year'
+SAA_LABEL     = 'Seasonal attenuation amplitude'
 
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
@@ -151,7 +151,7 @@ TEXT_NOTES    ='<b>Notes:</b><br/>\
 ### Functions
 
 # the function that we are plotting
-def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change, IM = 0, t0 = 0, saa = 0 ):
+def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change, IM = 0, ddy = 0, saa = 0 ):
 
     h  = 1
     p  = float (b1 / 100) # input is multiplied by 100 for precision on the sliders
@@ -189,7 +189,7 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
 
     # this function is included from viraly.py
     silent = True
-    top_level = run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4, I0, t0, saa )
+    top_level = run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4, I0, ddy, saa )
 
     # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history, i_history ]
     # we chop the first element because it is the initial condition (ex: new cases don't make sense there, especially on a second wave simulation )
