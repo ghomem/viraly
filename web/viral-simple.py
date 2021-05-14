@@ -73,7 +73,7 @@ L_MAX   = 20
 L_START = 1
 
 # Simulation time
-DAYS = 365
+DAYS = 730
 
 # Propagation rate parameters
 #
