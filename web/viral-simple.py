@@ -106,10 +106,12 @@ IM_STEP  = 0.5
 DDY_MIN   = 0
 DDY_MAX   = 364
 DDY_START = 0
+DDY_STEP = 1
 
 SAA_MIN   = 0
 SAA_START = 0
 SAA_MAX   = 1
+SAA_STEP  = 0.01
 
 # for the incidence plot
 INCIDENCE_PERIOD = 14
