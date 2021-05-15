@@ -37,7 +37,7 @@ def print_usage ():
 # t0   - initial day relative to the day of the year where propagation is maximum
 # w    - seasonal modulation amplitude ( 0 <= w <= 1 )
 #
-# This function varies between 1 an w over the course of 365 days. If w = 0 it simply returns 1.
+# This function varies between 1 and 1-w over the course of 365 days. If w = 0 it simply returns 1.
 
 def get_seasonal_attenuation ( time, t0, w ):
     return  (1 - 0.5 * w * ( math.cos ( 2 * math.pi / 365 * (time - 182 - t0) ) + 1) )
