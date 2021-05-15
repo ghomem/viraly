@@ -241,6 +241,10 @@ def update_data(attrname, old, new):
     x = np.linspace(0, DAYS, DAYS)
     y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True, im.value, ddy.value, saa.value )
 
+    beta          = round ( h1.value * p1.value / 100 , 4)
+    R0            = round ( beta * period.value , 4)
+    im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ),0)
+
     # Only the global variable data sources need to be updated
     source_active.data = dict(x=x, y=y1)
     source_new.data    = dict(x=x, y=y2)
@@ -254,13 +258,11 @@ def update_data(attrname, old, new):
     source_da.data     = dict(x=x, y=y10)
     source_ic.data     = dict(x=x, y=y11)
     source_pr.data     = dict(x=x, y=y12)
+    source_r0.data     = dict(x=x, y=np.full(DAYS, R0))
 
     # Incidence vs Rt
     source_phase_space.data = dict(x=y5, y=y11)
 
-    beta          = round ( h1.value * p1.value / 100 , 4)
-    R0            = round ( beta * period.value , 4)
-    im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ),0)
     pre_str       = '&beta;: ' + str(beta) + '<br/>R<sub>0</sub>: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)+'%'
     extra_str     = ''
     stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + str(ar_stats[3]) + '%' '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
@@ -361,6 +363,11 @@ button3.on_click(vaccinate50_data)
 x = np.linspace(1, DAYS, DAYS)
 y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True, im.value, ddy.value, saa.value )
 
+# aux calculations
+beta          = round ( h1.value * p1.value / 100 , 4)
+R0            = round ( beta * period.value , 4)
+im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ), 0) # could go negative for R0 < 1
+
 # Active, New, Recovered, Dead, Rt, % Immunine
 source_active = ColumnDataSource(data=dict(x=x, y=y1))
 source_new    = ColumnDataSource(data=dict(x=x, y=y2))
@@ -374,6 +381,8 @@ source_ra     = ColumnDataSource(data=dict(x=x, y=y9))
 source_da     = ColumnDataSource(data=dict(x=x, y=y10))
 source_ic     = ColumnDataSource(data=dict(x=x, y=y11))
 source_pr     = ColumnDataSource(data=dict(x=x, y=y12))
+# constant R0 source
+source_r0     = ColumnDataSource(data=dict(x=x, y=np.full( DAYS, R0)))
 
 # Incidence vs Rt
 source_phase_space = ColumnDataSource(data=dict(x=y5, y=y11))
@@ -414,6 +423,7 @@ hover3.line_policy='nearest'
 plot3 = figure(plot_height=PLOT_HEIGHT, plot_width=PLOT_WIDTH, title=PLOT3_TITLE, tools=PLOT_TOOLS, x_range=[0, DAYS], )
 
 plot3.line('x', 'y', source=source_rt, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_ACTIVE_COLOR, legend_label='Rt' )
+plot3.line('x', 'y', source=source_r0, line_width=PLOT_LINE_WIDTH, line_alpha=PLOT_LINE_ALPHA, line_color=PLOT_LINE_RECOVERED_COLOR,   legend_label='R0' )
 
 set_plot_details(plot3, hover3, PLOT_Y_LABEL2)
 
@@ -501,9 +511,6 @@ intro.text    = TEXT_INTRO
 summary.text  = TEXT_SUMMARY
 summary.style = { 'font-weight' : 'bold' }
 
-beta          = round ( h1.value * p1.value / 100 , 4)
-R0            = round ( beta * period.value , 4)
-im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ), 0) # could go negative for R0 < 1
 pre_str       = '&beta;: ' + str(beta) + '<br/>R<sub>0</sub>: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)+'%'
 extra_str     = ''
 stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + str(ar_stats[3]) + '%' '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
