@@ -142,10 +142,11 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     # seasonal attenuation is 1, unless w is explicitly passed
     sa = get_seasonal_attenuation (time, ddy, saa)
 
-    # we need to allow the epidemic to grow again in the right season
+    # we need some background noise to allow the epidemic to grow again in the right season
+    # this may sound a bit artifial but we know there are always imported cases
+    # it only applies when saa is different from zero anyway
     if saa !=0:
-        bg_noise = 0
-        #bg_noise = min(1, m)
+        bg_noise = min(1, m)
     else:
         bg_noise = 0
 
