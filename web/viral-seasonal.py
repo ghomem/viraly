@@ -117,7 +117,7 @@ SAA_STEP  = 0.01
 INCIDENCE_PERIOD = 14
 
 # labels and strings
-PAGE_TITLE  ='Simple epidemic simulator'
+PAGE_TITLE  ='Seasonal epidemic simulator'
 PLOT_TITLE  ='Active'
 PLOT2_TITLE ='New, Recovered'
 PLOT3_TITLE ='Rt estimation'
