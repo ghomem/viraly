@@ -73,7 +73,7 @@ L_MAX   = 20
 L_START = 1
 
 # Simulation time
-DAYS = 730
+DAYS = 1095
 
 # Propagation rate parameters
 #
@@ -90,7 +90,7 @@ H1_STEP  = 0.1
 
 P1_MIN   = 0
 P1_MAX   = 100
-P1_START = 0.0375 * 100
+P1_START = 0.0371 * 100
 P1_STEP  = 0.01
 
 DRATE_MIN   = 0.05
