@@ -144,6 +144,7 @@ DRATE_LABEL   = 'Death rate (%)'
 IM_LABEL      = 'Pre immunized (%)'
 DDY_LABEL     = 'Seasonal day of the year'
 SAA_LABEL     = 'Seasonal attenuation amplitude'
+BAT_LABEL     = 'Baseline attenuation amplitude'
 
 TEXT_INTRO    = 'Use the mouse for initial selection and cursors for fine tuning:'
 TEXT_SUMMARY  = 'Stats:'
