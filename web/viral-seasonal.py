@@ -113,6 +113,11 @@ SAA_START = 0.24
 SAA_MAX   = 1
 SAA_STEP  = 0.01
 
+SAA_MIN   = 0
+SAA_START = 0
+SAA_MAX   = 1
+SAA_STEP  = 0.01
+
 # for the incidence plot
 INCIDENCE_PERIOD = 14
 
@@ -152,7 +157,7 @@ TEXT_NOTES    ='<b>Notes:</b><br/>\
 ### Functions
 
 # the function that we are plotting
-def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change, IM = 0, ddy = 0, saa = 0 ):
+def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,b3, tmax, dr, prog_change, IM = 0, ddy = 0, saa = 0, bat = 0 ):
 
     h  = 1
     p  = float (b1 / 100) # input is multiplied by 100 for precision on the sliders
@@ -181,16 +186,16 @@ def get_data(x, pop, n0, period, period_stdev, latent, d1, d2, tr1, tr2, b1, b2,
         prefer_mod4 = True
 
     # prepare debug friendly string for CLI troubleshoot
-    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{prefer_mod4},{I0},{ddy},{saa}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,        \
+    str_params = '{h},{p},{T},{L},{I},{h2},{p2},{tint},{tmax},{M},{N0},{DR},{progressive},{ttime},{h3},{p3},{tint2},{ttime2},{prefer_mod4},{I0},{ddy},{saa},{bat}'.format(h=h, p=p, T=T, L=L, I=I, h2=h2,p2=p2,        \
                                                                                                                                                             tint=tint, tmax=tmax, M=M, N0=N0, DR=DR,            \
                                                                                                                                                             progressive=progressive, ttime=ttime, h3=h3, p3=p3, \
                                                                                                                                                             tint2=tint2, ttime2=ttime2, prefer_mod4=prefer_mod4,\
-                                                                                                                                                            I0=I0, ddy=ddy, saa=saa)
+                                                                                                                                                            I0=I0, ddy=ddy, saa=saa, bat=bat)
     print(str_params)
 
     # this function is included from viraly.py
     silent = True
-    top_level = run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4, I0, ddy, saa )
+    top_level = run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent, prefer_mod4, I0, ddy, saa, bat )
 
     # dataset from viraly.py: [ n_history, nc_history, list(r_history), list(d_history), m_history, n_history, ra_history, da_history, rt_history, na_history, i_history ]
     # we chop the first element because it is the initial condition (ex: new cases don't make sense there, especially on a second wave simulation )
@@ -239,7 +244,7 @@ def update_data(attrname, old, new):
 
     # Generate the new curve with the slider values
     x = np.linspace(0, DAYS, DAYS)
-    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True, im.value, ddy.value, saa.value )
+    y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True, im.value, ddy.value, saa.value, bat.value )
 
     beta          = round ( h1.value * p1.value / 100 , 4)
     R0            = round ( beta * period.value , 4)
@@ -280,6 +285,7 @@ def reset_data():
     im.value           = IM_START
     ddy.value          = DDY_START
     saa.value          = SAA_START
+    bat.value          = BAT_START
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
@@ -337,6 +343,9 @@ ddy = Slider(title=DDY_LABEL, value=DDY_START, start=DDY_MIN, end=DDY_MAX, step=
 # seasonal attenuation amplitude
 saa = Slider(title=SAA_LABEL, value=SAA_START, start=SAA_MIN, end=SAA_MAX, step=SAA_STEP)
 
+# baseline attenuation
+bat = Slider(title=BAT_LABEL, value=BAT_START, start=BAT_MIN, end=BAT_MAX, step=BAT_STEP)
+
 button  = Button(label="Reset",                         button_type="default")
 button2 = Button(label="Vaccinate critical proportion", button_type="default")
 button3 = Button(label="Vaccinate 50%",                 button_type="default")
@@ -349,7 +358,7 @@ notes   = Div(text='', width=TEXT_WIDTH)
 
 # Assign widgets to the call back function
 # updates are on value_throtled because this is too slow for realtime updates
-for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, im, ddy, saa ]:
+for w in [population, iinfections, period, period_stdev, latent, h1, p1, drate, im, ddy, saa, bat ]:
     w.on_change('value_throttled', update_data)
 
 # reset button call back
@@ -361,7 +370,7 @@ button3.on_click(vaccinate50_data)
 
 # initial plot
 x = np.linspace(1, DAYS, DAYS)
-y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True, im.value, ddy.value, saa.value )
+y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1.value, 0, 0, DAYS, drate.value, True, im.value, ddy.value, saa.value, bat.value )
 
 # aux calculations
 beta          = round ( h1.value * p1.value / 100 , 4)
@@ -551,7 +560,7 @@ plot10.add_layout(quadrant4)
 notespacer = Spacer(width=TEXT_WIDTH, height=10, width_policy='auto', height_policy='fixed')
 
 # simplified set
-inputs = column(intro, population, iinfections, period, latent, h1, p1, drate, ddy, saa, im, button2, button3, button, summary, stats, notespacer, notes)
+inputs = column(intro, population, iinfections, period, latent, h1, p1, drate, ddy, saa, bat, im, button2, button3, button, summary, stats, notespacer, notes)
 
 curdoc().title = PAGE_TITLE
 
