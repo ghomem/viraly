@@ -122,8 +122,8 @@ def get_older_model4 ( time, history, M, T, L ):
     return count
 
 # common to models 3 and 4
-# ddy is day of the year, saa is seasonal attenuation amplitude
-def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False, ddy = 0, saa = 0):
+# ddy is day of the year, saa is seasonal attenuation amplitude, bat is the baseline attenuation
+def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = False, ddy = 0, saa = 0, bat = 0):
 
     # we get the outgoing cases (recoveries, deaths) from the gaussian
     # outgoers are computed from the history of new cases either with
@@ -139,8 +139,11 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     # the correction here is different becase current does not include outgoers...
     # we need to use the effective share of the population available for infection
     correction = max(( 1 - (M-m)/M ),0)
-    # seasonal attenuation is 1, unless w is explicitly passed
-    sa = get_seasonal_attenuation (time, ddy, saa)
+
+    # seasonal attenuation factor is 1, unless w is explicitly passed
+    saf = get_seasonal_attenuation (time, ddy, saa)
+    # likewise for the baseline attenuation factor
+    baf = ( 1 - bat )
 
     # we need some background noise to allow the epidemic to grow again in the right season
     # this may sound a bit artifial but we know there are always imported cases
@@ -150,10 +153,13 @@ def get_next_model34 ( current, h, p, time, nc_history, m, M, T, L, gaussian = F
     else:
         bg_noise = 0
 
+    # attenuation factor resulting from seasonal effects and social restrictions / changes of behaviour
+    atf = saf * baf
+
     # new cases - not more than the available population please!
-    nc = min( current*h*p*sa*correction, m) + bg_noise
+    nc = min( current*h*p*atf*correction, m) + bg_noise
     # Rt - attempt at estimating
-    rt = h*p*T*correction*sa
+    rt = h*p*T*correction*atf
 
     return nc, outgoing, rt
 
@@ -506,7 +512,7 @@ def run_simulation ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, 
 # optimized version only to be used by the web interface:
 # runs model 4 and is silent
 
-def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4, I0 = 0, ddy = 0, saa = 0 ):
+def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressive, ttime, h3, p3, tint2, ttime2, silent = True, prefer_mod4 = PREFER_MOD4, I0 = 0, ddy = 0, saa = 0, bat = 0 ):
 
     n4 = N0
     i4 = I0 + N0
@@ -541,7 +547,7 @@ def run_simulation_web ( h, p, T, L, I, h2, p2, tint, tmax, M, N0, DR, progressi
     for t in range (1, tmax + 1):
 
         # get new cases, outgoing and rt; ddy and ssa are seasonal parameters
-        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, prefer_mod4, ddy, saa)
+        nc4i, o4, rt4 = get_next_model34 (n4, h, p, t, nc4_history, m4, M, T, L, prefer_mod4, ddy, saa, bat)
         # update simulation parameters over time
         h, p = get_parameters( h,p, h2, p2, t, tint, progressive, ttime, h3, p3, tint2, ttime2)
 
