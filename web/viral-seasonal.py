@@ -113,10 +113,10 @@ SAA_START = 0.24
 SAA_MAX   = 1
 SAA_STEP  = 0.01
 
-SAA_MIN   = 0
-SAA_START = 0
-SAA_MAX   = 1
-SAA_STEP  = 0.01
+BAT_MIN   = 0
+BAT_START = 0
+BAT_MAX   = 1
+BAT_STEP  = 0.01
 
 # for the incidence plot
 INCIDENCE_PERIOD = 14
