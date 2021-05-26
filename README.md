@@ -12,8 +12,9 @@ This is a simple command line program that simulates an epidemic in 4 different 
 An epidemic is the propagation of something (a disease, a phrase, a brand, an idea, ...) over a population by means of interactions between elements. A technical summary document can be found [here](https://github.com/ghomem/viraly/blob/master/doc/viral-summary-github.pdf). There is a bokeh based web frontend on the /web folder an instance of which is available with examples for:
 
 * a [free epidemic](https://lo.gic.li/viral-simple)
-* a managed [3 stage epidemic](https://lo.gic.li/viral)
 * a free epidemic with [seasonal effects](https://lo.gic.li/viral-seasonal)
+* a managed [3 stage epidemic](https://lo.gic.li/viral)
+* a 3 stage simulation with a sudden [contact shock](https://lo.gic.li/viral-xmas)
 
 **Requirements**
 
