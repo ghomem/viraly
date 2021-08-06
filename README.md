@@ -15,6 +15,7 @@ An epidemic is the propagation of something (a disease, a phrase, a brand, an id
 * a free epidemic with [seasonal effects](https://lo.gic.li/viral-seasonal)
 * a managed [3 stage epidemic](https://lo.gic.li/viral)
 * a 3 stage simulation of a sudden [contact shock](https://lo.gic.li/viral-xmas)
+* a simulation of [R0 uncertainty]((https://lo.gic.li/viral-delta) on a highly immunized population exposed to a very contagious virus
 
 **Requirements**
 
