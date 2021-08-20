@@ -54,7 +54,7 @@ POP_STEP  = 0.5
 # Initial infections
 IIF_MIN   = 0
 IIF_MAX   = 10000
-IIF_START = 2500
+IIF_START = 7500
 IIF_STEP  = 50
 
 # Infectious period
@@ -108,7 +108,7 @@ DRATE_STEP  = 0.05
 
 IM_MIN   = 0
 IM_MAX   = 100
-IM_START = 70
+IM_START = 50
 IM_STEP  = 0.5
 
 # for the incidence plot
