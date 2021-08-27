@@ -245,8 +245,8 @@ def update_data(attrname, old, new):
     p1_ = p1.value*( 1 + p_delta.value/100 )
     _p1 = p1.value*( 1 - p_delta.value/100 )
 
-    y1_, y2_, y3_, y4_, y5_, y6_, y7_, y8_, y9_, y10_, y11_, y12_, ar_stats_ = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*_p1,       0, 0, DAYS, drate.value, True, im.value )
-    _y1, _y2, _y3, _y4, _y5, _y6, _y7, _y8, _y9, _y10, _y11, _y12, _ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1_,       0, 0, DAYS, drate.value, True, im.value )
+    y1_, y2_, y3_, y4_, y5_, y6_, y7_, y8_, y9_, y10_, y11_, y12_, ar_stats_ = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*p1_,       0, 0, DAYS, drate.value, True, im.value )
+    _y1, _y2, _y3, _y4, _y5, _y6, _y7, _y8, _y9, _y10, _y11, _y12, _ar_stats = get_data(x, population.value, iinfections.value, period.value, period_stdev.value, latent.value, DAYS, 0, 0, 0, h1.value*_p1,       0, 0, DAYS, drate.value, True, im.value )
 
     # Only the global variable data sources need to be updated
     source_active.data= dict(x=x, y=y1)
@@ -307,8 +307,8 @@ def update_data(attrname, old, new):
     extra_str     = ''
     stats_str     = pre_str + '<br/>Transmissions: '   + mki(_ar_stats[0], ar_stats[0], ar_stats_[0]) + \
                               '<br/>Transmissions %: ' + mki(_ar_stats[3], ar_stats[3], ar_stats_[3], '%') + \
-                              '<br/>Recoveries: '      +  mki(_ar_stats[1], ar_stats[1], ar_stats_[1]) + \
-                              '<br/>Deaths: '          +  mki(_ar_stats[2], ar_stats[2], ar_stats_[2]) + extra_str
+                              '<br/>Recoveries: '      + mki(_ar_stats[1], ar_stats[1], ar_stats_[1]) + \
+                              '<br/>Deaths: '          + mki(_ar_stats[2], ar_stats[2], ar_stats_[2]) + extra_str
     stats.text = stats_str
 
 def reset_data():
@@ -333,8 +333,8 @@ def vaccinate_data():
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
 
-def vaccinate70_data():
-    im.value  = 70
+def vaccinate60_data():
+    im.value  = 60
 
     # we seem to need to pass something here because the slider callback needs to have a declaration of 3 parameters
     update_data('xxxx',0,0)
@@ -377,7 +377,7 @@ im = Slider(title=IM_LABEL, value=IM_START, start=IM_MIN, end=IM_MAX, step=IM_ST
 
 button  = Button(label="Reset",                        button_type="default")
 button2 = Button(label="Immunize critical proportion", button_type="default")
-button3 = Button(label="Immunize 70%",                 button_type="default")
+button3 = Button(label="Immunize 60%",                 button_type="default")
 
 # text widgets
 intro   = Div(text='', width=TEXT_WIDTH)
@@ -395,7 +395,7 @@ button.on_click(reset_data)
 
 # vaccinate the population
 button2.on_click(vaccinate_data)
-button3.on_click(vaccinate70_data)
+button3.on_click(vaccinate60_data)
 
 # initial plot
 
