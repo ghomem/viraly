@@ -108,7 +108,7 @@ DRATE_STEP  = 0.05
 
 IM_MIN   = 0
 IM_MAX   = 100
-IM_START = 49  # = (100-85*0.6)
+IM_START = 52  # = 100 - (100-87*0.6)
 IM_STEP  = 0.5
 
 # for the incidence plot
