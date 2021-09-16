@@ -54,7 +54,7 @@ POP_STEP  = 0.5
 # Initial infections
 IIF_MIN   = 0
 IIF_MAX   = 10000
-IIF_START = 7500
+IIF_START = 2550
 IIF_STEP  = 50
 
 # Infectious period
@@ -103,12 +103,12 @@ P_DELTA_STEP  = 0.5
 
 DRATE_MIN   = 0.05
 DRATE_MAX   = 10
-DRATE_START = 0.05
+DRATE_START = 0.1 # 4 times lower than before, as happens with the CFR
 DRATE_STEP  = 0.05
 
 IM_MIN   = 0
 IM_MAX   = 100
-IM_START = 50
+IM_START = 51  # = 85*0.6
 IM_STEP  = 0.5
 
 # for the incidence plot
