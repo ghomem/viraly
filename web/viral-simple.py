@@ -73,7 +73,7 @@ L_MAX   = 20
 L_START = 1
 
 # Simulation time
-DAYS = 720
+DAYS = 365
 
 # Propagation rate parameters
 #
@@ -244,30 +244,12 @@ def update_data(attrname, old, new):
     # Incidence vs Rt
     source_phase_space.data = dict(x=y5, y=y11)
 
-    beta           = round ( h1.value * p1.value / 100 , 4)
-    R0             = round ( beta * period.value , 4)
-    im_threshold_f = ( 1 - 1/R0 )
-    im_threshold  = max (round ( im_threshold_f*100, 2 ),0)
-
-    # ft = fine tuning
-    ft_constant            = (period.value / 2) / 100
-    ft                     = ft_constant*(R0-1)
-
-    # empirical constant
-    emp_constant          = 0.72 * (1 + ft)
-
-    # estimated transmissions (expectations vs reality)
-    est_transmissions     = round( im_threshold_f * (1+1/(R0 ** emp_constant) ) * 100 ,2)
-    est_transmissions_err = round( est_transmissions - ar_stats[3], 2)
-
-    pre_str = '&beta;: ' + str(beta) + '<br/>R<sub>0</sub>: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)+'%'
-
-    if (R0 > 1):
-        extra_str = '<br>Estimated transmissions: ' +  str(est_transmissions) + '% Error: ' + str(est_transmissions_err)
-    else:
-        extra_str = ''
-
-    stats_str   = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + str(ar_stats[3]) + '%' '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
+    beta          = round ( h1.value * p1.value / 100 , 4)
+    R0            = round ( beta * period.value , 4)
+    im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ),0)
+    pre_str       = '&beta;: ' + str(beta) + '<br/>R<sub>0</sub>: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)+'%'
+    extra_str     = ''
+    stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + str(ar_stats[3]) + '%' '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
     stats.text = stats_str
 
 def reset_data():
@@ -500,13 +482,11 @@ summary.style = { 'font-weight' : 'bold' }
 beta          = round ( h1.value * p1.value / 100 , 4)
 R0            = round ( beta * period.value , 4)
 im_threshold  = max (round ( ( 1 - 1/R0 )*100, 2 ), 0) # could go negative for R0 < 1
-pre_str       = ''
+pre_str       = '&beta;: ' + str(beta) + '<br/>R<sub>0</sub>: ' + str(R0) + '<br/>Immunity threshold: ' + str(im_threshold)+'%'
 extra_str     = ''
-stats_str     = ''
-stats.text    = stats_str
+stats_str     = pre_str + '<br/>Transmissions: ' + str(ar_stats[0]) + ' / ' + str(ar_stats[3]) + '%' '<br/>Recoveries: ' + str(ar_stats[1]) + '<br/>Deaths: ' + str(ar_stats[2]) + extra_str
+stats.text = stats_str
 notes.text    = TEXT_NOTES
-
-update_data('xxxx',0,0)
 
 # plot 10 - test plot for evolution of risk
 
